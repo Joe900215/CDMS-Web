@@ -1,0 +1,694 @@
+﻿/*处理不同浏览器之间的兼容问题吧
+-moz-对应 Firefox, 
+-webkit-对应 Safari and Chrome
+ -o- for Opera
+ -ms- for Internet Explorer 
+linear-gradient:设置背景颜色线性渐变*/
+#North,#South {
+	background:#6C86AE !important;
+	background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #6C86AE), color-stop(100%, #526C95)) !important;
+	background-image: -webkit-linear-gradient(top, #6C86AE, #526C95) !important;
+	background-image: -moz-linear-gradient(top, #6C86AE, #526C95) !important;
+	background-image: -o-linear-gradient(top, #6C86AE, #526C95) !important;
+	background-image: -ms-linear-gradient(top, #6C86AE, #526C95) !important;
+	background-image: linear-gradient(top, #6C86AE, #526C95) !important;
+	border: 1px solid #567422 !important;
+}
+/*设置logo字体样式及logo图像*/
+.logo { 
+  padding: 10px 10px 10px 31px !important;/*设置边距，用!important设置样式优先级*/
+  /*background: url(../images/logo.png) no-repeat ; /*10px 12px; #fff*/
+  color: LightGreen; !important ;
+  font-size: 18px !important;
+  font-weight: bold !important;
+  text-shadow: 0 1px 0 #4e691f !important; /*设置文本阴影。CSS2 包含该属性，但是 CSS2.1 没有保留该属性。*/
+}
+.btn-logo {
+    background: url(../images/logo.png) no-repeat ;
+    background-position: 0 center;/*默认*/
+    background-repeat: no-repeat;/*默认*/
+    padding-left:18px;/*默认*/
+    height:60px;/*默认*/
+    width:700px;
+    font-size:25px;/*字体大小设置*/
+
+
+}
+/*logo按钮*/
+.logoimg{
+    /*background-image:url("../images/logo.png") !important; */
+	background:url("../images/logo.png") no-repeat !important;  
+    background-color:#6C86AE !important;
+    border:false !important;
+}
+/*设置最右边退出按钮*/
+.logout{
+    background-image:url("../images/logout.png") !important;  
+	/*background:url("../images/logout.png") !important;  
+    background-color:#6C86AE !important;
+    border:false !important;*/ 
+}
+
+/*设置登录页面系统logo*/
+.login_sys_logo{
+    background-image:url("../images/loginsyslogo.png") !important;  
+}
+
+/*设置账号管理按钮*/
+.account_manage{
+    background-image:url("../images/account_manage.png") !important;  
+}
+
+/*设置本地程序按钮*/
+.related_down{
+    background-image:url("../images/related_down.png") !important;  
+}
+
+.logout_16{
+    background-image:url("../images/logout_16.png") !important;  
+}
+
+/*文档管理按钮*/
+.docmanage_64{
+    background-image:url("../images/docmanage_64.png") !important;  
+}
+.docmanage_over_64{
+    background-image:url("../images/docmanage_over_64.png") !important;  
+}
+
+/*逻辑目录按钮*/
+.logicproject_64{
+    background-image:url("../images/logicproject_64.png") !important;  
+}
+.logicproject_over_64{
+    background-image:url("../images/logicproject_over_64.png") !important;  
+}
+
+/*定义无边框*/
+.my-panel-no-border{border-style:none}
+
+/*个人消息按钮*/
+.message_64{
+    background-image:url("../images/message_64.png") !important;  
+}
+.message_over_64{
+    background-image:url("../images/message_over_64.png") !important;  
+}
+
+/*导航按钮*/
+.naviga_64{
+    background-image:url("../images/naviga_64.png") !important;  
+}
+.naviga_over_64{
+    background-image:url("../images/naviga_over_64.png") !important;  
+}
+
+/*查询按钮*/
+.search_64{
+    background-image:url("../images/search_64.png") !important;  
+}
+.search_over_64{
+    background-image:url("../images/search_over_64.png") !important;  
+}
+
+/*流程工作台按钮*/
+.wfworkplace_64{
+    background-image:url("../images/wfworkplace_64.png") !important;  
+}
+.wfworkplace_over_64{
+    background-image:url("../images/wfworkplace_over_64.png") !important;  
+}
+
+/*个人工作台按钮*/
+.workplace_64{
+    background-image:url("../images/workplace_64.png") !important;  
+}
+.workplace_over_64{
+    background-image:url("../images/workplace_over_64.png") !important;  
+}
+
+/*流程页面按钮*/
+.submit_audit{
+    background-image:url(../images/submit_audit.png)!important;
+}
+
+.x-grid-cell-checkcolumn .x-grid-cell-inner {
+    padding-top: 4px;
+    padding-bottom: 2px;
+    line-height: 14px;/*设置行高：*/
+}
+.x-grid-with-row-lines .x-grid-cell-checkcolumn .x-grid-cell-inner {
+    padding-top: 3px;
+}
+.x-grid-checkheader {
+    height: 14px;
+    background-image: url('../images/unchecked.gif');/*设置背景图像*/
+    background-position: 50% -2px;/*设置背景定位*/
+    background-repeat: no-repeat;/*设置背景图像不重复*/
+    background-color: transparent;/*设置背景颜色*/
+}
+
+.x-grid-checkheader-checked {
+    background-image: url('../images/checked.gif');
+        background-position: 50% -2px;/*设置背景定位*/
+}
+
+.x-grid-checkheader-disable {
+    height: 14px;
+    background-image: url('../images/unchecked_disable.gif');/*设置背景图像*/
+    background-position: 50% -2px;/*设置背景定位*/
+    background-repeat: no-repeat;/*设置背景图像不重复*/
+    background-color: transparent;/*设置背景颜色*/
+}
+
+.x-grid-checkheader-checked-disable {
+    background-image: url('../images/checked_disable.gif');
+        background-position: 50% -2px;/*设置背景定位*/
+}
+
+.x-grid-checkheader-editor .x-form-cb-wrap {
+    text-align: center;/*文本水平居中对齐*/
+}
+
+   .x-grid-row td,.x-grid-summary-row td{  
+      height:22px;    
+      vertical-align: middle;
+      text-align: center;     
+      border-right: 1px solid #eceff6 !important; 
+      /*border-top: 1px solid #eceff6 !important;  */
+    } 
+
+.custom-grid-row{
+      height:35px;    
+      vertical-align: middle;
+      text-align: center;    
+      border-right: 1px solid #eceff6 !important; 
+      border-top: 1px solid #eceff6 !important;  
+}
+
+/*设置用户管理页面下增加用户按钮样式*/
+.user-add{
+	background:url("../images/user-add-16.png") !important;/*background:在一个声明中设置所有背景属性*/
+}
+/*设置用户管理页面下删除用户按钮样式user-blue-16.png*/
+.user-delete{
+	background:url("../images/user-delete-16.png") !important;
+}
+
+.group-edit{
+	background:url("../images/users_business.png") !important;
+}
+
+.admin-setting{
+	background:url("../images/admin-setting.png") !important;
+}
+
+.folder-add{
+	background:url("../images/folder_add.png") !important;
+}
+.folder-edit{
+	background:url("../images/folder_edit.png") !important;
+}
+
+.folder-delete{
+	background:url("../images/folder_delete.png") !important;
+}
+
+.edit-add{
+	background:url("../images/edit_add.png") !important;
+}
+
+/*日期选择器1*/
+.x-datepicker-sel {
+border-color: rgb(224, 162, 162);
+border-style: solid;
+border-width: 1px;
+}
+
+/*日期选择器2*/
+.x-datepicker a {
+    font-size: 12px;
+}
+.minutecss{
+    padding:4px;
+	height:100%;
+    border-top: 1px solid #a3bad9;
+    background: #dfecfb url(../../resources/themes/images/default/shared/glass-bg.gif) repeat-x left top;	
+}
+.y-hour-middle,.y-hour-left,.y-hour-right {
+	font:bold 11px "sans serif", tahoma, verdana, helvetica;
+	overflow:hidden;
+}
+
+.y-hour-right, .y-hour-left {
+	width:18px;
+}
+.y-hour-right{
+	text-align:right;
+}
+.y-hour-middle {
+	padding-top:2px;
+	padding-bottom:2px;
+	cursor:pointer;
+}
+.y-hour-right a, .y-hour-left a{
+	display:block;
+	width:16px;
+	height:16px;
+	background-position: center;
+	background-repeat: no-repeat;
+	cursor:pointer;
+}
+
+.y-hour-right a {
+	background-image: url(../images/arrowRight.gif);
+	margin-right:2px;
+}
+.y-hour-left a{
+	background-image: url(../images/arrowLeft.gif);
+	margin-left:2px;
+}    
+.y-minute-middle,.y-minute-left,.y-minute-right {
+	font:bold 11px "sans serif", tahoma, verdana, helvetica;
+	overflow:hidden;
+}
+
+.y-minute-right, .y-minute-left {
+	width:18px;
+}
+.y-minute-right{
+	text-align:right;
+}
+.y-minute-middle {
+	padding-top:2px;
+	padding-bottom:2px;
+	cursor:pointer;
+}
+.y-minute-right a, .y-minute-left a{
+	display:block;
+	width:16px;
+	height:16px;
+	background-position: center;
+	background-repeat: no-repeat;
+	cursor:pointer;
+}
+
+.y-minute-right a {
+	background-image: url(../images/arrowRight.gif);
+	margin-right:2px;
+}
+.y-minute-left a{
+	background-image: url(../images/arrowLeft.gif);
+	margin-left:2px;
+}
+
+.y-second-middle,.y-second-left,.y-second-right {
+	font:bold 11px "sans serif", tahoma, verdana, helvetica;
+	overflow:hidden;
+}
+
+.y-second-right, .y-second-left {
+	width:18px;
+}
+.y-second-right{
+	text-align:right;
+}
+.y-second-middle {
+	padding-top:2px;
+	padding-bottom:2px;
+	cursor:pointer;
+}
+.y-second-right a, .y-second-left a{
+	display:block;
+	width:16px;
+	height:16px;
+	background-position: center;
+	background-repeat: no-repeat;
+	cursor:pointer;
+}
+
+.y-second-right a {
+	background-image: url(../images/arrowRight.gif);
+	margin-right:2px;
+}
+.y-second-left a{
+	background-image: url(../images/arrowLeft.gif);
+	margin-left:2px;
+}    
+
+/*顶部按钮*/
+.transparentBut {
+ filter: alpha(opacity = 0);
+ -moz-opacity: 0;
+ -khtml-opacity: 0;
+ opacity: 0;
+ width: 76px;
+ height: 32.8px;
+ z-index: 11;
+}
+
+/*工具栏图标*/
+.refresh{
+	background:url("../../../extjs/resources/themes/images/default/grid/refresh.gif") !important;
+}
+
+/*手机三个点菜单图标*/
+.ellipsis{
+	background:url("../images/ellipsis-16.png") !important;
+}
+
+.project-create{
+	background:url("../images/book_add.png") !important;
+}
+
+.file-create{
+	background:url("../images/file-create.png") !important;
+}
+.file-delete{
+	background:url("../images/file-delete.png") !important;
+}
+.file-upload{
+	background:url("../images/file-upload.png") !important;
+}
+.file-download{
+	background:url("../images/file-download.png") !important;
+}
+.file-modiattr{
+	background:url("../images/file-modiattr.png") !important;
+}
+.file-batchcreate{
+	background:url("../images/file-batchcreate.png") !important;
+}
+.file-preview{
+	background:url("../images/file-preview.png") !important;
+}
+.arrow-left{
+	background:url("../images/arrow_left_16.png") !important;
+}
+.arrow-right{
+	background:url("../images/arrow_right_16.png") !important;
+}
+
+.dele-upload {
+    background:url("../images/dele-upload.png") !important;
+}
+.stop-upload {
+    background:url("../images/stop-upload.png") !important;
+}
+.user-blue-16{
+	background:url("../images/user-blue-16.png") !important;
+}
+.workflow-start{
+	background:url("../images/workflow-start.png") !important;
+}
+.task-report{
+	background:url("../images/task-report.png") !important;
+}
+
+.message-delete{
+	background:url("../images/msg_delete.png") !important;
+}
+
+.save{
+	background:url("../images/save.png") !important;
+}
+
+.address-book-add{
+	background:url("../images/address_book_add.png") !important;
+}
+.address-book-close{
+	background:url("../images/address_book_close.png") !important;
+}
+
+/*消息页面*/
+.msg-reply{
+	background:url("./icons/16x16/preferences.png") !important;
+}
+
+.msg-del{
+	background:url("./icons/16x16/SHELL32_240.png") !important;
+}
+
+.msg-open{
+	background:url("./icons/16x16/msoeres_14.png") !important;
+}
+
+.msg-new{
+	background:url("./icons/16x16/msg_new.png") !important;
+}
+
+.msg_transmit{
+	background:url("./icons/16x16/msg_transmit.png") !important;
+}
+
+.msg_read{
+	background:url("./icons/16x16/dmawin_527.png") !important;
+}
+
+
+
+
+/*设置上传窗口行高*/
+.upload-file-grid-row{
+    height:25px;
+}
+
+/*float:left;把图像向左浮动：*/
+/*display:block;此元素将显示为块级元素，此元素前后会带有换行符。*/
+.imageList{float:left;display:block;width:180px;height:200px;padding:10px;}
+.selected{background-color: #D3E1F1;}
+.overitem{background-color: #E7E7E7;}
+.imageList p{
+	text-align:center;
+	overflow:hidden;/*如果内容过长，内容会被修剪，并且其余内容是不可见的。*/
+	line-height:22px;/*设置行高：*/
+}
+/*text-overflow:ellipsis;显示省略符号来代表被修剪的文本。*/
+/*-moz-代表firefox浏览器私有属性*/
+/*-o- for Opera浏览器私有属性*/
+/*white-space:nowrap;规定段落中的文本不进行换行*/
+.ellipsis {-o-text-overflow:ellipsis;text-overflow:ellipsis;-moz-binding: url('ellipsis.xml#ellipsis');white-space:nowrap;overflow:hidden;}
+.sort
+{
+	background:url("../images/sort.png") !important;
+}
+.x-view-selector {
+    position: absolute;/*生成绝对定位的元素*/
+    border: 1px dotted #3399BB;/*设置 4 个边框的样式：*/
+}
+.x-view-border {
+     border: 1px dotted #3399BB;/*设置 4 个边框的样式：*/
+}
+.picture-delete{
+	background:url("../images/picture_delete.png") !important;
+}
+.x-boundlist-item span
+{
+    line-height:19px;
+}
+.x-boundlist-item img 
+{
+    display:inline;
+    vertical-align: top;/*垂直对齐一幅图像，top设置为顶部对齐*/
+}
+.x-boundlist-item .x-tree-elbow-plus
+{
+    background-image: url("../../../extjs/resources/themes/images/default/tree/arrows.gif");
+    background-position: -16px 0;    
+    width: 16px;
+}
+.x-boundlist-item .x-tree-icon-parent {
+    background-image: url("../../../extjs/resources/themes/images/default/tree/folder-open.gif");
+    width: 16px;
+}
+.x-boundlist-item .x-tree-icon-leaf
+{
+    background-image: url("../../../extjs/resources/themes/images/default/tree/leaf.gif");
+    width: 16px;
+}
+
+.add{
+	background:url("../images/page_white.png") !important;
+}
+.edit{
+	background:url("../images/page_white_edit.png") !important;
+}
+.delete{
+	background:url("../images/page_white_delete.png") !important;
+}
+.view{
+	background:url("../images/page_white_magnify.png") !important;
+}
+/**aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa**//
+        /*.custom-grid-row{
+            height:50px;
+        }*/
+
+        .x-grid-row-over .x-grid-cell-inner {
+            font-weight: bold;
+        }
+        /* shared styles for the ActionColumn icons */
+        .x-action-col-cell img {
+            height: 16px;
+            width: 16px;
+            /*cursor: default;*/
+            cursor: pointer;
+        }
+        /* custom icon for the "buy" ActionColumn icon */
+        .x-action-col-cell img.buy-col {
+            background-image: url(./icons/accept.png);
+        }
+
+        .x-ie6 .x-action-col-cell img.buy-col {
+            background-image: url(./icons/accept.gif);
+        }
+
+        .x-action-col-cell img.alert-col {
+            background-image: url(./icons/16x16/new_file.png);
+        }
+
+        .x-ie6.x-action-col-cell img.alert-col {
+            background-image: url(./icons/16x16/new_file.png);
+        }
+
+        .x-ie6 .x-action-col-cell img {
+            position:relative;
+            top:-1px;
+        }
+
+        /*//目录状态图标:未打开*/
+        .myfolder{background-image: url(./icons/OkIco/folder1.png)}
+        .x-grid-tree-node-expanded .myfolder {background-image: url(./icons/OkIco/folder2.png);}
+
+        /*//目录状态图标:可写*/
+        .writefolder{background-image: url(./icons/OkIco/Write_Fold.png)}
+        .x-grid-tree-node-expanded .writefolder {background-image: url(./icons/OkIco/Write_UnFold.png);}
+
+        /*//目录状态图标:只读*/
+        .readonlyfolder{background-image: url(./icons/OkIco/ReadOnly_Fold.png)}
+        .x-grid-tree-node-expanded .readonlyfolder {background-image: url(./icons/OkIco/ReadOnly_UnFold.png);}
+
+        /*//目录状态图标:搜索*/
+        .searchfolder{background-image: url(./icons/AppIco2/search.png)}
+        .x-grid-tree-node-expanded .searchfolder {background-image: url(./icons/AppIco2/search.png);}
+
+        /*//目录模板图标*/
+        .tempdefnfolder{background-image: url(./icons/16x16/project.png)}
+        .x-grid-tree-node-expanded .tempdefnfolder {background-image: url(./icons/16x16/project.png);}
+        
+            /*//目录状态图标:关于*/
+        .about{background-image: url(./icons/OkIco/about.png)}
+        .x-grid-tree-node-expanded .about {background-image: url(./icons/OkIco/about.png);}
+        
+              /*//目录状态图标:可写*/
+        .final2 {background-image: url(./icons/OkIco/final2.png)}
+        .x-grid-tree-node-expanded .final2  {background-image: url(./icons/OkIco/final2.png);}
+
+        /*//文件模板图标*/
+        .tempdefndoc{background-image: url(./icons/16x16/tempdfnc_doc.png)}
+        .x-grid-tree-node-expanded .tempdefndoc {background-image: url(./icons/16x16/tempdfnc_doc.png);}
+
+      
+
+        .x-grid-record-gray{
+            background-color:gray !important;
+        }
+        .x-grid-record-green{
+            background-color:green !important;
+        }
+
+         .x-grid-record-yellow .x-grid-td {
+            background: YELLOW;
+        } 
+
+        /*//文件状态图标:检入*/
+        .x-action-col-cell img.doc-check-in {background-image: url(./icons/AppIco1/edit.png);cursor:default;}
+        .doc-check-in{background-image: url(./icons/AppIco1/edit.png);cursor:default;}
+
+        /*//文件状态图标:检出*/
+        .x-action-col-cell img.doc-check-out {background-image: url(./icons/AppIco1/lock.png);cursor:default;}
+        .doc-check-out{background-image: url(./icons/AppIco1/lock.png);cursor:default;}
+
+        /*//文件状态图标:检出编辑*/
+        .x-action-col-cell img.doc-check-out-edit {background-image: url(./icons/AppIco1/q32.png);cursor:default;}
+        .doc-check-out-edit{background-image: url(./icons/AppIco1/q32.png);cursor:default;}
+
+        /*//文件状态图标:只读*/
+        .x-action-col-cell img.doc-read-only {background-image: url(./icons/AppIco1/readonly.png);cursor:default;}
+        .doc-read-only{background-image: url(./icons/AppIco1/readonly.png);cursor:default;}
+
+        /*//文件状态图标:最终状态*/
+        .x-action-col-cell img.doc-final {background-image: url(./icons/AppIco1/final.png);cursor:default;}
+        .doc-final{background-image: url(./icons/AppIco1/final.png);cursor:default;}
+
+          /*//文件状态图标:快捷方式*/
+        .docatta{background-image: url(./icons/AppIco2/docatta.png);cursor:default;}
+        .x-grid-tree-node-expanded .docatta {background-image: url(./icons/AppIco2/docatta.png);cursor:default;}
+
+        /*//文件应用程序图标*/
+        .x-action-col-cell img.doc-pdf-ico {background-image: url(./icons/AppIco3/pdf.png);cursor:default;}
+        .x-action-col-cell img.doc-doc-ico {background-image: url(./icons/AppIco3/doc.png);cursor:default;}
+        .x-action-col-cell img.doc-docx-ico {background-image: url(./icons/AppIco3/docx.png);cursor:default;}
+        .x-action-col-cell img.doc-xls-ico {background-image: url(./icons/AppIco3/xls.png);cursor:default;}
+        .x-action-col-cell img.doc-xlsx-ico {background-image: url(./icons/AppIco3/xlsx.png);cursor:default;}
+        .x-action-col-cell img.doc-dwg-ico {background-image: url(./icons/AppIco3/dwg.png);cursor:default;}
+        .x-action-col-cell img.doc-rar-ico {background-image: url(./icons/AppIco3/rar.png);cursor:default;}
+        .x-action-col-cell img.doc-zip-ico {background-image: url(./icons/AppIco3/zip.png);cursor:default;}
+        .x-action-col-cell img.doc-tar-ico {background-image: url(./icons/AppIco3/tar.png);cursor:default;}
+        .x-action-col-cell img.doc-cab-ico {background-image: url(./icons/AppIco3/cab.png);cursor:default;}
+        .x-action-col-cell img.doc-gz-ico {background-image: url(./icons/AppIco3/gz.png);cursor:default;}
+        .x-action-col-cell img.doc-7z-ico {background-image: url(./icons/AppIco3/7z.png);cursor:default;}
+        .x-action-col-cell img.doc-iso-ico {background-image: url(./icons/AppIco3/iso.png);cursor:default;}
+        .x-action-col-cell img.doc-thm-ico {background-image: url(./icons/AppIco3/thm.png);cursor:default;}
+        
+        /*//extjs6.2文件应用程序图标*/
+        .doc-pdf-ico{background-image: url(./icons/AppIco3/pdf.png);cursor:default;}
+        .doc-doc-ico{background-image: url(./icons/AppIco3/doc.png);cursor:default;}
+        .doc-docx-ico{background-image: url(./icons/AppIco3/docx.png);cursor:default;}
+        .doc-xls-ico{background-image: url(./icons/AppIco3/xls.png);cursor:default;}
+        .doc-xlsx-ico{background-image: url(./icons/AppIco3/xlsx.png);cursor:default;}
+        .doc-dwg-ico{background-image: url(./icons/AppIco3/dwg.png);cursor:default;}
+        .doc-rar-ico{background-image: url(./icons/AppIco3/rar.png);cursor:default;}
+        .doc-zip-ico{background-image: url(./icons/AppIco3/zip.png);cursor:default;}
+        .doc-tar-ico{background-image: url(./icons/AppIco3/tar.png);cursor:default;}
+        .doc-cab-ico{background-image: url(./icons/AppIco3/cab.png);cursor:default;}
+        .doc-gz-ico{background-image: url(./icons/AppIco3/gz.png);cursor:default;}
+        .doc-7z-ico{background-image: url(./icons/AppIco3/7z.png);cursor:default;}
+        .doc-iso-ico{background-image: url(./icons/AppIco3/iso.png);cursor:default;}
+        .doc-thm-ico{background-image: url(./icons/AppIco3/thm.png);cursor:default;}
+
+        .docunknown{background-image: url(./icons/AppIco3/unknown.png);cursor:default;}
+        .x-action-col-cell img.docunknown {background-image: url(./icons/AppIco3/unknown.png);cursor:default;}
+        /*.x-grid-tree-node-expanded .docunknown {background-image: url(./icons/AppIco3/unknown.png);cursor:default;}*/
+
+        .x-action-col-cell img.folder-rar {background-image: url(../images/folder-rar.png);cursor:default;}
+
+
+         .my-toolbar .x-toolbar .x-btn .x-btn-tl{ background-position: 0 0; } 
+         .my-toolbar .x-toolbar .x-btn .x-btn-tr{ background-position: -3px 0; } 
+         .my-toolbar .x-toolbar .x-btn .x-btn-tc{ background-position: 0 -6px; } 
+         .my-toolbar .x-toolbar .x-btn .x-btn-ml{ background-position: 0px -24px; } 
+         .my-toolbar .x-toolbar .x-btn .x-btn-mr{ background-position: -3px -24px; }
+         .my-toolbar .x-toolbar .x-btn .x-btn-mc{ background-position: 0 -1097px; } 
+         .my-toolbar .x-toolbar .x-btn .x-btn-bl{ background-position: -6px -3px; } 
+         .my-toolbar .x-toolbar .x-btn .x-btn-br{ background-position: -9px -3px; } 
+         .my-toolbar .x-toolbar .x-btn .x-btn-bc{ background-position: 0 -18px; } 
+         .my-toolbar .x-toolbar .x-btn-over .x-btn-tl{ background-position: -6px 0; } 
+         .my-toolbar .x-toolbar .x-btn-over .x-btn-tr{ background-position: -9px 0; } 
+         .my-toolbar .x-toolbar .x-btn-over .x-btn-tc{ background-position: 0 -9px; } 
+         .my-toolbar .x-toolbar .x-btn-over .x-btn-ml{ background-position: -6px -24px; } 
+         .my-toolbar .x-toolbar .x-btn-over .x-btn-mr{ background-position: -9px -24px; } 
+         .my-toolbar .x-toolbar .x-btn-over .x-btn-mc{ background-position: 0 -2168px; } 
+         .my-toolbar .x-toolbar .x-btn-over .x-btn-bl{ background-position: -6px -3px; } 
+         .my-toolbar .x-toolbar .x-btn-over .x-btn-br{ background-position: -9px -3px; } 
+         .my-toolbar .x-toolbar .x-btn-over .x-btn-bc{ background-position: 0 -18px; }
+
+        .cursor-default {
+            cursor:default;
+        }
+
+         .hide-store-row{      display:none    } 
+
+       #label22{font-size: 22px; color: #99B4D1;background-color:#99B4D1}   
+       .classDiv1{font-size: 22px; color: #99B4D1; }   
+       .classDiv2{font-size: 22px; color: #99B4D1; } 

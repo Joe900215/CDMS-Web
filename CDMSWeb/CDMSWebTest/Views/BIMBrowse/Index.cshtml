@@ -1,0 +1,262 @@
+﻿@{
+    //ViewBag.Title = "Index";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>@ViewData["docDesc"] - 艾三维协同管理信息系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("Scripts/extjs/resources/css/ext-all.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("Scripts/app/resources/css/app.css")" />    @*在首页添加css样式表*@
+    <link rel="stylesheet" type="text/css" href="@Url.Content("Scripts/WebGL/TemplateData/style.css")" />
+    <link rel="shortcut icon" href="@Url.Content("Scripts/WebGL/TemplateData/favicon.ico")" />
+
+    <script type="text/javascript" src="@Url.Content("Scripts/extjs/bootstrap.js")"></script>
+    <script type="text/javascript" src="@Url.Content("Scripts/extjs/Ext-lang-zh_CN.js")"></script>
+    <script type="text/javascript" src="@Url.Content("Scripts/extjs/ux/data/PagingMemoryProxy.js")"></script> 
+
+    <script type="text/javascript" src="@Url.Content("Scripts/WebGL/Build/UnityLoader.js")"></script>
+    <script type="text/javascript" src="@Url.Content("Scripts/WebGL/TemplateData/UnityProgress.js")"></script>
+
+</head>
+<body>
+
+    <script>
+
+    Ext.Loader.setConfig({
+        enabled: true,
+        paths: {
+            ////定义应用程序的路径
+            'Ext.ux': 'scripts/extjs/ux',
+            'Ext.ux.upload': 'scripts/extjs/ux/upload',
+            'CDMSWeb': 'scripts/app',
+            'Ext.plug_ins': 'scripts/app/plug_ins',
+            'Ext.WebGL': 'scripts/WebGL/plugin'
+        }
+    });
+
+    Ext.ns('CDMSWeb');
+
+    //处理错误信息的代码,CDMSWeb.ProxyException的定义:
+    //路径：\CDMSWeb\Scripts\app\store\Users.js
+    //在proxy定义内添加listeners配置项来监听exception事件
+    CDMSWeb.ProxyException = function (proxy, response, opts) {
+        if (typeof (opts.error) != "undefined")
+            Ext.Msg.alert("错误信息", "连接服务器失败，请稍后再试！"+opts.error.statusText);//opts.error);
+    }
+
+    CDMSWeb.ModelException = function (response, opts) {
+        Ext.Msg.alert("错误信息", "数据模型错误！"+opts.error.statusText);
+    }
+
+    CDMSWeb.FormSubmitFailure = function (form,action) {
+        if (action.failureType === "connect") {
+            Ext.Msg.alert('错误',
+            '状态:' + action.response.status + ': ' +
+            action.response.statusText);
+            return;
+        }
+        if (action.result) {
+            if (action.result.Msg)
+                Ext.Msg.alert('错误', action.result.Msg);
+        }
+    }
+
+    </script>
+
+    @{
+
+        if (Session["IsAuthenticated"] != null && Session["IsAuthenticated"].ToString() == "true")
+        {
+            <script>
+
+    CDMSWeb.Userinfo = {
+        Roles: [
+            @Html.Raw("'系统管理员'")
+        ]
+    };
+                //传递参数
+                //CDMSWeb.BIMDocKeyword = Request.RequestContext.RouteData.Values["docKeyword"];
+
+                //传递参数
+                CDMSWeb.RequestInfo = {
+                    BIMDocKeyword: ["@ViewData["docKeyword"]"]
+                };
+
+    CDMSWeb.postParams = {
+        path: null,
+        "ASPSESSID": "@Session.SessionID",
+        "AUTHID": ""
+    };
+
+    CDMSWeb.tinyCfg = {
+        // 基本选项
+        theme: "advanced", //使用高级选项
+        language: "zh",   //使用中文
+        skin: "extjs",    //使用extjs的样式
+        inlinepopups_skin: "extjs",
+        inline_styles: true,
+        theme_advanced_row_height: 27,
+        delta_height: 0,
+        convert_urls: false,
+        relative_urls: true,
+        media_use_script: true,
+
+        //要添加那些插件
+        plugins: "autolink,lists,pagebreak,style,layer,table,advhr,advimage,advlink,inlinepopups,media,searchreplace,contextmenu,paste,directionality,noneditable,visualchars,nonbreaking,advlist,imagemanager",
+
+        // 样式选项，用来设置显示那些操作按钮
+        theme_advanced_buttons1: "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+        theme_advanced_buttons2: "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,code,|,forecolor,backcolor",
+        theme_advanced_buttons3: "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,media,advhr,|,ltr,rtl,|,imagemanager",
+        theme_advanced_toolbar_location: "top",
+        theme_advanced_toolbar_align: "left",
+        theme_advanced_statusbar_location: "bottom",
+
+        // 设置前台站点使用到的样式，这样样式会显示在样式列表中，这里没有，就没设置
+        //content_css: "Scripts/Extjs/ux/Form/site.css"
+    };
+
+
+    Ext.onReady(function () {
+        if (Ext.BLANK_IMAGE_URL.substr(0, 4) != "data") {
+            Ext.BLANK_IMAGE_URL = "Content/Images/s.gif";
+        }
+
+        Ext.application({
+            name: "WebGL",//定义应用程序的名称
+            appFolder: "scripts/WebGL/app",//应用程序的路径
+            autoCreateViewport: true,//自动加载\Script\app\View目录下的Viewport.js文件,在Loader中配置
+            controllers: ["BIMBrowsePanel"]//自动加载主面板的控制器\Script\WebGL\plugin\controller\MainPanel.js
+        });
+
+        //Ext.onReady(function () {
+        //    //创建一个窗体
+        //    var win = new Ext.Window({
+        //        width: 300,
+        //        height: 300,
+        //        items: [],
+        //        modal: true,
+        //        buttonAlign: 'center',
+        //        buttons: [{
+        //            text: '测试', id: 'btnTest', handler: function () {
+        //                Ext.Msg.show({
+        //                    title: '询问',
+        //                    msg: '您喜欢 ExtJs 吗？',
+        //                    fn: processResult,
+        //                    icon: Ext.Msg.QUESTION,
+        //                    buttons: Ext.Msg.YESNO
+        //                });
+        //            }
+        //        }
+        //        ]
+        //    });
+        //    win.show();
+        //});
+
+        //    //询问对话框处理Handler
+        //    function processResult(btn) {
+        //        Ext.Msg.alert('结果', btn);
+        //    }
+
+    });
+
+            </script>
+        }
+        else
+        {
+            <script>
+                Ext.require('Ext.ux.Login');
+
+                Ext.onReady(function () {
+                    if (Ext.BLANK_IMAGE_URL.substr(0, 4) != "data") {
+                        Ext.BLANK_IMAGE_URL = "Content/Images/s.gif";
+                    }
+
+                    Ext.ux.Login.show();
+                })
+            </script>
+        }
+    }
+
+    <script>
+        
+        //模型名称
+        var modelName = "测试模型2233";
+
+        var gameInstance = null;
+
+        ////模型文件下载地址
+        var modelUrl = "/Interface/CDMS0119792/建筑.thm";
+
+    //读取文件的调用函数，由Unity自己载入完成后自己调用
+    function LoadFile() {
+    gameInstance.SendMessage('MasterControl', 'JsLoad', modelName + ";" + modelUrl);
+    }
+
+    //高亮元素,nodeid,elementid为字符串
+    function HighlightElement(nodeid, elementid) {
+        gameInstance.SendMessage('JavaScriptInterface', 'HighlightElement', nodeid + ";" + elementid);
+    }
+
+    //隐藏元素,elementid为字符串
+    function HideElement(nodeid, elementid) {
+        gameInstance.SendMessage('JavaScriptInterface', 'HideElement', nodeid + ";" + elementid);
+    }
+
+    //隐藏某一个二级子节点(若要隐藏多个则用';'号隔开)
+    function HideCategory(nodeids) {
+        gameInstance.SendMessage('JavaScriptInterface', 'HideCategory', nodeids);
+    }
+
+    //隐藏元素,elementid为字符串
+    function ShowElement(nodeid, elementid) {
+        //gameInstance.SendMessage('JavaScriptInterface', 'ShowElement', nodeid + ";" + elementid);
+        gameInstance.SendMessage('JavaScriptInterface', 'ClearHide', nodeid + ";" + elementid);
+    }
+
+    //隐藏某一个二级子节点(若要隐藏多个则用';'号隔开)
+    function ShowCategory(nodeids) {
+        //gameInstance.SendMessage('JavaScriptInterface', 'ShowCategory', nodeids);
+        gameInstance.SendMessage('JavaScriptInterface', 'ClearHide', nodeids);
+    }
+    //清理隐藏
+    function ClearHide() {
+        gameInstance.SendMessage('JavaScriptInterface', 'ClearHide');
+    }
+
+    //当Unity高亮一个元素的时候会调用这个函数
+    function OnSelectItemChanged(elementid) {
+        //这里代码你自己填
+        console.log(elementid);
+    }
+
+    /*
+    *函数功能：从href获得参数
+    *sHref:   http://www.artfh.com/arg.htm?arg1=d&arg2=re
+    *sArgName:arg1, arg2
+    *return:    the value of arg. d, re
+    */
+    function GetArgsFromHref(sHref, sArgName) {
+        var args = sHref.split("?");
+        var retval = "";
+
+        if (args[0] == sHref) /*参数为空*/ {
+            return retval; /*无需做任何处理*/
+        }
+        var str = args[1];
+        args = str.split("&");
+        for (var i = 0; i < args.length; i++) {
+            str = args[i];
+            var arg = str.split("=");
+            if (arg.length <= 1) continue;
+            if (arg[0] == sArgName) retval = arg[1];
+        }
+        return retval;
+    }
+    </script>
+</body>
+</html>

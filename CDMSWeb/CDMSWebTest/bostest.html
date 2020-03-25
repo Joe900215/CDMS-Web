@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Model Display Page</title>
+<link href="http://bos3d.bimwinner.com/static/latest/BIMWINNER.BOS3D.min.css" rel="stylesheet">
+</head>
+<body>
+<div id="viewer" style="width:100%; height:100%"></div>
+<!-- 引用BOS3D提供的显示组件库 -->
+<script src="http://bos3d.bimwinner.com/static/latest/BIMWINNER.BOS3D.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+ var option = {host: "http://bos3d.bimwinner.com", viewport: "viewer"};
+
+ var viewer3D = new BIMWINNER.BOS3D.Viewer(option);
+
+ var modelKey = "M1565856737049";//在此指定模型key，请更换modelKey以查看自己上传的模型  M1565336221105  M1565250653046
+ var projectKey = "test";
+
+ var tool = new BIMWINNER.BOS3D.UI.ToolBar(viewer3D);
+ tool.createTool();
+
+ viewer3D.addView(modelKey, projectKey);
+ //适应屏幕大小
+ viewer3D.autoResize();
+ window.addEventListener("resize",function () {
+	 viewer3D.autoResize();
+ })
+</script>
+</body>
+</html>
+            

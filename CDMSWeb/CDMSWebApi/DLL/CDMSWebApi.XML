@@ -1,0 +1,1209 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CDMSWebApi</name>
+    </assembly>
+    <members>
+        <member name="M:AVEVA.CDMS.WebApi.AcceDataController.GetObjectRightList(System.String,System.String)">
+             <summary>
+             获取目录的用户和用户组权限列表
+             </summary>
+             <param name="sid">连接秘钥</param>
+             <param name="ProjectKeyword">目录Keyword或者DocKeyword</param>
+             <returns>
+             <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+             <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+             <para>例子：</para>
+             <code>
+             {
+              "success": true,
+              "total": 0,
+              "msg": "",
+              "data": []
+            }
+            </code>
+             </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.AttrDataController.GetAttrDataListJson(AVEVA.CDMS.Server.AttrDataList,System.Boolean)">
+            <summary>
+            获取属性列表
+            </summary>
+            <param name="attrDataList">属性列表</param>
+            <param name="objAttrEditRight">DOC或Project是否有编辑属性权限</param>
+            <returns>返回一个JSON对象JObject</returns>
+        </member>
+        <member name="T:AVEVA.CDMS.WebApi.FileController">
+            <summary>  
+            DBSource操作类
+            </summary>  
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.FileController.DateTimeEQ(System.String,System.DateTime)">
+            <summary>
+            比较时间是否相同
+            </summary>
+            <param name="datetime">字符串时间</param>
+            <param name="dtime">时间类型</param>
+            <returns>是否相同</returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.FileController.BeforeUploadFile(System.String,System.String,System.String,System.String,System.String,System.Decimal,System.String)">
+            <summary>
+            上传第一块文件块时触发，在上传文件，替换文件时使用
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="DocKeyword">文档关键字，可以为空则不判断权限</param>
+            <param name="ServerFileName">服务器端文件名称, "upload\\abc.doc"</param>
+            <param name="CreateDate">文件创建时间</param>
+            <param name="FileSize">文件大小</param>
+            <param name="ModifyDate">文件编辑时间</param>
+            <param name="MD5">文件编辑时间</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功并且存储空间已经有同名文档时，data包含一个JObject，里面包含参数"state"(值为"seleSureReplace",提醒用户是否替换文件)，"fileName"(已有文件的文件名)，"fileSize"(已有文件的文件大小)，"updateTime"(已有文件的更新时间)</para>
+            <para>操作成功并且上传成功时，success返回true,data包含一个空的JObject</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.FileController.UploadFile(System.String,System.String,System.Web.HttpRequestBase)">
+            <summary>
+            继续上传文件块
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="ServerFullFileName">BeforeuploadFile 创建的服务器上文件名称</param>
+            <param name="_HttpRequest">Http参数，系统自动生成，主要包含以下参数：Files:文件列表，Files里面只有一个文件, 文件大小512K, 客户端将大文件切块传输</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功并且上传成功时，success返回true,data包含一个空的JObject</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.FileController.AfterUploadFile(System.String,System.String,System.String)">
+            <summary>
+            文件上传完毕后触发事件
+            </summary>
+            <param name="sid"></param>
+            <param name="DocKeyword"></param>
+            <param name="ServerFileName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.BatchCreateDocMenu.MeasureMenuState">
+            <summary>
+            创建目录菜单项
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.CreateNewDocMenu.MeasureMenuState">
+            <summary>
+            创建文档菜单项
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.PreviewDocMenu.MeasureMenuState">
+            <summary>
+            创建目录菜单项
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ReplaceDocMenu.MeasureMenuState">
+            <summary>
+            上传替换文档菜单项
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DeleteDocMenu.MeasureMenuState">
+            <summary>
+            删除文档菜单项
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DeleteProjectMenu.MeasureMenuState">
+            <summary>
+            创建目录菜单项
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ModiDocAttrMenu.MeasureMenuState">
+            <summary>
+            创建目录菜单项
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ModiProjAttrMenu.MeasureMenuState">
+            <summary>
+            创建目录菜单项
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.CreateProjByDefMenu.MeasureMenuState">
+            <summary>
+            创建目录菜单项
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.CreateNewProjectMenu.MeasureMenuState">
+            <summary>
+            创建目录菜单项
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.startProjectFlowMenu.MeasureMenuState">
+            <summary>
+            启动流程菜单项
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.startProcessMenu.MeasureMenuState">
+            <summary>
+            启动流程菜单项
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:AVEVA.CDMS.WebApi.WebSelUserForNextState">
+            <summary>
+            WEB选择用户
+            </summary>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WebSelUserForNextState.SelectUser(AVEVA.CDMS.Server.WorkFlow,AVEVA.CDMS.Server.WorkState)">
+            <summary>
+            获取当前流程状态的下一流程状态的用户组
+            </summary>
+            <param name="wf">工作流对象</param>
+            <param name="ws">状态</param>
+            <returns>用户组</returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WebSelUserForNextState.SelProjectsByKeyWord(System.String,AVEVA.CDMS.Server.WorkFlow)">
+            <summary>
+            
+            </summary>
+            <param name="keyword"></param>
+            <param name="wf"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WebWorkFlowEvent.WorkFlowReback(AVEVA.CDMS.Server.WorkFlow)">
+            <summary>
+            把流程中当前状态撤销,回到上一个状态
+            退回的过程中,要删除跳到当前状态时所发送的消息,所创建的快捷个人工作台 等等动作所生成的数据
+            而且必需只有直接提交到当前状态的人员,才能进行撤销
+            </summary>
+            <param name="workFlow"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.RSACryptoService.Decrypt(System.String)">
+            <summary>
+            RSA解密
+            </summary>
+            <param name="cipherText"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.RSACryptoService.Encrypt(System.String)">
+            <summary>
+            RSA加密
+            </summary>
+            <param name="text"></param>
+            <returns></returns>
+        </member>
+        <!-- 对于成员“M:AVEVA.CDMS.WebApi.CommonController.GetHtml(System.String,System.Net.CookieContainer,System.String,System.String)”忽略有格式错误的 XML 注释 -->
+        <member name="M:AVEVA.CDMS.WebApi.CommonController.GetServerFileInfo(System.String)">
+            <summary>
+            获取服务器上的文件属性:1.创建时间 2.大小 3.编辑时间 4.MD5
+            </summary>
+            <param name="serverfile">存储上的文件名称</param>
+            <returns>返回 String[], 1.创建时间 2.大小 3.编辑时间 4.MD5</returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.CommonController.SetServerFileAttr(System.String,System.String,System.String)">
+            <summary>
+            设置服务器上文件属性：创建时间和最后编辑时间
+            </summary>
+            <param name="fileName">文件名称</param>
+            <param name="CreateTime">创建时间</param>
+            <param name="ModifyTime">最后编辑时间</param>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.CommonController.SetFileAttr(System.String,System.DateTime,System.DateTime)">
+            <summary>
+            设置服务器上文件的名称
+            </summary>
+            <param name="filename">文件名称（包含路径）</param>
+            <param name="CreateDate">创建时间</param>
+            <param name="ModiyDate">最后编辑时间</param>
+        </member>
+        <member name="F:AVEVA.CDMS.WebApi.CommonController.mRTStrs">
+            <summary>
+            加密关键字（用于自动登录）
+            </summary>
+            <returns>字符串</returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.CommonController.WebWriteLog(System.String)">
+            <summary>
+            写日志
+            </summary>
+            <param name="info">信息</param>
+            <returns></returns>
+        </member>
+        <member name="T:AVEVA.CDMS.WebApi.DBSourceController">
+            <summary>  
+            DBSource操作类
+            </summary>  
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DBSourceController.Index">
+            <summary>
+            索引
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="F:AVEVA.CDMS.WebApi.DBSourceController.UserInfoList">
+            <summary>
+            用户信息表
+            </summary>
+        </member>
+        <member name="F:AVEVA.CDMS.WebApi.DBSourceController.mdbManager">
+            <summary>
+            静态数据管理器
+            </summary>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DBSourceController.RefreshDBSource(System.String)">
+            <summary>
+            强制刷新DBSource
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DBSourceController.GetCurrentUser(System.String)">
+            <summary>
+            获取当前用户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DBSourceController.Logout(System.String)">
+            <summary>
+            登出数据源
+            </summary>
+            <param name="UserName">用户名</param>
+            <returns>返回一个JSON对象</returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DBSourceController.Login(System.String,System.String,System.String)">
+            <summary>
+            登录数据源
+            </summary>
+            <param name="UserName">用户名</param>
+            <param name="Password">用户密码</param>
+            <param name="hostname">登录主机名</param>
+            <returns>返回一个JSON对象</returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DBSourceController.GetMenuList(System.String,System.String,System.String,System.String,System.String)">
+             <summary>
+             获取菜单列表
+             </summary>
+             <param name="sid">连接秘钥</param>
+             <param name="ParentId">父目录的Keyword</param>
+             <param name="ProjectList">选中的Project列表</param>
+             <param name="DocList">选中的Doc列表</param>
+             <param name="Position">菜单的位置，有四个选项：TVProject = 0,LVProject = 1,LVDoc = 2,LVMultiSelected = 3</param>
+             <returns>
+             <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+             <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+             <para>操作成功时，data包含多个JObject，每个JObject包含：</para><para>"Id"：菜单Id,"Name":菜单名，"State"：菜单状态，（禁用，启用），"Position"：菜单位置</para>
+             <para>例子：</para>
+             <code>
+             {
+            "success": true,
+            "total": 0,
+             "msg": "",
+             "data": [
+             {
+                   "Id": null,
+                   "Name": "新建目录",
+                   "State": "Enabled",
+                   "Position": 0
+                 },
+                 {
+                   "Id": null,
+                   "Name": "新建文档",
+                   "State": "Enabled",
+                   "Position": 0
+                 }
+               ]
+             }</code>
+             </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DBSourceController.GetDBSource">
+            <summary>
+            返回数据源对象
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:AVEVA.CDMS.WebApi.DBSourceController.dbManager">
+            <summary>
+            DBManager 全局变量
+            </summary>
+        </member>
+        <member name="T:AVEVA.CDMS.WebApi.DocController">
+            <summary>  
+            Doc操作类
+            </summary>  
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DocController.GetDocList(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            返回一个Project对象下指定DocList的JSON对象
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="ProjectKeyWord">Project节点关键字</param>
+            <param name="page">要访问的页数</param>
+            <param name="filterJson">筛选条件</param>
+            <param name="limit">每一页的记录数</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,total返回文档总数；操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含多个JObject，每个个JObject里面包含参数"Keyword"：文档关键字，"O_itemno"：文档Id，"Title"：文档代码加描述，"O_size"，
+            "O_filename"，"O_dmsstatus_DESC"：文件状态（"检入"，"检出"，"最终状态"），"O_version"：版本，"Creater"，"O_credatetime"，"Updater"，"O_updatetime"，"O_outpath"，"O_flocktime"，
+            "O_conode"：机器号，"IsShort"：是否快捷方式</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <!-- 对于成员“M:AVEVA.CDMS.WebApi.DocController.GetDocBaseAttrByKeyword(System.String,System.String)”忽略有格式错误的 XML 注释 -->
+        <member name="M:AVEVA.CDMS.WebApi.DocController.GetDocAttrDataByKeyword(System.String,System.String)">
+            <summary>
+            根据DOC的Keyword返回一个Doc附加属性，在显示文档附加属性栏时使用
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="DocKeyword">DOC关键字</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含多个JObject， 每个JObject里面包含参数：</para>
+            <para>附加属性包含的参数："AttrCode"：属性代码,"AttrName"：属性描述"AttrValue":属性值，"AttrType",属性类型("AddiAttr":附加属性),"Visible":是否显示("True")，
+            "TempAttrType"：附加属性的类别(Common = 3, User = 4)，"DataType"：附加属性的数据类型类别("user":用户类型),"DefaultCode"：编辑属性的默认值，在下拉选择时用到，
+            "ShowData"：下拉列表的子项
+            </para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DocController.NewDoc(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            新建一个Doc对象，返回Doc对象及附加属性的详细JSON字符串
+            </summary>
+            <param name="sid">登录关键字</param>
+            <param name="keyword"> Doc keyword</param>
+            <returns>返回Doc对象及AttrData对象的JSON字符串</returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DocController.DeleteDoc(System.String,System.String,System.String,System.String)">
+            <summary>
+            删除文档
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="ProjectKeyword">Project关键字,这里传Project过来，是因为要判断doc是否是快捷方式，
+            如果不传project并且doc是快捷方式，就会直接删除DOC原文件，而不是删除快捷方式了</param>
+            <param name="DocKeyword">Doc关键字</param>
+            <param name="sureDel">确认是否删除</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含一个JObject，里面包含参数"state"；</para>
+            <para>当 "state"的值为"seleSureDel"时，表示提示客户端选择是否确认删除</para>
+            <para>当 "state"的值为"delSuccess"时，表示删除成功</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DocController.IsImage(System.String)">
+            <summary>
+            判断文件是否为图片
+            </summary>
+            <param name="path">文件的完整路径</param>
+            <returns>返回结果</returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DocController.CheckIsTextFile(System.String)">
+            <summary>
+            Checks the file is textfile or not.
+            </summary>
+            <param name="fileName">Name of the file.</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DocController.PreviewDoc(System.String,System.String)">
+            <summary>
+            预览文档
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="DocKeyword">Doc关键字</param>
+            <param name="Server_MapPath">网站根目录,系统自动生成</param>
+            <param name="UnrarMapPath">当预览压缩文档时,传送压缩文件的解压路径</param>
+            <param name="UnrarFileName">当预览压缩文档时,传送压缩文件的文件名</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功且预览文件为压缩文件时，data包含一个JObject，里面包含参数"filetype"：文件类型值为"rar"，"path"：文件解压路径，
+            "filelist"：解压后文件列表，"isUnrar":是否压缩文件值为"true"</para>
+            <para>其中"filelist"是一个JArray字符串，包含参数："type"：解压后文档或目录类型（"dir"，"file"），"name"：文件或目录名称，"size",
+            "path":路径，"parentpath":父目录路径</para>
+            <para>操作成功且预览文件为word，excel,pdf,文本，图片等文档时，data包含一个JObject，里面包含参数"filetype"：文件类型，"path"：文件预览路径，
+            "isUnrar":是否解压缩文件后的文件（值为"true"或"false"）</para>
+            <para>例子：</para>
+            </returns>
+            
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DocController.PreviewZipDoc(System.String,System.String,System.String,System.String)">
+            <summary>
+            预览压缩文件里面文件
+            </summary>
+            <param name="sid">SID</param>
+            <param name="docKeyword">doc keyword</param>
+            <param name="path">文件路径(前后不要加\\或者/)， 例子:\\127.0.0.1\LFWebStorage\CDMS0408318\Preview\测试文件夹\测试 Microsoft Excel 工作表33.xlsx  path = 测试文件夹 </param>
+            <param name="filename">文件名称，例子:\\127.0.0.1\LFWebStorage\CDMS0408318\Preview\测试文件夹\测试 Microsoft Excel 工作表33.xlsx， filename = 测试 Microsoft Excel 工作表33.xlsx</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DocController.FileDownload(System.String,System.String,System.String)">
+            <summary>
+            下载文件
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="DocKeyword">Doc关键字</param>
+            <param name="Server_MapPath">网站根目录,系统自动生成</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含一个JObject，包含参数"path"，用于存放下载文件的路径</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DocController.GenerateCheckCode(System.Int32)">
+            
+            生成随机字母字符串(数字字母混和)
+            
+            待生成的位数
+            生成的字母字符串
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DocController.GetDocAttr(System.String,System.String,System.String,System.String)">
+            <summary>
+            获取doc属性,在调用文档的“新建文档”菜单和“编辑属性”菜单，初始化表单时使用
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="action">操作类型，"ModiDoc":修改文档,"CreateDoc":创建文档</param>
+            <param name="ProjectKeyword">目录关键字</param>
+            <param name="DocKeyword">Doc关键字</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时且操作类型为"ModiDoc"(修改文档)时，data包含一个JObject，里面包含参数"docdesc"：Doc描述，"defkeyword"：Doc模板的IndexKeyWord，"defkeyid"：Doc模板的Id,"defname":Doc模板的代码,"defdesc":Doc模板的描述,"filename"：文件名，"filesize"：文件大小</para>
+            <para>操作成功时且操作类型为"CreateDoc"(创建文档)时，success返回true，data包含一个空的JObject</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DocController.CreateDoc(System.String,System.String,System.String)">
+            <summary>
+            更新doc属性，附加属性,在调用文档的“新建文档”菜单和“编辑属性”菜单，保存时使用；以及在属性栏编辑修改单个属性，附加属性时使用
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="projectKeyword">目录关键字</param>
+            <param name="docKeyword">Doc关键字</param>
+            <param name="docAttrJson">文档属性，附加属性列表，每个JObject包含："name"，"value","attrtype"三个属性。"attrtype"属性的值为""(空的字符串)时，name有以下值：docCode(Doc代码)，docDesc(Doc描述)，
+            tempDefnId(模板)；当"attrtype"属性的值为"attrData"(附加属性)时,"name"为附加属性的代码</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时且操作类型为"ModiDoc":修改文档时，success返回true,data包含一个空的JObject</para>
+            <para>操作成功时且操作类型为"CreateDoc":创建文档时，success返回true,data包含一个空的JObject</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DocController.UpdateDocAttr(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            更新doc属性，附加属性,在调用文档的“新建文档”菜单和“编辑属性”菜单，保存时使用；以及在属性栏编辑修改单个属性，附加属性时使用
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="action">操作类型，"ModiDoc":修改文档,"CreateDoc":创建文档</param>
+            <param name="projectKeyword">目录关键字</param>
+            <param name="docKeyword">Doc关键字</param>
+            <param name="docAttrJson">文档属性，附加属性列表，每个JObject包含："name"，"value","attrtype"三个属性。"attrtype"属性的值为""(空的字符串)时，name有以下值：docCode(Doc代码)，docDesc(Doc描述)，
+            tempDefnId(模板)；当"attrtype"属性的值为"attrData"(附加属性)时,"name"为附加属性的代码</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时且操作类型为"ModiDoc":修改文档时，success返回true,data包含一个空的JObject</para>
+            <para>操作成功时且操作类型为"CreateDoc":创建文档时，success返回true,data包含一个空的JObject</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DocController.GetDocRightList(System.String,System.String)">
+             <summary>
+             获取文档的用户和用户组权限列表
+             </summary>
+             <param name="sid">连接秘钥</param>
+             <param name="DocKeyword">文档Keyword</param>
+             <returns>
+             <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+             <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+             <para>例子：</para>
+             <code>
+             {
+              "success": true,
+              "total": 0,
+              "msg": "",
+              "data": []
+            }
+            </code>
+             </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DocController.GetDocDFWriteRight(AVEVA.CDMS.Server.Doc,System.String)">
+             <summary>
+             获取文档的用户和用户组权限列表
+             </summary>
+             <param name="sid">连接秘钥</param>
+             <param name="DocKeyword">文档Keyword</param>
+             <returns>
+             <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+             <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+             <para>例子：</para>
+             <code>
+             {
+              "success": true,
+              "total": 0,
+              "msg": "",
+              "data": []
+            }
+            </code>
+             </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.DocController.ReUploadFile(AVEVA.CDMS.Server.Doc)">
+            <summary>
+            判断是否是断点续传文件
+            </summary>
+            <param name="doc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.EnterPointController.Enter(System.Web.HttpRequestBase,System.Collections.Generic.List{System.Type},System.String)">
+            <summary>
+            入口函数
+            </summary>
+            <param name="Request"></param>
+            <param name="tList"></param>
+            <param name="Server_MapPath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.EnterPointController.ProcessRequest(System.String)">
+            <summary>
+            解密字符串
+            </summary>
+            <param name="encrypStr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.EnterPointController.enProcessRequest(System.String)">
+            <summary>
+            加密字符串
+            </summary>
+            <param name="decrypStr"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AVEVA.CDMS.WebApi.MessageController">
+            <summary>  
+            消息操作类
+            </summary>  
+             
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.MessageController.GetMessageTree(System.String,System.String)">
+            <summary>
+            获取Message消息类别对象下子Message树节点列表
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="node">Project节点关键字</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含多个JObject，每个JObject里面包含参数"id"：节点关键字，"text"：节点文本，"parentId"：父节点关键字
+            "leaf":是否有子节点("true","false"),"iconCls":设置图标</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.MessageController.GetMessageList(System.String,System.String,System.String,System.String)">
+            <summary>
+            返回MessageList的JSON对象
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="MessageType">消息类型</param>
+            <param name="page">要访问的页数</param>
+            <param name="limit">每一页的记录数</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,total返回记录总数；操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含多个JObject，每个JObject里面包含参数"Keyword","Sender","Title","SendDatetime",
+            "Workflow_DESC":流程名称,"SignificantType":重要程度,"DelayDay":延迟天数,"WorkflowId","post_time"</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.MessageController.GetUserNoReadMessageList(System.String,System.String,System.String,System.String)">
+            <summary>
+            返回用户未读消息列表
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="MessageType">消息类型</param>
+            <param name="page">要访问的页数</param>
+            <param name="limit">每一页的记录数</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,total返回记录总数；操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含多个JObject，每个JObject里面包含参数"Keyword","Sender","Title","SendDatetime",
+            "Workflow_DESC":流程名称,"SignificantType":重要程度,"DelayDay":延迟天数,"WorkflowId","post_time"</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.MessageController.GetMessage(System.String,System.String)">
+            <summary>
+            返回Message的JSON对象
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="MessageKeyword">消息关键字</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含一个JObject，里面包含参数："Sender"，"RecUsers"，"Title"，"Content"，"HasWorkFlow"；</para>
+            <para>当消息的附件里面有文档时，会在data里面添加一个或多个JObject，每个JObject里面包含参数"Attachment"：文档名称，"AttaKeyword"：文档Keyword，"AttaType"：文档类型值为"Doc"</para>
+            <para>当消息的附件里面有目录时，会在data里面添加一个或多个JObject，每个JObject里面包含参数"Attachment"：目录名称，"AttaKeyword"：目录Keyword，"AttaType"：文档类型值为"Proj"</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="T:AVEVA.CDMS.WebApi.ProjectController">
+            <summary>  
+            Project操作类
+            </summary>  
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ProjectController.GetRootProjectList(AVEVA.CDMS.Server.DBSource,System.Int32)">
+            <summary>
+            获取根目录
+            </summary>
+            <param name="sid">登录关键字</param>
+            <param name="ProjetType">根目录文件类型</param>
+            <returns>Project List</returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ProjectController.GetProjectListJson(System.String,System.String,System.String)">
+            <summary>
+            获取Project对象的子Project列表
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="node">Project节点关键字</param>
+            <param name="ProjectType">Project类型，1：项目目录，4，：查询，5：个人工作台，7：逻辑目录</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,total返回记录总数；操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含多个JObject，每个JObject里面包含参数"id":节点关键字,"text":节点文本,"leaf":是否有子节点,
+            "iconCls"：设置图标</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ProjectController.GetProjectBaseAttrByKeyword(System.String,System.String)">
+            <summary>
+            返回一个Project对象的基本属性，在显示目录基本属性栏时使用
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="ProjectKeyWord">Project节点关键字</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含多个JObject， 每个JObject里面包含参数：</para>
+            <para>基本属性包含的参数："AttrCode"：属性代码,"AttrName"：属性描述"AttrValue":属性值，"AttrType",属性类型("Attr":属性),"Visible":是否显示("True")</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ProjectController.GetProjectAttrDataByKeyword(System.String,System.String)">
+            <summary>
+            返回一个Project对象的附加属性，在显示目录附加属性栏时使用
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="ProjectKeyWord">Project节点关键字</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含多个JObject， 每个JObject里面包含参数：</para>
+            <para>附加属性包含的参数："AttrCode"：属性代码,"AttrName"：属性描述"AttrValue":属性值，"AttrType",属性类型("AddiAttr":附加属性),"Visible":是否显示("True")，
+            "TempAttrType"：附加属性的类别(Common = 3, User = 4)，"DataType"：附加属性的数据类型类别("user":用户类型),"DefaultCode"：编辑属性的默认值，在下拉选择时用到，
+            "ShowData"：下拉列表的子项
+            </para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ProjectController.GetProjectRightList(System.String,System.String)">
+             <summary>
+             获取目录的用户和用户组权限列表
+             </summary>
+             <param name="sid">连接秘钥</param>
+             <param name="ProjectKeyword">目录Keyword</param>
+             <returns>
+             <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+             <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+             <para>例子：</para>
+             <code>
+             {
+              "success": true,
+              "total": 0,
+              "msg": "",
+              "data": []
+            }
+            </code>
+             </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ProjectController.SaveLastProject(System.String,System.String)">
+            <summary>
+            退出时保存最后访问的目录
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="ProjectKeyword">Project关键字</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含一个空的JObject</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ProjectController.SaveProject">
+            <summary>
+            保留一个空函数，修改js端tree后更新用
+            </summary>
+            <returns>
+            <para>返回一个空的JObject</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ProjectController.GetProjectPath(System.String,System.String)">
+            <summary>
+            获取Project的完整目录路径
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="Keyword">Project关键字，当为"LastProject"时，获取当前用户最后访问目录的路径</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含一个JObject，里面包含参数"ProjectPath"：节点路径（格式："/Root/节点路径"）,"NodeId":Project的Keyword</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ProjectController.GetChildsDocsCount(System.String,System.String)">
+            <summary>
+            返回一个Project对象下所有子project的文档合计数量
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="ProjectList">Project关键字列表，用","分割</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含一个JObject，里面包含多个参数，参数名为Project关键字，值为该Project里文档的数量</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ProjectController.getProjectListWithLevel(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            获取各级子Project
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="node">Project节点关键字</param>
+            <param name="ProjectType">Project类型，1：项目目录，4，：查询，5：个人工作台，7：逻辑目录</param>
+            <param name="Level">获取目录的深度，1级："1",2级："2",3级:"3",4级:"4"</param>
+            <param name="Peer">是否获取同级目录</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含多个JObject，每个JObject表示一个一级目录，里面包含参数"id":节点关键字,"text":节点文本,"leaf":是否有子节点,
+            "children"：循环嵌套下一级目录，里面包含多个JObject每个JObject表示一个下级目录，参数与一级目录相同</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ProjectController.CreateProjectByDef(System.String,System.String)">
+            <summary>
+            模板创建各级子Project
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="Projects">包含多个Project节点的JArray字符串，每个JObject包含有:"id","parentId"</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含一个空的JObject</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ProjectController.DelProject(System.String,System.String,System.String)">
+            <summary>
+            删除目录
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="ProjectKeyword">Project节点关键字</param>
+            <param name="sureDel">确定是否要删除，当为"true"时直接删除，当为"false"时返回提示确认是否删除</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含一个JObject，里面包含参数"state"；</para>
+            <para>当 "state"的值为"seleSureDel"时，表示提示客户端选择是否确认删除</para>
+            <para>当 "state"的值为"delSuccess"时，表示删除成功</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ProjectController.GetProjectAttr(System.String,System.String,System.String)">
+            <summary>
+            返回目录属性
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="action">操作类型，当值为"CreateProject"时，返回存储空间，当值为"ModiProject"时，返回详细的目录属性</param>
+            <param name="ProjectKeyword">Project节点关键字</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时且操作类型为"ModiProject"(修改目录)时，data包含一个JObject，里面包含参数"projname"：project代码，
+            "projdesc"：Project描述，"defkeyword"：Project模板的IndexKeyWord，"defkeyid"：Project模板的Id,"defname":Project模板的代码,"defdesc":Project模板的描述,
+            "storagekeyword"：存储空间keyword，"storagename"：存储空间的代码，"storagedesc"：存储空间的描述，"isHide"</para>
+            <para>操作成功时且操作类型为"CreateProject"(创建目录)时，success返回true，data包含一个空的JObject</para>
+            <para>例子：</para>
+            </returns>
+            
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ProjectController.CreateProject(System.String,System.String,System.String)">
+            <summary>
+            创建目录
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="projectKeyword">Project节点关键字</param>
+            <param name="projectAttrJson">目录属性Json，每个JObject包含有："name"，"value"两个属性，"name"="projectName"时修改目录名，"name"="projectDesc"时修改目录描述，"name"="tempDefnId"时修改模板ID,name"="isHide"时修改是否隐藏</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含一个空的JObject</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ProjectController.UpdateProjectAttr(System.String,System.String,System.String)">
+            <summary>
+            更新project属性，属性页
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="projectKeyword">Project节点关键字</param>
+            <param name="projectAttrJson">目录属性Json，每个JObject包含有："name"，"value"两个属性，"name"="projectName"时修改目录名，"name"="projectDesc"时修改目录描述，"name"="tempDefnId"时修改模板ID,name"="isHide"时修改是否隐藏</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含一个空的JObject</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.ProjectController.GetTempDefList(System.String,System.String)">
+            <summary>
+            返回Project模板下所有Project和Doc子模板列表
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="node">Project节点关键字</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,total返回记录总数；操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含多个JObject，每个JObject表示一个模板，里面包含参数"text"：模板描述，"id"：模板ID，"leaf"：是否有子模板
+            "type"：模板类型，"iconCls"：设置图标</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="T:AVEVA.CDMS.WebApi.UserController">
+            <summary>  
+            用户操作类
+            </summary>  
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.UserController.GetUserList(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            返回用户列表
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="page">要访问的页数</param>
+            <param name="limit">每一页的记录数</param>
+            <param name="Group">可选，用户组Keyword</param>
+            <param name="filter">可选，筛选字符串</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含多个JObject，每个JObject里面包含参数"text":用户代码加描述，"id":用户KeyWord</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.UserController.GetUserGroupList(System.String,System.String,System.String)">
+            <summary>
+            返回用户组对象下的子用户组列表
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="node">用户组节点关键字</param>
+            <param name="GroupType">用户组类别，默认为"Org"(机构用户组)</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,total返回记录总数;操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含多个JObject，每个JObject里面包含参数"text":用户组描述，"id"：用户组KeyWord，"leaf"：是否有子用户组</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="T:AVEVA.CDMS.WebApi.WorkFlowController">
+            <summary>  
+            流程操作类
+            </summary>  
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.GetWorkFlow(System.String,System.String)">
+            <summary>
+            根据DOC或者Project或者WorkFlow的Keyword，返回一个对象的工作流各个状态的意见的JSON对象
+            DOC，Project，WorkFlow的Keyword里面只选一个来处理
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="Keyword">DOC或者Project或者WorkFlow的关键字</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含多个JObject，JObject的值又分为多种类型：</para>
+            <para>类型一：校审意见(WA),包含参数："UserName"，"WorkState"，"ProcAudit"，"DeProcAudit"，"ProcTime"，"KeyWord"，"Visible"值为("True")</para>
+            <para>类型二：分支按钮(WSB),包含参数："BtnType"：值为"btn")，"Desc"，"KeyWord"，"Enabled","Visible"值为("False")</para>
+            <para>类型三：返回修改按钮(RebackText),包含参数："BtnType"：值为("reback")，"Desc"，"KeyWord"：值为("")，"Visible"值为("False")</para>
+            <para>类型四：默认校审意见列表("DefaultAuditList"),包含参数："BtnType"：值为("addAduit")，"Desc"，"KeyWord"：值为("")，"Visible"值为("False")</para>
+            <para>类型五：返回流程号,包含参数："WfKeyword"，"Visible"值为("False")</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.GetWorkFlowPagesData(System.String,System.String)">
+            <summary>
+            返回流程页信息
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="KeywordType">可选,Keyword的类型</param>
+             <param name="Keyword">DOC或者Project或者WorkFlow的关键字</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含一个JObject，里面包含参数"state"；</para>
+            <para>操作成功时，data包含多个JObject，JObject的值又分为多种类型：</para>
+            <para>类型一：返回附件的文档列表,包含参数："code"，"desc"，"o_filename","o_size","o_credatetime","o_updatetime","o_status","attrKeyword","attrType"值为("Doc"）,"PageId"值为("1")</para>
+            <para>类型二：返回附件的目录列表,包含参数："code"，"desc"，"o_credatetime","o_updatetime","o_status","attrKeyword","attrType"值为("Project"）,"PageId"值为("1")</para>
+            <para>类型三：返回当前流程模板,包含参数："WorkState"：值为当前流程模板代码,"desc"值为("DefWorkFlowCode")</para>
+            <para>类型四：返回当前流程描述,包含参数："WorkState"：值为当前流程描述,"desc"值为("DefWorkFlowDesc")，"PageId"值为("2")</para>
+            <para>类型五：返回流程校审人员列表(当前流程状态时),包含参数："WorkState"：值为用户流程状态,"UserName"，"PageId"值为("2")</para>
+            <para>类型六：返回流程校审人员列表(不是当前流程状态时),包含参数："UserName"，"PageId"值为("2")</para>
+            <para>类型七：返回流程历史列表(不是当前流程状态时),包含参数："UserName"，"WorkState"值为流程操作，"SendDate"：日期，"PageId"值为("3")</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.StartNewWorkFlow(System.String,System.String,System.String,System.String)">
+            <summary>
+            启动新流程
+            </summary>
+            <param name="sid">登录关键字</param>
+            <param name="DocList"> Doc列表，用','分割</param>
+            <param name="WfKeyword">流程关键字</param>
+            <param name="userlist">可选，用户关键字列表，用','分割</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含一个JObject，里面包含参数"state"</para>
+            <para>当 "state"的值为"selectDefWorkFlow"时，流程列表有多个流程，通知客户端弹出流程选择界面</para>
+            <para>当 "state"的值为"selectUser"时，提示需要选择下一状态的校审人员</para>
+            <para>当 "state"的值为"Passr"时，表示新建流程成功</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.ManageProjectWorkFlow(AVEVA.CDMS.Server.User,System.Collections.Generic.List{AVEVA.CDMS.Server.Project},System.String,System.String,System.Boolean)">
+            处理Project的流程
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.GetDefWorkFlowList(System.String,System.String)">
+            <summary>
+            获取可用流程模板列表
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="DocList">DOC列表,用","号分割</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含多个JObject，每个个JObject里面包含参数"id"：流程模板的KeyWord，"text"：流程模板的描述，"o_code":流程模板的代码</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.getDefWorkFlowList(System.Collections.Generic.List{AVEVA.CDMS.Server.Doc})">
+            <summary>
+            判断一组目录或者文档能采用的流程
+            </summary>
+            <param name="docList">Doc List</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.getDefWorkFlowList(System.Collections.Generic.List{AVEVA.CDMS.Server.Project})">
+            <summary>
+            判断一组目录或者文档能采用的流程
+            </summary>
+            <param name="docList">Doc List</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.getDefWorkFlowList(System.Collections.Generic.List{System.Object})">
+            <summary>
+            判断一组目录或者文档能采用的流程
+            </summary>
+            <param name="objList">Doc Project List</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.IsDefnWorkFlowNeedShow(System.Collections.Generic.List{System.Object},AVEVA.CDMS.Server.DefWorkFlow)">
+            <summary>
+            判断流程模板是否需要显示
+            </summary>
+            <param name="objList">doc project List</param>
+            <param name="defWorkFlow">DefWorkFlow</param>
+            <returns>DefWorkFlow</returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.IsObjectMathCondition(System.Object,System.String)">
+            <summary>
+            根据新建的目录或者文档中模板的条件表达式,判断新建的目录或者文档对象是否符合条件
+            </summary>
+            <param name="projectOrDoc">Project或者Doc对象</param>
+            <param name="express">表达式</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.AddWorkflowAudit(System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            添加流程意见
+            参数ProcAudit:流程意见
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="Keyword">流程关键字</param>
+            <param name="ProcAudit">流程意见</param>
+            <param name="DeProcAudit">修改意见</param>
+            <param name="CheckerName">签署人名字</param>
+            <param name="WorkStateDesc">流程状态描述</param>
+            <param name="CheckTime">意见签署时间</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含一个空的JObject</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.ModiWorkflowAudit(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            编辑流程意见
+            参数ProcAudit:流程意见
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="winAction">是新建意见（"NewAudit"）还是编辑意见（"ModiAudit"）</param>
+            <param name="Keyword">流程关键字</param>
+            <param name="ProcAudit">流程意见</param>
+            <param name="DeProcAudit">修改意见</param>
+            <param name="CheckerName">签署人名字</param>
+            <param name="WorkStateDesc">流程状态描述</param>
+            <param name="CheckTime">意见签署时间</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含一个空的JObject</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.GotoNextWfState(System.String,System.String,System.String,System.String)">
+            <summary>
+            跳转到下一流程状态
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="btnText">所按下按钮的文本</param>
+            <param name="WfKeyword">流程关键字</param>
+            <param name="userlist">下一状态用户列表,用","号分割</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含一个JObject，里面包含参数"state"；</para>
+            <para>当 "state"的值为"selectUser"时，提示需要选择下一状态的校审人员</para>
+            <para>当 "state"的值为"Passr"时，表示新建流程成功</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.RebackWorkFlow(System.String,System.String)">
+            <summary>
+            撤销提交流程
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="Keyword">流程，文档或目录的关键字</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含一个JObject，里面包含参数"state"；</para>
+            <para>当 "state"的值为"selectUser"时，提示需要选择下一状态的校审人员</para>
+            <para>当 "state"的值为"Passr"时，表示新建流程成功</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.DeleteWorkFlow(System.String,System.String)">
+            <summary>
+            删除流程
+            </summary>
+            <param name="sid">连接秘钥</param>
+            <param name="Keyword">流程，文档或目录的关键字</param>
+            <returns>
+            <para>返回JObject,有四个参数：success:是否操作成功,total:记录总数,msg:错误消息,data(JArray字符串):返回的数据。</para>
+            <para>操作成功时，success返回true,操作失败时在msg里返回错误消息</para>
+            <para>操作成功时，data包含一个JObject，里面包含参数"state"；</para>
+            <para>当 "state"的值为"selectUser"时，提示需要选择下一状态的校审人员</para>
+            <para>当 "state"的值为"Passr"时，表示新建流程成功</para>
+            <para>例子：</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.IsUserOncePassWorkState(AVEVA.CDMS.Server.WorkState,AVEVA.CDMS.Server.User)">
+            <summary>
+            判断用户是否通过了流程状态
+            </summary>
+            <param name="workState">状态</param>
+            <param name="user">用户</param>
+            <returns>是否通过流程</returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.GetWorkFlowJson(AVEVA.CDMS.Server.WorkFlow)">
+            <summary>
+            获取流程Json
+            </summary>
+            <param name="workFlow">WorkFlow对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.GetWorkFlowUserString(AVEVA.CDMS.Server.WorkFlow)">
+            <summary>
+            获取流程用户信息
+            </summary>
+            <param name="wf">WorkFlow对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.CurrentWSDefaultAuditList(AVEVA.CDMS.Server.WorkFlow)">
+            <summary>
+            获取缺省意见表
+            </summary>
+            <param name="wf"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.CanWorkFlowWithDraw(AVEVA.CDMS.Server.WorkFlow)">
+            <summary>
+            判断当前登录人员是否允许撤销流程,退回前一状态
+            </summary>
+            <param name="workFlow"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.HasOtherWorkflows(AVEVA.CDMS.Server.WorkFlow)">
+            <summary>
+            是否有关联工作流对象存在
+            </summary>
+            <param name="wf">工作流对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.OtherWorkflowsList(AVEVA.CDMS.Server.WorkFlow)">
+            <summary>
+            获取相关工作流对象
+            </summary>
+            <param name="wf">工作流对象</param>
+            <returns>相关工作流对象列表</returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.SelectWorkStateBranch(System.Collections.Generic.List{AVEVA.CDMS.Server.WorkStateBranch})">
+            <summary>
+            选择流程分支
+            </summary>
+            <param name="branchList"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.WebApi.WorkFlowController.SelProfessionOnWorkFlowStart(AVEVA.CDMS.Server.WorkFlow,System.String)">
+            <summary>
+            如果定义流程的定义状态中存在需要选择专业的定义状态,则需要提前选择专业及人员,并实例相应的状态
+            </summary>
+            <param name="workFlow">工作流对象</param>
+            <param name="userlist">用户列表</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

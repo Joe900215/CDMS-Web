@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0824BF68-B052-4E9E-A8CF-F1E1772A35CB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SHEPC_Plugins</RootNamespace>
+    <AssemblyName>SHEPC_Plugins</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoCADManager">
+      <HintPath>..\..\DLL\AutoCADManager.dll</HintPath>
+    </Reference>
+    <Reference Include="CDMSServer">
+      <HintPath>..\..\DLL\CDMSServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.MSScriptControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\DLL\Interop.MSScriptControl.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\DLL\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="A10Menu.cs" />
+    <Compile Include="A11Menu.cs" />
+    <Compile Include="A17Menu.cs" />
+    <Compile Include="A13Menu.cs" />
+    <Compile Include="A14Menu.cs" />
+    <Compile Include="A12Menu.cs" />
+    <Compile Include="A15Menu.cs" />
+    <Compile Include="A16Menu.cs" />
+    <Compile Include="A18Menu.cs" />
+    <Compile Include="A19Menu.cs" />
+    <Compile Include="A20Menu.cs" />
+    <Compile Include="A23Menu.cs" />
+    <Compile Include="A24Menu.cs" />
+    <Compile Include="A1Menu.cs" />
+    <Compile Include="A21Menu.cs" />
+    <Compile Include="A22Menu.cs" />
+    <Compile Include="A25Menu.cs" />
+    <Compile Include="A26Menu.cs" />
+    <Compile Include="A28Menu.cs" />
+    <Compile Include="A29Menu.cs" />
+    <Compile Include="A27Menu.cs" />
+    <Compile Include="A30Menu.cs" />
+    <Compile Include="A31Menu.cs" />
+    <Compile Include="A34Menu.cs" />
+    <Compile Include="A35Menu.cs" />
+    <Compile Include="A33Menu.cs" />
+    <Compile Include="A32Menu.cs" />
+    <Compile Include="A2Menu.cs" />
+    <Compile Include="A5Menu.cs" />
+    <Compile Include="A8Menu.cs" />
+    <Compile Include="A3Menu.cs" />
+    <Compile Include="A4Menu.cs" />
+    <Compile Include="A6Menu.cs" />
+    <Compile Include="A7Menu.cs" />
+    <Compile Include="A9Menu.cs" />
+    <Compile Include="C1Menu.cs" />
+    <Compile Include="C2Menu.cs" />
+    <Compile Include="C3Menu.cs" />
+    <Compile Include="CDMSFunction.cs" />
+    <Compile Include="D2Menu.cs" />
+    <Compile Include="D1Menu.cs" />
+    <Compile Include="ContactListMenu.cs" />
+    <Compile Include="SQUMenu.cs" />
+    <Compile Include="D3Menu.cs" />
+    <Compile Include="B1Menu.cs" />
+    <Compile Include="B2Menu.cs" />
+    <Compile Include="B3Menu.cs" />
+    <Compile Include="CreateProject.cs" />
+    <Compile Include="EnterPoint.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CDMSWebApi\CDMSWebApi\CDMSWebApi.csproj">
+      <Project>{1da68f0c-52ce-4ad6-9fd7-128ce36bc31f}</Project>
+      <Name>CDMSWebApi</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

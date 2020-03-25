@@ -1,0 +1,26 @@
+﻿USE [GJEPCMS]
+GO
+
+/****** Object:  Table [dbo].[WAPI_UserAuths]    Script Date: 02/21/2020 09:44:16 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+/*收藏文件夹*/
+CREATE TABLE [dbo].[User_Favorites](
+	[o_userno] [int] NOT NULL,
+	[O_suser5] [nvarchar](100) NULL
+) ON [PRIMARY]
+
+/*登录数据库*/
+CREATE TABLE [dbo].[WAPI_UserAuths](
+	[id] [int] identity(1,1) primary key,
+	[o_userno] [int] NULL,
+	[o_type] [nchar](50) NULL,
+	[o_sid] [nchar](100) NULL,
+	[o_logintime] [datetime] NULL,
+) ON [PRIMARY]
+
+GO

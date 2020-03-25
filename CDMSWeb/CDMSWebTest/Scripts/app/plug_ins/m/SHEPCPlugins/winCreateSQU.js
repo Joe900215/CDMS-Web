@@ -1,0 +1,925 @@
+﻿//新建目录
+Ext.define('Ext.plug_ins.SHEPCPlugins.winCreateSQU', {
+    extend: 'Ext.container.Container',
+    alias: 'widget.winCreateSQU',
+    //layout: "border",
+    layout: 'fit',
+    resultvalue: '', mainPanelId: '',
+    initComponent: function () {
+        var me = this;
+        //目录树选取的节点关键字
+        me.projectKeyword = "";
+        me.winAction = "CreateSQU";
+
+        //新创建后的目录关键字
+        me.newProjectKeyword = "";
+        //上传附件服务器地址
+        me.ServerFullFileName = "";
+        //上传文档的doc关键字列表
+        me.docList = "";
+        //单号
+        me.docNum = "";
+        //附件序号
+        me.docUploadIndex = 0;
+        //附件上传状态
+        me.uploadCompleteState = false;
+
+        me.unitdata = [{ text: "00", value: "00" }, { text: "01", value: "01" }, { text: "02", value: "02" }];//机组combo
+        //发文单位combo
+        me.dispatch = [];
+        me.professiondata = [{ text: "DQ", value: "DQ" }, { text: "GD", value: "GD" }, { text: "GL", value: "GL" },
+            { text: "HJ", value: "HJ" }, { text: "HS", value: "HS" }, { text: "PZ", value: "PZ" },
+            { text: "QJ", value: "QJ" }, { text: "RK", value: "RK" }, { text: "TJ", value: "TJ" },
+            { text: "AQ", value: "AQ" }, { text: "ZL", value: "ZL" }, { text: "GC", value: "GC" },
+        { text: "YB", value: "YB" }, { text: "CM", value: "CM" }, { text: "OM", value: "OM" }, { text: "HM", value: "HM" }
+
+        ];//专业combo
+
+
+        me.receivedata = [{ text: "GEDI", value: "GEDI" }, { text: "APCC", value: "APCC" }, { text: "GPEC", value: "GPEC" },
+    { text: "ZMSJ", value: "ZMSJ" }
+        ];//主送方combo
+
+        //是否需回复combo数据
+        me.needreplydata = [{ text: "不需回复", value: "不需回复" }, { text: "需回复", value: "需回复" }];
+        //性质combo数据
+        me.propertydata = [{ text: "通知", value: "通知" }, { text: "建议", value: "建议" }, { text: "备忘", value: "备忘" },
+            { text: "联系", value: "联系" }, { text: "其它", value: "其它" }];
+
+        me.projectCodeText = Ext.create("Ext.form.field.Text", {
+            xtype: "textfield",
+            fieldLabel: "发文编号", anchor: "80%", labelWidth: 60, labelAlign: "left", width: 160,//flex: 1
+            value: "FA06241", readOnly: true
+        });
+
+        //添加发文类别text
+        me.postCategoryText = Ext.create("Ext.form.field.Text", {
+            xtype: "textfield", hideLabel: true, value: "SQU", readOnly: true,
+            anchor: "80%", labelAlign: "left", width: 70
+        });
+
+        //添加发文单位代码text
+        me.dispatchText = Ext.create("Ext.form.field.Text", {
+            xtype: "textfield", hideLabel: true, readOnly: true,
+            anchor: "80%", labelAlign: "left", width: 90
+        });
+
+        //添加流水单号text
+        me.docNumText = Ext.create("Ext.form.field.Text", {
+            xtype: "textfield", hideLabel: true, value: "",
+            anchor: "80%", labelAlign: "left", width: 90
+        });
+
+        //添加标题text
+        me.titleText = Ext.create("Ext.form.field.Text", {
+            xtype: "textfield", fieldStyle: 'border-color: red; background-image: none;',
+            fieldLabel: "主题", anchor: "80%", labelWidth: 60, labelAlign: "left", margin: '8 0 8 0', width: 360//flex: 1
+        });
+
+        //添加回复要求text
+        me.requestText = Ext.create("Ext.form.field.Text", {
+            xtype: "textfield", fieldStyle: 'border-color: red; background-image: none;',
+            fieldLabel: "回复要求", anchor: "80%", labelWidth: 60, labelAlign: "left", margin: '8 0 8 0', width: 360//flex: 1
+        });
+
+        //添加内容Text
+        me.contentText = Ext.create("Ext.form.field.TextArea", {
+            xtype: "textarea", anchor: "80%", labelWidth: 60, labelAlign: "left", margin: '8 0 8 0', width: 360,
+            fieldLabel: "内容", height: 80
+        });
+
+        //专工 
+        me.checkText = Ext.create("Ext.form.field.Text", {
+            xtype: "textfield", readOnly: true, fieldStyle: 'border-color: red; background-image: none;',
+            fieldLabel: "专工", anchor: "80%", labelWidth: 55, labelAlign: "left", margin: '0 0 0 0', width: 260//flex: 1
+        });
+        ////审核人
+        //me.aduitText = Ext.create("Ext.form.field.Text", {
+        //    xtype: "textfield", readOnly: true, fieldStyle: 'border-color: red; background-image: none;',
+        //    fieldLabel: "审核人", anchor: "80%", labelWidth: 55, labelAlign: "left", margin: '0 0 0 0', width: 260//flex: 1
+        //});
+        //审核人
+        me.approvText = Ext.create("Ext.form.field.Text", {
+            xtype: "textfield", readOnly: true, fieldStyle: 'border-color: red; background-image: none;',
+            fieldLabel: "审核人", anchor: "80%", labelWidth: 55, labelAlign: "left", margin: '0 0 0 86', width: 260//flex: 1
+        });
+
+        //添加机组combo
+        Ext.define("unitModel", {
+            extend: 'Ext.data.Model',
+            fields: ["text", "value"]
+        });
+        me.unitProxy = Ext.create("Ext.data.proxy.Memory", {
+            data: me.unitdata,
+            model: "unitModel"
+        });
+
+        me.unitStore = Ext.create("Ext.data.Store", {
+            model: unitModel,
+            proxy: me.unitProxy
+        });
+
+        me.unitCombo = Ext.create("Ext.form.field.ComboBox",
+        {
+            xtype: "combo",
+            triggerAction: "all", store: me.unitStore,
+            valueField: 'value', editable: false,//不可输入
+            displayField: 'text', hideLabel: true,
+            anchor: "80%", labelAlign: "left", width: 70,//, margins: "8"
+            listeners:
+            {
+                select: function (combo, records, eOpts) {
+                    //获取流水号
+                    me.getRunNum();
+                }
+            }
+        });
+
+
+
+        //添加主送方combo
+        Ext.define("receiveModel", {
+            extend: 'Ext.data.Model',
+            fields: ["text", "value"]
+        });
+        me.receiveProxy = Ext.create("Ext.data.proxy.Memory", {
+            data: me.receivedata,
+            model: "receiveModel"
+        });
+
+        me.receiveStore = Ext.create("Ext.data.Store", {
+            model: receiveModel,
+            proxy: me.receiveProxy
+        });
+
+        me.receiveCombo = Ext.create("Ext.form.field.ComboBox",
+        {
+            xtype: "combo",
+            triggerAction: "all", store: me.receiveStore,
+            valueField: 'value', editable: false,//不可输入
+            displayField: 'text', hideLabel: true,
+            anchor: "80%", labelAlign: "left", width: 90,//, margins: "8"
+            listeners:
+            {
+                select: function (combo, records, eOpts) {
+                    //获取流水号
+                    me.getRunNum();
+                }
+            }
+        });
+
+        //添加专业combo
+        Ext.define("professionModel", {
+            extend: 'Ext.data.Model',
+            fields: ["text", "value"]
+        });
+        me.professionProxy = Ext.create("Ext.data.proxy.Memory", {
+            data: me.professiondata,
+            model: "professionModel"
+        });
+
+        me.professionStore = Ext.create("Ext.data.Store", {
+            model: professionModel,
+            proxy: me.professionProxy
+        });
+
+        me.professionCombo = Ext.create("Ext.form.field.ComboBox",
+        {
+            xtype: "combo",
+            triggerAction: "all", store: me.professionStore,
+            valueField: 'value', editable: false,//不可输入
+            displayField: 'text', hideLabel: true,
+            anchor: "80%", labelAlign: "left", width: 70,//, margins: "8"
+            listeners:
+            {
+                select: function (combo, records, eOpts) {
+                    //获取流水号
+                    me.getRunNum();
+                }
+            }
+        });
+
+        //添加是否需要回复combo
+        Ext.define("needreplyModel", {
+            extend: 'Ext.data.Model',
+            fields: ["text", "value"]
+        });
+        me.needreplyProxy = Ext.create("Ext.data.proxy.Memory", {
+            data: me.needreplydata,
+            model: "needreplyModel"
+        });
+
+        me.needreplyStore = Ext.create("Ext.data.Store", {
+            model: needreplyModel,
+            proxy: me.needreplyProxy
+        });
+
+        me.needreplyCombo = Ext.create("Ext.form.field.ComboBox",
+        {
+            xtype: "combo", fieldLabel: "是否需要回复",
+            triggerAction: "all", store: me.needreplyStore,
+            valueField: 'value', editable: false,//不可输入
+            displayField: 'text', //hideLabel: true,
+            anchor: "80%", labelAlign: "left", labelWidth: 80, width: 160,//, margins: "8"
+            listeners:
+            {
+            }
+        });
+
+        //添加联系单性质combo
+        Ext.define("propertyModel", {
+            extend: 'Ext.data.Model',
+            fields: ["text", "value"]
+        });
+        me.propertyProxy = Ext.create("Ext.data.proxy.Memory", {
+            data: me.propertydata,
+            model: "propertyModel"
+        });
+
+        me.propertyStore = Ext.create("Ext.data.Store", {
+            model: propertyModel,
+            proxy: me.propertyProxy
+        });
+
+        me.propertyCombo = Ext.create("Ext.form.field.ComboBox",
+        {
+            xtype: "combo", fieldLabel: "性质",
+            triggerAction: "all", store: me.propertyStore,
+            valueField: 'value', editable: false,//不可输入
+            displayField: 'text', //hideLabel: true,
+            anchor: "80%", labelAlign: "right", labelWidth: 60, width: 170,//, margins: "8"
+            listeners:
+            {
+            }
+        });
+
+        me.FileUploadButton = Ext.create('Ext.ux.upload.Button', {
+            renderTo: Ext.getBody(),
+            text: '添加附件',
+            //plugins: [{
+            //    ptype: 'ux.upload.window',
+            //    title: '上传文件',
+            //    width: 520,
+            //    height: 350,
+            //    hidden:true
+            //}
+            //], 
+            uploader:
+            {
+                url: 'WebApi/Post',
+                uploadpath: '/Root/files',
+                autoStart: false,//选择文件后是否自动上传
+                max_file_size: '20020mb',
+                multipart_params: { 'guid': '', 'ProjectKeyword': '', 'sid': '', 'C': 'AVEVA.CDMS.WebApi.FileController', 'A': 'UploadFile', 'SureReplace': 'false', 'AppendFilePath': '', 'user': '' }, //设置你的参数//{},
+                
+                drop_element: me.filegrid,//拖拽控件
+                statusQueuedText: '准备上传',
+                statusUploadingText: '上传中 ({0}%)',
+                statusFailedText: '<span style="color: red">错误</span>',
+                statusDoneText: '<span style="color: green">已完成</span>',
+                statusInvalidSizeText: '文件过大',
+                statusInvalidExtensionText: '错误的文件类型'
+            },
+            listeners:
+            {
+                uploadstarted: function (uploader, files) {
+
+                },
+
+                filesadded: function (uploader, files) {
+                    uploader.multipart_params.ProjectKeyword = "temp";// me.grid.store.proxy.extraParams.ProjectKeyWord;
+                    uploader.multipart_params.sid = localStorage.getItem("sid");
+
+
+                    for (var i = 0; i < files.length ; i++) {
+                        //插入行到文件grid
+                        var r = Ext.create('filemodel', {
+                            name: files[i].name
+                        });
+
+                        var rowlength = me.filegrid.getStore().data.length;
+                        me.filegrid.getStore().insert(rowlength, r);
+                    }
+                    return true;
+                },
+
+                beforeupload: function (uploadbasic, uploader, file) {
+                    //console.log('beforeupload');			
+                    //上传文件而不是替换文件时，这里要把Doc关键字重置
+                    uploadbasic.multipart_params.DocKeyword = "";
+
+                    var extIndex = file.name.lastIndexOf(".");
+                    var fileCode = file.name;
+                    if (extIndex >= 0) {
+                        fileCode = fileCode.substring(0, extIndex);
+                    }
+
+                    //规范附件名称
+                    me.docUploadIndex = me.docUploadIndex + 1;
+                    fileCode = me.docNum + " 附件" + me.docUploadIndex.toString() + " " + fileCode;
+
+                    Ext.require('Ext.ux.Common.comm', function () {
+                        //先创建文档
+                        createDoc(uploadbasic, file, me.newProjectKeyword, fileCode, "", "", function (uploadbasic, res, options, DocKeyword) {
+                            //var state = res.success;
+                            if (res.success === true) {
+                                //处理创建文档后的返回事件
+                                me.docList = me.docList + "," + DocKeyword;
+
+                                //触发服务端BeforeUploadFile事件，如果是断点续传，获取已上传的文件大小
+                                sendBeforeUploadFile(uploadbasic, options.file, DocKeyword, me);
+                            }
+                        });
+                    });
+
+                },
+
+                fileuploaded: function (uploader, file) {
+                    //console.log('fileuploaded');
+                    //me.afterUploadFile(uploader, file, me.ServerFullFileName);
+
+                    //文件上传后的事件
+                    Ext.require('Ext.ux.Common.comm', function () {
+                        afterUploadFile(uploader, file, me.ServerFullFileName);
+                    });
+                },
+
+                uploadcomplete: function (uploader, success, failed) {
+                    //设置上传附件完毕标记
+                    me.uploadCompleteState = true;
+                },
+                scope: this
+            }, width: 80
+
+
+        });
+
+        //定义已上传附件的model
+        Ext.define("filemodel", {
+            extend: "Ext.data.Model",
+            fields: ["name"],
+            url: "_blank",
+        });
+
+        //定义已上传附件的store
+        me.filestore = Ext.create("Ext.data.Store", {
+            model: "filemodel"
+        });
+        //定义已上传附件的view
+        me.filegrid = Ext.widget("grid", {
+            region: "center",
+            height: 80,
+            hideHeaders: true,//隐藏表头
+            flex: 1,
+            store: me.filestore,
+            columns: [
+                { text: '', dataIndex: 'name', width: '100%' }
+            ]
+        });
+
+        //添加列表
+        me.items = [
+          Ext.widget('form', {
+              layout: "form",
+              items: [{
+                  xtype: "panel",
+                  baseCls: 'my-panel-no-border',//隐藏边框
+                  layout: {
+                      type: 'vbox',
+                      pack: 'start',
+                      align: 'stretch'
+                  },
+                  items: [
+                      {
+                          layout: "hbox",
+                          width: '100%', baseCls: 'my-panel-no-border',//隐藏边框
+                          items: [{ baseCls: 'my-panel-no-border', flex: 1 },
+                      {
+                          xtype: 'label',
+                          cls: 'classDiv2',
+                          itemId: 'label1',
+                          text: 'SQU工程联系单', margins: '0 0 0 10'
+                      }, { baseCls: 'my-panel-no-border', flex: 1 }]
+                      }
+                  ,
+                  {
+                      xtype: "fieldset", margin: '8',
+                      layout: {
+                          type: 'vbox',
+                          pack: 'start',
+                          align: 'stretch'
+                      },
+                      items: [
+                      {
+                          layout: "hbox",
+                          width: '100%', baseCls: 'my-panel-no-border',//隐藏边框
+                          align: 'stretch', margin: '8 0 8 0', padding: '0 0 0 0',
+                          pack: 'start',
+                          items: [me.projectCodeText,
+                            {
+                                xtype: "label",
+                                text: "-", margins: "0 5 0 5"
+                            }, me.unitCombo,
+                            {
+                                xtype: "label",
+                                text: "-", margins: "0 5 0 5"
+                            }, me.dispatchText,//me.dispatchCombo,
+                            {
+                                xtype: "label",
+                                text: "-", margins: "0 5 0 5"
+                            }, me.receiveCombo,
+                            {
+                                xtype: "label",
+                                text: "-", margins: "0 5 0 5"
+                            }, me.professionCombo,
+                            {
+                                xtype: "label",
+                                text: "-", margins: "0 5 0 5"
+                            }, me.postCategoryText,
+                            {
+                                xtype: "label",
+                                text: "-", margins: "0 5 0 5"
+                            }, me.docNumText
+                          ]
+                      },
+                      {
+                          layout: "hbox",
+                          width: '100%', baseCls: 'my-panel-no-border',//隐藏边框
+                          align: 'stretch', margin: '8 0 8 0', padding: '0 0 0 0',
+                          pack: 'start',
+                          items: [
+                              me.needreplyCombo,
+                              me.propertyCombo
+                          ]
+                      },
+                      me.titleText
+                      ,
+                      me.requestText,
+                  me.contentText,
+                  {
+                      layout: "vbox",
+                      width: '100%', baseCls: 'my-panel-no-border',//隐藏边框
+                      align: 'stretch', margin: '8 0 8 0', padding: '0 0 0 0',
+                      pack: 'start',
+                      items: [
+                          {
+                              layout: "hbox",
+                              width: '100%', baseCls: 'my-panel-no-border',//隐藏边框
+                              align: 'stretch', margin: '0 0 0 0', padding: '0 0 0 0',
+                              pack: 'start', items: [{ width: 60, baseCls: 'my-panel-no-border' },
+                              me.FileUploadButton]
+                          },
+                          {
+                              layout: "hbox",
+                              width: '100%', baseCls: 'my-panel-no-border',//隐藏边框
+                              align: 'stretch', margin: '8 0 0 0', padding: '0 0 0 0',
+                              pack: 'start',
+                              items: [{
+                                  xtype: "label",
+                                  text: "附件:",
+                                  width: 60
+                              }, me.filegrid]
+                          }
+                      ], flex: 1
+                  },
+                   {
+                       layout: "hbox",
+                       width: '100%', baseCls: 'my-panel-no-border',//隐藏边框
+                       align: 'stretch', margin: '8 0 8 0', padding: '0 0 0 0',
+                       pack: 'start',
+                       items: [me.checkText, {
+                           xtype: "button",
+                           text: "选择...", margins: "0 0 0 10",
+                           listeners: {
+                               "click": function (btn, e, eOpts) {//添加点击按钮事件
+
+                                   Ext.require('Ext.ux.Common.comm', function () {
+                                       showSelectUserWin("getUser", "", "", function () {
+                                           me.checkText.setValue(window.parent.usernamelist);
+                                           me.checkList = window.parent.resultvalue;
+                                       });
+                                   })
+                               }
+                           }
+                       }
+                       //, me.approvText,
+                       //    {
+                       //        xtype: "button",
+                       //        text: "选择...", margins: "0 0 0 10",
+                       //        listeners: {
+                       //            "click": function (btn, e, eOpts) {//添加点击按钮事件
+                       //                Ext.require('Ext.ux.Common.comm', function () {
+                       //                    showSelectUserWin("getUser", "", "", function () {
+                       //                        me.approvText.setValue(window.parent.usernamelist);
+                       //                        me.approvList = window.parent.resultvalue;
+                       //                    });
+                       //                })
+                       //            }
+                       //        }
+                       //    }
+                       ]
+                   }
+                   //,
+                   //{
+                   //    layout: "hbox",
+                   //    width: '100%', baseCls: 'my-panel-no-border',//隐藏边框
+                   //    align: 'stretch', margin: '8 0 8 0', padding: '0 0 0 0',
+                   //    pack: 'start',
+                   //    items: [me.aduitText, {
+                   //        xtype: "button",
+                   //        text: "选择...", margins: "0 0 0 10",
+                   //        listeners: {
+                   //            "click": function (btn, e, eOpts) {//添加点击按钮事件
+
+                   //                Ext.require('Ext.ux.Common.comm', function () {
+                   //                    showSelectUserWin("getUser", "", "", function () {
+                   //                        me.aduitText.setValue(window.parent.usernamelist);
+                   //                        me.aduitList = window.parent.resultvalue;
+                   //                    });
+                   //                })
+                   //            }
+                   //        }
+                   //    }]
+                   //}
+                      ]
+                  },
+              {
+                  xtype: "panel",
+                  layout: "hbox",
+                  baseCls: 'my-panel-no-border',//隐藏边框
+                  //align: 'right',
+                  //pack: 'end',//组件在容器右边
+                  items: [{
+                      flex: 1, baseCls: 'my-panel-no-border'//隐藏边框
+                  },
+                      {
+                          xtype: "button",
+                          text: "确定", width: 60, margins: "10 5 10 5",
+                          listeners: {
+                              "click": function (btn, e, eOpts) {//添加点击按钮事件
+                                  me.send_create_SQU();
+                              }
+                          }
+                      },
+                      {
+                          xtype: "button",
+                          text: "取消", width: 60, margins: "10 15 10 5",
+                          listeners: {
+                              "click": function (btn, e, eOpts) {//添加点击按钮事件
+                                  //Ext.Msg.alert("您展开了目录树节点！！！", "您展开了目录树节点！节点ID:" + me.tempDefnId);
+                                  winSQU.close();
+                              }
+                          }
+                      }
+                  ]
+              }
+                  ]
+              }]
+          })];
+
+        me.get_combobox_default();//设置combobox默认值
+
+        me.callParent(arguments);
+    },
+
+    //设置combobox默认值
+    get_combobox_default: function () {
+        var me = this;
+        me.unitCombo.setRawValue(me.unitdata[0].text);//设置显示值
+        me.unitCombo.setValue(me.unitdata[0].value); //设置ID值
+
+        me.professionCombo.setRawValue(me.professiondata[0].text);//设置显示值
+        me.professionCombo.setValue(me.professiondata[0].value); //设置ID值
+
+        me.receiveCombo.setRawValue(me.receivedata[0].text);//设置显示值
+        me.receiveCombo.setValue(me.receivedata[0].value); //设置ID值
+
+        me.needreplyCombo.setRawValue(me.needreplydata[1].text);//设置是否需要回复combo显示值
+        me.needreplyCombo.setValue(me.needreplydata[1].value); //设置ID值
+
+        me.propertyCombo.setRawValue(me.propertydata[3].text);//设置性质combo显示值
+        me.propertyCombo.setValue(me.propertydata[3].value); //设置ID值
+
+        //设置发文单位
+        var nodes = Ext.getCmp(me.mainPanelId).down('treepanel').getSelectionModel().getSelection();//获取已选取的节点
+        if (nodes !== null && nodes.length > 0) {
+
+            me.projectKeyword = nodes[0].data.Keyword;//定义本页面全局变量
+            var projKeyword = nodes[0].data.Keyword;
+            Ext.Ajax.request({
+                //url: 'SHEPCPlugins/GetCreateWinDefault',
+                url: 'WebApi/Post',
+                method: "POST",
+                params: {
+                    C: "AVEVA.CDMS.SHEPC_Plugins.EnterPoint", A: "GetCreateWinDefault",
+                    action: me.winAction, ProjectKeyword: projKeyword,
+                    projectCode: me.projectCodeText.value, Unit: me.unitCombo.value,
+                    Send: me.dispatchText.value, Receive: me.receiveCombo.value,
+                    profession: me.professionCombo.value,
+                    type: me.postCategoryText.value, sid: localStorage.getItem("sid")
+
+                },
+                success: function (response, options) {
+                    try {
+                        //获取数据后，更新窗口
+                        var res = Ext.JSON.decode(response.responseText, true);
+                        var state = res.success;
+                        if (state === true) {
+                            var recod = eval(res.data[0]);
+                            me.dispatchText.setValue(recod.DispatchCode);
+                            me.docNumText.setValue(recod.RunNum);
+                            me.checkText.setValue(recod.checkText);
+                            me.checkList = recod.checkValue;
+                            //me.approvText.setValue(recod.auditorText);
+                            me.approvList = recod.auditorValue;
+                        } else {
+                            var errmsg = res.msg;
+                            Ext.Msg.alert("错误信息", errmsg);
+                        }
+                    } catch (e) { }
+                }
+            });
+        }
+    },
+
+    ////创建D3联系单
+    //send_create_d3: function () {
+    //    var me = this;
+    //    me.docNum = me.projectCodeText.value + "-" + me.unitCombo.value + "-" + me.dispatchText.value + "-" + me.professionCombo.value + "-" + me.postCategoryText.value + "-" + me.docNumText.value;
+    //    var title = me.titleText.value;
+    //    var content = me.contentText.value;
+    //    var projKeyword = me.projectKeyword;
+    //    var filelist = "";
+    //    var fstore = me.filestore;
+    //    if (fstore.getCount() > 0) {
+    //        for (var i = 0; i < fstore.getCount() ; i++) {
+    //            if (i > 0) {
+    //                filelist = filelist + "|" + fstore.getAt(i).data.name;
+    //            } else { filelist = fstore.getAt(i).data.name; }
+
+    //        }
+    //    }
+    //    Ext.MessageBox.wait("正在生成Word表单，请稍候...", "等待");
+    //    //Ext.Msg.alert("您点击了目录树节点！！！", "您点击了目录树节点！节点ID:" + docNum + "," + title + "," + content+","+filelist);
+    //    Ext.Ajax.request({
+    //        //url: 'SHEPCPlugins/CreateD3',
+    //        url: 'WebApi/Post',
+    //        method: "POST",
+    //        params: {
+    //            //IsUpEdition:是否升版,filelist：文件列表，action：操作命令
+    //            C: "AVEVA.CDMS.SHEPC_Plugins.EnterPoint",A:"CreateD3",
+    //            action: me.winAction, ProjectKeyword: projKeyword,
+    //            docNum: me.docNum, title: title,
+    //            content: content,
+    //            checkList:me.checkList , approvList:me.approvList,
+    //            filelist: filelist, IsUpEdition: "flase",
+    //            sid: localStorage.getItem("sid")
+    //        },
+    //        success: function (response, options) {
+    //            //try {
+    //                //Ext.MessageBox.close();//关闭等待对话框
+    //                //获取数据后，更新窗口
+    //                var res = Ext.JSON.decode(response.responseText, true);
+    //                var state = res.success;
+    //                if (state === true) {
+    //                    var recod = eval(res.data[0]);
+    //                    var projectKeyword = recod.ProjectKeyword;//获取新建的目录id
+    //                    var docKeyword = recod.DocKeyword;//获取联系单文档id
+    //                    var docList = recod.DocList;//获取流程文档列表
+    //                    me.send_create_doc_callback(projectKeyword,docKeyword,docList, true);
+    //                } else {
+    //                    //Ext.MessageBox.close();//关闭等待对话框
+    //                    //Ext.Msg.alert("系统提示", res.msg);
+    //                }
+    //            //} catch (e) { }
+    //        },
+    //        failure: function (response, options) {
+    //            //Ext.MessageBox.close();//关闭等待对话框
+    //            Ext.Msg.alert("系统提示", "连接服务器失败，请尝试重新提交！");
+    //        }
+    //    });
+
+
+    //},
+
+    //创建SQU联系单
+    send_create_SQU: function () {
+        var me = this;
+        me.docNum = me.projectCodeText.value + "-" + me.unitCombo.value + "-" + me.dispatchText.value + "-" + me.receiveCombo.value + "-"
+            + me.professionCombo.value + "-" + me.postCategoryText.value + "-" + me.docNumText.value;
+        var title = me.titleText.value;
+        if (title.indexOf("#") > 0) {
+            Ext.Msg.alert("系统提示", "文件名称中包含非法字符 # 请去掉！");
+            return;
+        }
+        var needreply = me.needreplyCombo.value;//是否需要回复
+        var property = me.propertyCombo.value;//性质
+        var request = me.requestText.value;//回复要求
+        var content = me.contentText.value;
+        var projKeyword = me.projectKeyword;
+        var filelist = "";
+        var fstore = me.filestore;
+        if (fstore.getCount() > 0) {
+            for (var i = 0; i < fstore.getCount() ; i++) {
+                if (i > 0) {
+                    filelist = filelist + "|" + fstore.getAt(i).data.name;
+                } else { filelist = fstore.getAt(i).data.name; }
+
+            }
+        }
+        Ext.MessageBox.wait("正在生成Word表单，请稍候...", "等待");
+        Ext.Ajax.request({
+            //url: 'SHEPCPlugins/CreateSQU',
+            url: 'WebApi/Post',
+            method: "POST",
+            params: {
+                C: "AVEVA.CDMS.SHEPC_Plugins.EnterPoint", A: "CreateSQU",
+                //IsUpEdition:是否升版,filelist：文件列表，action：操作命令
+                action: me.winAction, ProjectKeyword: projKeyword,
+                docNum: me.docNum, title: title,
+                needreply: needreply, property: property, request: request,
+                content: content,
+                checkList: me.checkList, approvList: me.approvList,//aduitList:me.aduitList,
+                filelist: filelist, IsUpEdition: "flase",
+                sid: localStorage.getItem("sid")
+            },
+            success: function (response, options) {
+                //Ext.MessageBox.close();//关闭等待对话框
+                //获取数据后，更新窗口
+                var res = Ext.JSON.decode(response.responseText, true);
+                var state = res.success;
+                if (state === true) {
+                    var recod = eval(res.data[0]);
+                    var projectKeyword = recod.ProjectKeyword;//获取新建的目录id
+
+                    var docKeyword = recod.DocKeyword;//获取联系单文档id
+
+                    me.docList = recod.DocList;//获取流程文档列表
+                    me.newProjectKeyword = recod.ProjectKeyword;//获取新建的目录id
+
+                    Ext.MessageBox.close();//关闭等待对话框
+
+                    if (me.FileUploadButton.uploader.uploader.files.length > 0) {
+                        ////当有附件时，创建DOC文档成功后，上传附件
+                        me.FileUploadButton.uploader.start();
+
+                        Ext.MessageBox.wait("正在上传附件，请稍候...", "等待");
+
+                        var int = window.setInterval(function () {
+                            //上传附件完毕
+                            if (me.uploadCompleteState === true) {
+                                Ext.MessageBox.close();//关闭等待对话框
+                                //处理返回事件
+                                me.send_create_doc_callback(projectKeyword, docKeyword, me.docList, true);
+                                //停止线程
+                                window.clearInterval(int);
+                            }
+                        }, 500);
+                    } else {
+                        //当没有附件时，处理返回事件
+                        me.send_create_doc_callback(projectKeyword, docKeyword, me.docList, true);
+                    }
+
+                } else {
+                    var errmsg = res.msg;
+                    Ext.Msg.alert("错误信息", errmsg);
+                }
+            },
+            failure: function (response, options) {
+                //Ext.MessageBox.close();//关闭等待对话框
+                Ext.Msg.alert("系统提示", "连接服务器失败，请尝试重新提交！");
+            }
+        });
+    },
+
+    //处理服务端创建联系单后的返回事件
+    send_create_doc_callback: function (parentKeyword, docKeyword, docList, closeWin) {
+        var me = this;
+        me.btnIsClick = false;
+        var parentFuctionName = "";//上一级函数名
+        //Ext.MessageBox.show({
+        //    title: '工作流启动',
+        //    msg: '是否启动校审流程？',
+        //    buttons: Ext.MessageBox.YESNO,
+        //    parentFuctionName: parentFuctionName,
+        //    docKeyword: docKeyword,
+        //    buttonText: {
+        //        yes: "是",
+        //        no: "否"
+        //    },
+        //    fn: function (btn, parentFuctionName) {
+        //if (me.btnIsClick === false) {//防止第二次按下
+        //    me.btnIsClick = true;
+        //    if (btn === "yes") {
+        winSQU.close();
+        //启动流程
+        Ext.require('Ext.ux.Common.comm', function () {
+            //参数：doclist,wfKeyword,userlist,callback_fun
+            StartNewWorkFlow(docList, "", me.checkList, function (res,WorkFlowKeyword, CuWorkStateCode) {
+                var strs = me.checkText.value.split("__"); //字符分割 
+                if (me.dispatchText.value != "GEDI" && CuWorkStateCode === "CHECK" && strs.length > 0 && localStorage.getItem("username") === strs[0]) {
+                    //跳转到下一状态
+                    // Ext.require('Ext.ux.Common.comm', function () {
+                    //      GotoNextWorkflowState("提交项目经理", WorkFlowKeyword, "", function () {
+                    //回调函数，通过流程分支
+                    me.refreshWin(parentKeyword, false);
+                    //   });
+                    //  })
+                } else if (me.dispatchText.value === "GEDI" && CuWorkStateCode === "CHECK3" && strs.length > 0 && localStorage.getItem("username") === strs[0]) {
+                    //跳转到下一状态
+                    Ext.require('Ext.ux.Common.comm', function () {
+                        GotoNextWorkflowState("提交总包文控", WorkFlowKeyword, "", function () {
+                            //回调函数，通过流程分支
+                            me.refreshWin(parentKeyword, false);
+                        });
+                    })
+                } else {
+                    //刷新窗口,前面已经关闭了窗口，所以这里不需要再关闭窗口
+                    me.refreshWin(parentKeyword, false);
+                }
+
+            });
+        })
+        //    }
+        //    else {
+
+        //        Ext.Ajax.request({
+        //            //url: 'SHEPCPlugins/SendManualStartMsg',
+        //            url: 'WebApi/Post',
+        //            method: "POST",
+        //            params: {
+        //                C: "AVEVA.CDMS.SHEPC_Plugins.EnterPoint", A: "SendManualStartMsg",
+        //                action: me.winAction, DocKeyword: docKeyword, sid: localStorage.getItem("sid")
+        //            },
+        //            success: function (response, options) {
+        //                //关闭新建联系单窗口并刷新父窗口
+        //                me.refreshWin(parentKeyword, true);
+
+        //                Ext.MessageBox.alert("手动启动工作流提示", "提示：您在手动启动流程时，请将主文件与附件全部选中再启动流程，以免流程结束没有附件");
+        //            }
+        //        });
+        //    }
+        //}
+        //    }
+        //});
+    },
+
+ 
+    //刷新表单，参数:parentKeyword:新建的联系单目录
+    refreshWin: function (parentKeyword, closeWin) {
+        var me = this; var tree = Ext.getCmp(me.mainPanelId).down('treepanel');
+        var viewTreeStore = tree.store;//.getProjectsTreeStore();
+
+        viewTreeStore.load({
+            callback: function (records, options, success) {//添加回调，获取子目录的文件数量
+                if (closeWin)
+                    winSQU.close();
+
+                //展开目录
+                Ext.require('Ext.ux.Common.comm', function () {
+                    Ext.getCmp('contentPanel').down('_mainProjectTree').ExpendProject(parentKeyword);
+                });
+
+            }
+        });
+
+    },
+
+    //获取流水号
+    getRunNum: function () {
+        var me = this;
+        Ext.Ajax.request({
+            //url: 'SHEPCPlugins/GetRunNum',
+            url: 'WebApi/Post',
+            method: "POST",
+            params: {
+                C: "AVEVA.CDMS.SHEPC_Plugins.EnterPoint", A: "GetRunNum",
+                action: me.winAction, ProjectCode: me.projectCodeText.value,
+                Unit: me.unitCombo.value, Send: me.dispatchText.value,
+                Receive: me.receiveCombo.value,
+                Profession: me.professionCombo.value, DocType: me.postCategoryText.value,
+                sid: localStorage.getItem("sid")
+            },
+            success: function (response, options) {
+                //获取数据后，更新窗口
+                var res = Ext.JSON.decode(response.responseText, true);
+                var state = res.success;
+                if (state === true) {
+                    var recod = eval(res.data[0]);
+                    var runNum = recod.RunNum;//获取流水号
+                    me.docNumText.setValue(runNum);
+                } else {
+                    var errmsg = res.msg;
+                    Ext.Msg.alert("错误信息", errmsg);
+                }
+            },
+            failure: function (response, options) {
+                //                Ext.Msg.alert("系统提示", "连接服务器失败，请尝试重新提交！");
+            }
+        });
+    }
+
+
+    //},
+
+});

@@ -1,0 +1,3137 @@
+//ActionScript 3.0
+//  package com
+//    package formatlos
+//      package events
+//        class BitmapDataUnlimitedEvent
+// swfµÄÔ´Âë
+
+package com.formatlos.events 
+{
+    import flash.events.*;
+    
+    public class BitmapDataUnlimitedEvent extends flash.events.Event
+    {
+        public function BitmapDataUnlimitedEvent(arg1:String, arg2:Boolean=false, arg3:Boolean=false)
+        {
+            super(arg1, arg2, arg3);
+            return;
+        }
+
+        public override function clone():flash.events.Event
+        {
+            return new com.formatlos.events.BitmapDataUnlimitedEvent(type, bubbles, cancelable);
+        }
+
+        public static const COMPLETE:String="bitmapDataComplete";
+
+        public static const ERROR:String="bitmapDataError";
+    }
+}
+
+
+//      class BitmapDataUnlimited
+package com.formatlos 
+{
+    import com.formatlos.events.*;
+    import flash.display.*;
+    import flash.events.*;
+    import flash.geom.*;
+    
+    public class BitmapDataUnlimited extends flash.events.EventDispatcher
+    {
+        public function BitmapDataUnlimited()
+        {
+            super();
+            return;
+        }
+
+        public function get bitmapData():flash.display.BitmapData
+        {
+            return this._bitmapData;
+        }
+
+        public function create(arg1:int, arg2:int, arg3:Boolean=true, arg4:uint=16777215):void
+        {
+            var width_:int;
+            var height_:int;
+            var transparent_:Boolean=true;
+            var fillColor_:uint=16777215;
+
+            var loc1:*;
+            width_ = arg1;
+            height_ = arg2;
+            transparent_ = arg3;
+            fillColor_ = arg4;
+            try 
+            {
+                this._bitmapData = new flash.display.BitmapData(width_, height_, transparent_, fillColor_);
+                this.dispatchComplete();
+            }
+            catch (error:ArgumentError)
+            {
+                if (width_ <= 0 || height_ <= 0) 
+                {
+                    throw error;
+                }
+                _transparent = transparent_;
+                _fillColor = fillColor_;
+                _gif = new com.formatlos.Gif(width_, height_, transparent_, fillColor_);
+                _loader = new flash.display.Loader();
+                _loader.contentLoaderInfo.addEventListener(flash.events.Event.COMPLETE, onLoaderComplete);
+                _loader.loadBytes(_gif.bytes);
+            }
+            return;
+        }
+
+        public function draw(arg1:flash.display.IBitmapDrawable, arg2:flash.geom.Matrix=null, arg3:flash.geom.ColorTransform=null, arg4:String=null, arg5:flash.geom.Rectangle=null, arg6:Boolean=false):void
+        {
+            var loc1:*=null;
+            var loc2:*=0;
+            var loc3:*=0;
+            var loc4:*=0;
+            var loc5:*=0;
+            var loc6:*=0;
+            var loc7:*=0;
+            var loc8:*=null;
+            var loc9:*=null;
+            var loc10:*=null;
+            if (arg1 is flash.display.BitmapData) 
+            {
+                loc1 = (arg1 as flash.display.BitmapData).rect.clone();
+            }
+            else if (arg1 is flash.display.DisplayObject) 
+            {
+                loc1 = (arg1 as flash.display.DisplayObject).getBounds(arg1 as flash.display.DisplayObject);
+            }
+            if (loc1) 
+            {
+                loc2 = arg5 ? arg5.x : 0;
+                loc3 = arg5 ? arg5.y : 0;
+                loc4 = arg5 ? arg5.right : this._bitmapData.width;
+                loc5 = arg5 ? arg5.bottom : this._bitmapData.height;
+                loc6 = Math.min(loc1.right, loc4);
+                loc7 = Math.min(loc1.bottom, loc5);
+                loc10 = new flash.geom.Rectangle();
+                if (arg2) 
+                {
+                    loc6 = loc6 * arg2.a;
+                    loc7 = loc7 * arg2.d;
+                }
+                while (loc2 < loc6) 
+                {
+                    while (loc3 < loc7) 
+                    {
+                        loc8 = new flash.geom.Matrix();
+                        if (arg2) 
+                        {
+                            loc8.a = arg2.a;
+                            loc8.d = arg2.d;
+                        }
+                        loc8.translate(-loc2, -loc3);
+                        loc10.width = loc6 - loc2 >= DRAW_LIMIT ? DRAW_LIMIT : loc6 - loc2;
+                        loc10.height = loc7 - loc3 >= DRAW_LIMIT ? DRAW_LIMIT : loc7 - loc3;
+                        if (loc2 == 0 && loc3 == 0) 
+                        {
+                            this._bitmapData.draw(arg1, loc8, arg3, arg4, loc10, arg6);
+                        }
+                        else 
+                        {
+                            if (!loc9) 
+                            {
+                                loc9 = this._bitmapData.clone();
+                            }
+                            loc9.fillRect(loc9.rect, this._transparent ? 0 : this._fillColor);
+                            loc9.draw(arg1, loc8, arg3, arg4, loc10, arg6);
+                            this._bitmapData.copyPixels(loc9, loc9.rect, new flash.geom.Point(loc2, loc3), null, null, true);
+                        }
+                        loc3 = loc3 + DRAW_LIMIT;
+                    }
+                    loc2 = loc2 + DRAW_LIMIT;
+                    loc3 = 0;
+                }
+                if (loc9) 
+                {
+                    loc9.dispose();
+                    loc9 = null;
+                }
+            }
+            return;
+        }
+
+        internal function onLoaderComplete(arg1:flash.events.Event):void
+        {
+            var event:flash.events.Event;
+            var ok:Boolean;
+
+            var loc1:*;
+            event = arg1;
+            ok = true;
+            try 
+            {
+                this._bitmapData = flash.display.Bitmap(this._loader.content).bitmapData.clone();
+                if (!this._transparent) 
+                {
+                    this._bitmapData.fillRect(this._bitmapData.rect, this._fillColor);
+                }
+            }
+            catch (error:ArgumentError)
+            {
+                ok = false;
+                dispatchEvent(new com.formatlos.events.BitmapDataUnlimitedEvent(com.formatlos.events.BitmapDataUnlimitedEvent.ERROR));
+            }
+            this._loader.contentLoaderInfo.removeEventListener(flash.events.Event.COMPLETE, this.onLoaderComplete);
+            this._loader = null;
+            if (ok) 
+            {
+                this.dispatchComplete();
+            }
+            return;
+        }
+
+        internal function dispatchComplete():void
+        {
+            dispatchEvent(new com.formatlos.events.BitmapDataUnlimitedEvent(com.formatlos.events.BitmapDataUnlimitedEvent.COMPLETE));
+            return;
+        }
+
+        internal static const DRAW_LIMIT:uint=4000;
+
+        internal var _loader:flash.display.Loader;
+
+        internal var _gif:com.formatlos.Gif;
+
+        internal var _fillColor:uint;
+
+        internal var _transparent:Boolean;
+
+        internal var _bitmapData:flash.display.BitmapData;
+    }
+}
+
+
+//      class Gif
+package com.formatlos 
+{
+    import flash.utils.*;
+    
+    public class Gif extends Object
+    {
+        public function Gif(arg1:int, arg2:int, arg3:Boolean=false, arg4:uint=4294967295)
+        {
+            super();
+            this._width = arg1;
+            this._height = arg2;
+            this._transparent = arg3;
+            this._fillColor = arg4;
+            this.initialize();
+            return;
+        }
+
+        public function get bytes():flash.utils.ByteArray
+        {
+            return this._binaryGif;
+        }
+
+        internal function initialize():void
+        {
+            this._binaryGif = new flash.utils.ByteArray();
+            this.writeHeader();
+            this.writeLogicalScreenDescriptor();
+            this.writeColorTable();
+            this.writeGraphicControlExtensionBlock();
+            this.writeImageBlock();
+            this.writeTrailer();
+            return;
+        }
+
+        internal function writeHeader():void
+        {
+            this._binaryGif.writeUTFBytes("GIF89a");
+            return;
+        }
+
+        internal function writeLogicalScreenDescriptor():void
+        {
+            this.writeShort(this._width);
+            this.writeShort(this._height);
+            this._binaryGif.writeByte(128 | 112 | 0 | this._colorTableSize);
+            this._binaryGif.writeByte(0);
+            this._binaryGif.writeByte(0);
+            return;
+        }
+
+        internal function writeColorTable():void
+        {
+            this._colorTable = new flash.utils.ByteArray();
+            this._colorTable[0] = this._fillColor >> 16 & 255;
+            this._colorTable[1] = this._fillColor >> 8 & 255;
+            this._colorTable[2] = this._fillColor & 255;
+            this._binaryGif.writeBytes(this._colorTable, 0, this._colorTable.length);
+            var loc1:*=0;
+            var loc2:*=3 * 256 - this._colorTable.length;
+            while (loc1 < loc2) 
+            {
+                this._binaryGif.writeByte(0);
+                ++loc1;
+            }
+            return;
+        }
+
+        internal function writeGraphicControlExtensionBlock():void
+        {
+            var loc1:*=0;
+            var loc2:*=0;
+            this._binaryGif.writeByte(33);
+            this._binaryGif.writeByte(249);
+            this._binaryGif.writeByte(4);
+            if (this._transparent) 
+            {
+                loc1 = 1;
+                loc2 = 2;
+            }
+            else 
+            {
+                loc1 = 0;
+                loc2 = 0;
+            }
+            loc2 = loc2 << 2;
+            this._binaryGif.writeByte(0 | loc2 | 0 | loc1);
+            this.writeShort(0);
+            this._binaryGif.writeByte(this._transparentIndex);
+            this._binaryGif.writeByte(0);
+            return;
+        }
+
+        internal function writeImageBlock():void
+        {
+            this._binaryGif.writeByte(44);
+            this.writeShort(0);
+            this.writeShort(0);
+            this.writeShort(this._width);
+            this.writeShort(this._height);
+            this._binaryGif.writeByte(0);
+            return;
+        }
+
+        internal function writeTrailer():void
+        {
+            this._binaryGif.writeByte(59);
+            return;
+        }
+
+        internal function writeShort(arg1:int):void
+        {
+            this._binaryGif.writeByte(arg1 & 255);
+            this._binaryGif.writeByte(arg1 >> 8 & 255);
+            return;
+        }
+
+        internal var _width:int;
+
+        internal var _height:int;
+
+        internal var _colorTable:flash.utils.ByteArray;
+
+        internal var _colorTableSize:int=7;
+
+        internal var _transparent:Boolean;
+
+        internal var _transparentIndex:int=0;
+
+        internal var _fillColor:uint;
+
+        internal var _binaryGif:flash.utils.ByteArray;
+    }
+}
+
+
+//    package mxi
+//      package image
+//        package events
+//          class ExifParserEvent
+package com.mxi.image.events 
+{
+    import flash.events.*;
+    
+    public class ExifParserEvent extends flash.events.Event
+    {
+        public function ExifParserEvent(arg1:String, arg2:Object)
+        {
+            this.data = arg2;
+            super(arg1);
+            return;
+        }
+
+        public override function clone():flash.events.Event
+        {
+            return new com.mxi.image.events.ExifParserEvent(type, this.data);
+        }
+
+        public static const EXIF_DATA:String="exifdata";
+
+        public static const GPS_DATA:String="gpsdata";
+
+        public var data:Object;
+    }
+}
+
+
+//          class ImageEvent
+package com.mxi.image.events 
+{
+    import flash.events.*;
+    
+    public class ImageEvent extends flash.events.Event
+    {
+        public function ImageEvent(arg1:String, arg2:String=null)
+        {
+            this.code = arg2;
+            super(arg1, false, false);
+            return;
+        }
+
+        public override function clone():flash.events.Event
+        {
+            return new com.mxi.image.events.ImageEvent(type, this.code);
+        }
+
+        public static const COMPLETE:String="imagecomplete";
+
+        public static const ERROR:String="imageerror";
+
+        public static const WRONG_FORMAT:String="-700";
+
+        public static const OUT_OF_MEMORY:String="-701";
+
+        public static const OUT_OF_DIMENSIONS:String="-702";
+
+        public var code:String;
+    }
+}
+
+
+//        class ExifParser
+package com.mxi.image 
+{
+    import com.mxi.*;
+    import flash.events.*;
+    import flash.utils.*;
+    
+    public class ExifParser extends flash.events.EventDispatcher
+    {
+        public function ExifParser()
+        {
+            this.data = new com.mxi.BinaryReader();
+            this.offsets = {"tiffHeader":10};
+            this.tags = {"tiff":{274:"Orientation", 34665:"ExifIFDPointer", 34853:"GPSInfoIFDPointer"}, "exif":{36864:"ExifVersion", 40961:"ColorSpace", 40962:"PixelXDimension", 40963:"PixelYDimension", 36867:"DateTimeOriginal", 33434:"ExposureTime", 33437:"FNumber", 34855:"ISOSpeedRatings", 37377:"ShutterSpeedValue", 37378:"ApertureValue", 37383:"MeteringMode", 37384:"LightSource", 37385:"Flash", 41986:"ExposureMode", 41987:"WhiteBalance", 41990:"SceneCaptureType", 41988:"DigitalZoomRatio", 41992:"Contrast", 41993:"Saturation", 41994:"Sharpness"}, "gps":{0:"GPSVersionID", 1:"GPSLatitudeRef", 2:"GPSLatitude", 3:"GPSLongitudeRef", 4:"GPSLongitude"}};
+            this.tagDescs = {"ColorSpace":{1:"sRGB", 0:"Uncalibrated"}, "MeteringMode":{0:"Unknown", 1:"Average", 2:"CenterWeightedAverage", 3:"Spot", 4:"MultiSpot", 5:"Pattern", 6:"Partial", 255:"Other"}, "LightSource":{1:"Daylight", 2:"Fliorescent", 3:"Tungsten", 4:"Flash", 9:"Fine weather", 10:"Cloudy weather", 11:"Shade", 12:"Daylight fluorescent (D 5700 - 7100K)", 13:"Day white fluorescent (N 4600 -5400K)", 14:"Cool white fluorescent (W 3900 - 4500K)", 15:"White fluorescent (WW 3200 - 3700K)", 17:"Standard light A", 18:"Standard light B", 19:"Standard light C", 20:"D55", 21:"D65", 22:"D75", 23:"D50", 24:"ISO studio tungsten", 255:"Other"}, "Flash":{0:"Flash did not fire.", 1:"Flash fired.", 5:"Strobe return light not detected.", 7:"Strobe return light detected.", 9:"Flash fired, compulsory flash mode", 13:"Flash fired, compulsory flash mode, return light not detected", 15:"Flash fired, compulsory flash mode, return light detected", 16:"Flash did not fire, compulsory flash mode", 24:"Flash did not fire, auto mode", 25:"Flash fired, auto mode", 29:"Flash fired, auto mode, return light not detected", 31:"Flash fired, auto mode, return light detected", 32:"No flash function", 65:"Flash fired, red-eye reduction mode", 69:"Flash fired, red-eye reduction mode, return light not detected", 71:"Flash fired, red-eye reduction mode, return light detected", 73:"Flash fired, compulsory flash mode, red-eye reduction mode", 77:"Flash fired, compulsory flash mode, red-eye reduction mode, return light not detected", 79:"Flash fired, compulsory flash mode, red-eye reduction mode, return light detected", 89:"Flash fired, auto mode, red-eye reduction mode", 93:"Flash fired, auto mode, return light not detected, red-eye reduction mode", 95:"Flash fired, auto mode, return light detected, red-eye reduction mode"}, "ExposureMode":{0:"Auto exposure", 1:"Manual exposure", 2:"Auto bracket"}, "WhiteBalance":{0:"Auto white balance", 1:"Manual white balance"}, "SceneCaptureType":{0:"Standard", 1:"Landscape", 2:"Portrait", 3:"Night scene"}, "Contrast":{0:"Normal", 1:"Soft", 2:"Hard"}, "Saturation":{0:"Normal", 1:"Low saturation", 2:"High saturation"}, "Sharpness":{0:"Normal", 1:"Soft", 2:"Hard"}, "GPSLatitudeRef":{"N":"North latitude", "S":"South latitude"}, "GPSLongitudeRef":{"E":"East longitude", "W":"West longitude"}};
+            super();
+            return;
+        }
+
+        public function init(arg1:flash.utils.ByteArray):Boolean
+        {
+            this.offsets = {"tiffHeader":10};
+            if (!arg1 || !arg1.length) 
+            {
+                return false;
+            }
+            this.data.init(arg1);
+            if (this.data.SHORT(0) === 65505 && this.data.STRING(4, 4).toUpperCase() === "EXIF") 
+            {
+                return this.getIFDOffsets();
+            }
+            return false;
+        }
+
+        public function EXIF():Object
+        {
+            var loc1:*=null;
+            var loc2:*=0;
+            var loc3:*=null;
+            if (!this.offsets["exifIFD"] || this.offsets["exifIFD"] === null) 
+            {
+                return null;
+            }
+            loc1 = this.extractTags(this.offsets["exifIFD"], this.tags.exif);
+            if (loc1.hasOwnProperty("ExifVersion") && loc1.ExifVersion is Array) 
+            {
+                loc2 = 0;
+                loc3 = "";
+                while (loc2 < loc1.ExifVersion.length) 
+                {
+                    loc3 = loc3 + String.fromCharCode(loc1.ExifVersion[loc2]);
+                    ++loc2;
+                }
+                loc1.ExifVersion = loc3;
+            }
+            return loc1;
+        }
+
+        public function GPS():Object
+        {
+            var loc1:*=null;
+            if (!this.offsets["gpsIFD"] || this.offsets["gps"] === null) 
+            {
+                return null;
+            }
+            loc1 = this.extractTags(this.offsets["gpsIFD"], this.tags.gps);
+            if (loc1.hasOwnProperty("GPSVersionID") && loc1.GPSVersionID is Array) 
+            {
+                loc1.GPSVersionID = loc1.GPSVersionID.join(".");
+            }
+            return loc1;
+        }
+
+        public function setExif(arg1:String, arg2:*):Boolean
+        {
+            if (!(arg1 === "PixelXDimension") && !(arg1 === "PixelYDimension")) 
+            {
+                return false;
+            }
+            return this.setTag("exif", arg1, arg2);
+        }
+
+        public function getBinary():flash.utils.ByteArray
+        {
+            return this.data.SEGMENT();
+        }
+
+        internal function isJPEG():Boolean
+        {
+            return this.data.SHORT(0) == 65496;
+        }
+
+        internal function getIFDOffsets():Boolean
+        {
+            var loc1:*=null;
+            var loc2:*=this.offsets.tiffHeader;
+            this.data.II(this.data.SHORT(loc2) == 18761);
+            var loc3:*;
+            loc2 = loc3 = loc2 + 2;
+            if (this.data.SHORT(loc3) !== 42) 
+            {
+                return false;
+            }
+            loc2 = loc3 = loc2 + 2;
+            this.offsets["IFD0"] = this.offsets.tiffHeader + this.data.LONG(loc3);
+            loc1 = this.extractTags(this.offsets["IFD0"], this.tags.tiff);
+            this.offsets["exifIFD"] = "ExifIFDPointer" in loc1 ? this.offsets.tiffHeader + loc1.ExifIFDPointer : null;
+            this.offsets["gpsIFD"] = "GPSInfoIFDPointer" in loc1 ? this.offsets.tiffHeader + loc1.GPSInfoIFDPointer : null;
+            return true;
+        }
+
+        internal function extractTags(arg1:int, arg2:Object):Object
+        {
+            var loc2:*=0;
+            var loc3:*=0;
+            var loc4:*=null;
+            var loc5:*=0;
+            var loc6:*=0;
+            var loc7:*=0;
+            var loc8:*=0;
+            var loc9:*=undefined;
+            var loc1:*=this.data.SHORT(arg1);
+            var loc10:*=[];
+            var loc11:*={};
+            loc2 = 0;
+            while (loc2 < loc1) 
+            {
+                var loc12:*;
+                loc7 = loc12 = arg1 + 12 * loc2 + 2;
+                loc8 = loc12;
+                if (loc4 = arg2[this.data.SHORT(loc8)]) 
+                {
+                    loc8 = loc12 = loc8 + 2;
+                    loc5 = this.data.SHORT(loc12);
+                    loc8 = loc12 = loc8 + 2;
+                    loc6 = this.data.LONG(loc12);
+                    loc8 = loc8 + 4;
+                    loc10 = [];
+                    loc12 = loc5;
+                    switch (loc12) 
+                    {
+                        case 1:
+                        case 7:
+                        {
+                            if (loc6 > 4) 
+                            {
+                                loc8 = this.data.LONG(loc8) + this.offsets.tiffHeader;
+                            }
+                            loc3 = 0;
+                            while (loc3 < loc6) 
+                            {
+                                loc10[loc3] = this.data.BYTE(loc8 + loc3);
+                                ++loc3;
+                            }
+                            break;
+                        }
+                        case 2:
+                        {
+                            if (loc6 > 4) 
+                            {
+                                loc8 = this.data.LONG(loc8) + this.offsets.tiffHeader;
+                            }
+                            loc11[loc4] = this.data.STRING(loc8, (loc6 - 1));
+                        }
+                        case 3:
+                        {
+                            if (loc6 > 2) 
+                            {
+                                loc8 = this.data.LONG(loc8) + this.offsets.tiffHeader;
+                            }
+                            loc3 = 0;
+                            while (loc3 < loc6) 
+                            {
+                                loc10[loc3] = this.data.SHORT(loc8 + loc3 * 2);
+                                ++loc3;
+                            }
+                            break;
+                        }
+                        case 4:
+                        {
+                            if (loc6 > 1) 
+                            {
+                                loc8 = this.data.LONG(loc8) + this.offsets.tiffHeader;
+                            }
+                            loc3 = 0;
+                            while (loc3 < loc6) 
+                            {
+                                loc10[loc3] = this.data.LONG(loc8 + loc3 * 4);
+                                ++loc3;
+                            }
+                            break;
+                        }
+                        case 5:
+                        {
+                            loc8 = this.data.LONG(loc8) + this.offsets.tiffHeader;
+                            loc3 = 0;
+                            while (loc3 < loc6) 
+                            {
+                                loc10[loc3] = this.data.LONG(loc8 + loc3 * 4) / this.data.LONG(loc8 + loc3 * 4 + 4);
+                                ++loc3;
+                            }
+                            break;
+                        }
+                        case 9:
+                        {
+                            loc8 = this.data.LONG(loc8) + this.offsets.tiffHeader;
+                            loc3 = 0;
+                            while (loc3 < loc6) 
+                            {
+                                loc10[loc3] = this.data.SLONG(loc8 + loc3 * 4);
+                                ++loc3;
+                            }
+                            break;
+                        }
+                        case 10:
+                        {
+                            loc8 = this.data.LONG(loc8) + this.offsets.tiffHeader;
+                            loc3 = 0;
+                            while (loc3 < loc6) 
+                            {
+                                loc10[loc3] = this.data.SLONG(loc8 + loc3 * 4) / this.data.SLONG(loc8 + loc3 * 4 + 4);
+                                ++loc3;
+                            }
+                            break;
+                        }
+                    }
+                    loc9 = loc6 != 1 ? loc10 : loc10[0];
+                    if (this.tagDescs.hasOwnProperty(loc4) && !(typeof loc9 == "object")) 
+                    {
+                        loc11[loc4] = this.tagDescs[loc4][loc9];
+                    }
+                    else 
+                    {
+                        loc11[loc4] = loc9;
+                    }
+                }
+                ++loc2;
+            }
+            return loc11;
+        }
+
+        internal function setTag(arg1:String, arg2:*, arg3:*):Boolean
+        {
+            var loc1:*=undefined;
+            var loc2:*=0;
+            var loc3:*=0;
+            var loc5:*=undefined;
+            var loc7:*=null;
+            var loc4:*=0;
+            if (arg2 is String) 
+            {
+                loc7 = this.tags[arg1.toLowerCase()];
+                var loc8:*=0;
+                var loc9:*=loc7;
+                for (loc5 in loc9) 
+                {
+                    if (loc7[loc5] !== arg2) 
+                    {
+                        continue;
+                    }
+                    arg2 = loc5;
+                    break;
+                }
+            }
+            if ((loc1 = this.offsets[arg1.toLowerCase() + "IFD"]) === null) 
+            {
+                return false;
+            }
+            loc2 = this.data.SHORT(loc1);
+            var loc6:*=0;
+            while (loc6 < loc2) 
+            {
+                loc3 = loc1 + 12 * loc6 + 2;
+                if (this.data.SHORT(loc3) == arg2) 
+                {
+                    loc4 = loc3 + 8;
+                    break;
+                }
+                ++loc6;
+            }
+            if (!loc4) 
+            {
+                return false;
+            }
+            this.data.LONG(loc4, arg3);
+            return true;
+        }
+
+        internal var data:com.mxi.BinaryReader;
+
+        internal var offsets:Object;
+
+        internal var tags:Object;
+
+        internal var tagDescs:Object;
+    }
+}
+
+
+//        class Image
+package com.mxi.image 
+{
+    import com.formatlos.*;
+    import com.formatlos.events.*;
+    import com.mxi.*;
+    import com.mxi.image.events.*;
+    import flash.display.*;
+    import flash.events.*;
+    import flash.geom.*;
+    import flash.utils.*;
+    import mx.graphics.codec.*;
+    
+    public class Image extends com.mxi.CleanEventDispatcher
+    {
+        public function Image(arg1:flash.utils.ByteArray)
+        {
+            this._source = arg1;
+            super();
+            return;
+        }
+
+        public function scale(arg1:*=null, arg2:*=null, arg3:*=null):void
+        {
+            var loc1:*=null;
+            var loc2:*=NaN;
+            if (!(loc1 = this._getImageInfo())) 
+            {
+                dispatchEvent(new com.mxi.image.events.ImageEvent(com.mxi.image.events.ImageEvent.ERROR, com.mxi.image.events.ImageEvent.WRONG_FORMAT));
+                return;
+            }
+            if (loc1.width > com.mxi.image.Image.MAX_WIDTH || loc1.height > com.mxi.image.Image.MAX_HEIGHT) 
+            {
+                dispatchEvent(new com.mxi.image.events.ImageEvent(com.mxi.image.events.ImageEvent.ERROR, com.mxi.image.events.ImageEvent.OUT_OF_DIMENSIONS));
+                return;
+            }
+            this._width = arg1 || loc1.width;
+            this._height = arg2 || loc1.height;
+            this._quality = arg3 || 90;
+            if ((loc2 = Math.min(this._width / loc1.width, this._height / loc1.height)) > 1 || loc2 == 1 && !(loc1.type === "JPEG")) 
+            {
+                dispatchEvent(new com.mxi.image.events.ImageEvent(com.mxi.image.events.ImageEvent.COMPLETE));
+                return;
+            }
+            this._loader = new flash.display.Loader();
+            this._loader.contentLoaderInfo.addEventListener(flash.events.Event.COMPLETE, this.onBitmapDataReady);
+            this._loader.loadBytes(this._source);
+            return;
+        }
+
+        protected function _getImageInfo():Object
+        {
+            var loc1:*=null;
+            if (this._info) 
+            {
+                return this._info;
+            }
+            if (com.mxi.image.JPEG.test(this._source)) 
+            {
+                this._image = new com.mxi.image.JPEG(this._source);
+            }
+            else if (com.mxi.image.PNG.test(this._source)) 
+            {
+                this._image = new com.mxi.image.PNG(this._source);
+            }
+            if (this._image) 
+            {
+                this._info = this._image.info();
+                if (this._info) 
+                {
+                    this._info["type"] = flash.utils.getQualifiedClassName(this._image).replace(new RegExp("^.*::"), "");
+                }
+            }
+            return this._info;
+        }
+
+        protected function onBitmapDataReady(arg1:flash.events.Event):void
+        {
+            var e:flash.events.Event;
+            var bitmapSource:flash.display.IBitmapDrawable;
+            var output:flash.display.BitmapData;
+            var width:Number;
+            var height:Number;
+            var scale:Number;
+            var prepareBitmap:Function;
+            var outputScale:Function;
+
+            var loc1:*;
+            bitmapSource = null;
+            output = null;
+            width = NaN;
+            height = NaN;
+            scale = NaN;
+            e = arg1;
+            this._loader.contentLoaderInfo.removeEventListener(flash.events.Event.COMPLETE, this.onBitmapDataReady);
+            bitmapSource = e.target.content as flash.display.IBitmapDrawable;
+            width = this._info.width;
+            height = this._info.height;
+            scale = Math.min(this._width / width, this._height / height);
+            this._width = Math.round(width * scale);
+            this._height = Math.round(height * scale);
+            prepareBitmap = function (arg1:Number, arg2:Number, arg3:Function):void
+            {
+                var width:Number;
+                var height:Number;
+                var callback:Function;
+                var bitmapCreator:com.formatlos.BitmapDataUnlimited;
+
+                var loc1:*;
+                bitmapCreator = null;
+                width = arg1;
+                height = arg2;
+                callback = arg3;
+                bitmapCreator = new com.formatlos.BitmapDataUnlimited();
+                bitmapCreator.addEventListener(com.formatlos.events.BitmapDataUnlimitedEvent.COMPLETE, function (arg1:com.formatlos.events.BitmapDataUnlimitedEvent):void
+                {
+                    callback(bitmapCreator.bitmapData);
+                    return;
+                })
+                bitmapCreator.addEventListener(com.formatlos.events.BitmapDataUnlimitedEvent.ERROR, function (arg1:com.formatlos.events.BitmapDataUnlimitedEvent):void
+                {
+                    dispatchEvent(new com.mxi.image.events.ImageEvent(com.mxi.image.events.ImageEvent.ERROR, com.mxi.image.events.ImageEvent.OUT_OF_MEMORY));
+                    return;
+                })
+                bitmapCreator.create(width, height, true);
+                return;
+            }
+            outputScale = function (arg1:Number, arg2:Number):void
+            {
+                var width:Number;
+                var height:Number;
+
+                var loc1:*;
+                width = arg1;
+                height = arg2;
+                prepareBitmap(width, height, function (arg1:flash.display.BitmapData):void
+                {
+                    var loc1:*=NaN;
+                    var loc2:*=null;
+                    loc1 = Math.min(width / output.width, height / output.height);
+                    loc2 = new flash.geom.Matrix();
+                    loc2.scale(loc1, loc1);
+                    arg1.draw(output, loc2, null, null, null, true);
+                    output.dispose();
+                    output = arg1;
+                    return;
+                })
+                return;
+            }
+            prepareBitmap(width, height, function (arg1:flash.display.BitmapData):void
+            {
+                var bitmapData:flash.display.BitmapData;
+                var headers:Array;
+                var exifParser:com.mxi.image.ExifParser;
+
+                var loc1:*;
+                headers = null;
+                exifParser = null;
+                bitmapData = arg1;
+                output = bitmapData;
+                output.draw(bitmapSource, null, null, null, null, true);
+                while (output.width / 2 > _width) 
+                {
+                    outputScale(output.width / 2, output.height / 2);
+                }
+                outputScale(_width, _height);
+                if (_info.type != "JPEG") 
+                {
+                    imageData = new mx.graphics.codec.PNGEncoder().encode(output);
+                }
+                else 
+                {
+                    imageData = new mx.graphics.codec.JPEGEncoder(_quality).encode(output);
+                    _image.extractHeaders();
+                    headers = _image.getHeaders("exif");
+                    if (headers.length) 
+                    {
+                        exifParser = new com.mxi.image.ExifParser();
+                        if (exifParser.init(headers[0])) 
+                        {
+                            exifParser.setExif("PixelXDimension", _width);
+                            exifParser.setExif("PixelYDimension", _height);
+                            dispatchEvent(new com.mxi.image.events.ExifParserEvent(com.mxi.image.events.ExifParserEvent.EXIF_DATA, exifParser.EXIF()));
+                            dispatchEvent(new com.mxi.image.events.ExifParserEvent(com.mxi.image.events.ExifParserEvent.GPS_DATA, exifParser.GPS()));
+                            _image.setHeaders("exif", exifParser.getBinary());
+                            try 
+                            {
+                                imageData = _image.insertHeaders(imageData);
+                            }
+                            catch (e:Error)
+                            {
+                            };
+                        }
+                    }
+                }
+                dispatchEvent(new com.mxi.image.events.ImageEvent(com.mxi.image.events.ImageEvent.COMPLETE));
+                return;
+            })
+            return;
+        }
+
+        public static const MAX_WIDTH:uint=8191;
+
+        public static const MAX_HEIGHT:uint=8191;
+
+        internal var _source:flash.utils.ByteArray;
+
+        internal var _info:Object=null;
+
+        internal var _width:Number;
+
+        internal var _height:Number;
+
+        internal var _quality:Number;
+
+        internal var _loader:flash.display.Loader;
+
+        internal var _image:*;
+
+        public var imageData:flash.utils.ByteArray;
+    }
+}
+
+
+//        class JPEG
+package com.mxi.image 
+{
+    import com.mxi.*;
+    import flash.utils.*;
+    
+    public class JPEG extends Object
+    {
+        public function JPEG(arg1:flash.utils.ByteArray)
+        {
+            this._markers = {65505:{"app":"EXIF", "name":"APP1", "signature":"Exif"}, 65506:{"app":"ICC", "name":"APP2", "signature":"ICC_PROFILE"}, 65517:{"app":"IPTC", "name":"APP13", "signature":"Photoshop 3.0"}};
+            this._headers = [];
+            super();
+            this._br = new com.mxi.BinaryReader();
+            this._br.init(arg1);
+            return;
+        }
+
+        public function info():Object
+        {
+            var loc2:*=0;
+            var loc3:*=0;
+            var loc1:*=0;
+            while (loc1 <= this._br.length) 
+            {
+                var loc4:*;
+                loc1 = loc4 = loc1 + 2;
+                loc2 = this._br.SHORT(loc4);
+                if (loc2 >= 65472 && loc2 <= 65475) 
+                {
+                    loc1 = loc1 + 5;
+                    loc1 = loc4 = loc1 + 2;
+                    return {"height":this._br.SHORT(loc1), "width":this._br.SHORT(loc4)};
+                }
+                loc1 = loc4 = loc1 + 2;
+                loc3 = this._br.SHORT(loc4);
+                loc1 = loc1 + (loc3 - 2);
+            }
+            return null;
+        }
+
+        public function extractHeaders():Array
+        {
+            var loc1:*=0;
+            var loc2:*=0;
+            var loc3:*=0;
+            loc1 = 2;
+            while (loc1 <= this._br.length) 
+            {
+                loc2 = this._br.SHORT(loc1);
+                if (loc2 >= 65488 && loc2 <= 65495) 
+                {
+                    loc1 = loc1 + 2;
+                    continue;
+                }
+                if (loc2 === 65498 || loc2 === 65497) 
+                {
+                    break;
+                }
+                loc3 = this._br.SHORT(loc1 + 2) + 2;
+                if (this._markers[loc2] && this._br.STRING(loc1 + 4, this._markers[loc2].signature.length) === this._markers[loc2].signature) 
+                {
+                    this._headers.push({"hex":loc2, "app":this._markers[loc2].app.toUpperCase(), "name":this._markers[loc2].name.toUpperCase(), "start":loc1, "length":loc3, "segment":this._br.SEGMENT(loc1, loc3)});
+                }
+                loc1 = loc1 + loc3;
+            }
+            return this._headers;
+        }
+
+        public function getHeaders(arg1:String=null):Array
+        {
+            var loc1:*=null;
+            var loc2:*=[];
+            loc1 = this._headers.length ? this._headers : this.extractHeaders();
+            if (!arg1) 
+            {
+                return loc1;
+            }
+            var loc3:*=0;
+            var loc4:*=loc1.length;
+            while (loc3 < loc4) 
+            {
+                if (loc1[loc3].app === arg1.toUpperCase()) 
+                {
+                    loc2.push(loc1[loc3].segment);
+                }
+                ++loc3;
+            }
+            return loc2;
+        }
+
+        public function setHeaders(arg1:String, arg2:*):void
+        {
+            var loc1:*=[];
+            if (arg2 is flash.utils.ByteArray) 
+            {
+                loc1.push(arg2);
+            }
+            else 
+            {
+                loc1 = arg2;
+            }
+            var loc2:*=0;
+            var loc3:*=0;
+            var loc4:*=this._headers.length;
+            while (loc2 < loc4) 
+            {
+                if (this._headers[loc2].app === arg1.toUpperCase()) 
+                {
+                    this._headers[loc2].segment = loc1[loc3];
+                    this._headers[loc2].length = loc1[loc3].length;
+                    ++loc3;
+                }
+                if (loc3 >= loc1.length) 
+                {
+                    break;
+                }
+                ++loc2;
+            }
+            return;
+        }
+
+        public function insertHeaders(arg1:flash.utils.ByteArray, arg2:Array=null):flash.utils.ByteArray
+        {
+            var loc1:*=0;
+            var loc3:*=0;
+            var loc4:*=0;
+            var loc2:*=new com.mxi.BinaryReader();
+            if (!arg2 || !arg2.length) 
+            {
+                arg2 = this._headers;
+            }
+            loc2.init(arg1);
+            if (loc2.SHORT(0) !== 65496) 
+            {
+                throw new Error("Invalid JPEG");
+            }
+            if (arg2.length) 
+            {
+                loc1 = loc2.SHORT(2) != 65504 ? 2 : 4 + loc2.SHORT(4);
+                loc3 = 0;
+                loc4 = arg2.length;
+                while (loc3 < loc4) 
+                {
+                    loc2.SEGMENT(loc1, 0, arg2[loc3].segment);
+                    loc1 = loc1 + arg2[loc3].length;
+                    ++loc3;
+                }
+            }
+            return loc2.SEGMENT();
+        }
+
+        public function purge():void
+        {
+            this._br.clear();
+            return;
+        }
+
+        public static function test(arg1:flash.utils.ByteArray):Boolean
+        {
+            var loc1:*=[255, 216];
+            var loc2:*=(loc1.length - 1);
+            while (loc2 >= 0) 
+            {
+                if (arg1[loc2] != loc1[loc2]) 
+                {
+                    return false;
+                }
+                --loc2;
+            }
+            return true;
+        }
+
+        protected var _markers:Object;
+
+        protected var _headers:Array;
+
+        protected var _br:com.mxi.BinaryReader;
+    }
+}
+
+
+//        class PNG
+package com.mxi.image 
+{
+    import com.mxi.*;
+    import flash.utils.*;
+    
+    public class PNG extends Object
+    {
+        public function PNG(arg1:flash.utils.ByteArray)
+        {
+            super();
+            this._br = new com.mxi.BinaryReader();
+            this._br.init(arg1);
+            return;
+        }
+
+        public function info():Object
+        {
+            var loc1:*=null;
+            var loc2:*=0;
+            loc1 = this._getChunkAt(8);
+            if (loc1.type == "IHDR") 
+            {
+                loc2 = loc1.start;
+                var loc3:*;
+                loc2 = loc3 = loc2 + 4;
+                return {"width":this._br.LONG(loc2), "height":this._br.LONG(loc3)};
+            }
+            return null;
+        }
+
+        internal function _getChunkAt(arg1:uint):Object
+        {
+            var loc1:*=0;
+            var loc2:*=null;
+            var loc3:*=0;
+            var loc4:*=0;
+            loc1 = this._br.LONG(arg1);
+            var loc5:*;
+            arg1 = loc5 = arg1 + 4;
+            loc2 = this._br.STRING(loc5, 4);
+            arg1 = loc5 = arg1 + 4;
+            loc3 = loc5;
+            loc4 = this._br.LONG(arg1 + loc1);
+            return {"length":loc1, "type":loc2, "start":loc3, "CRC":loc4};
+        }
+
+        public static function test(arg1:flash.utils.ByteArray):Boolean
+        {
+            var loc1:*=[137, 80, 78, 71, 13, 10, 26, 10];
+            var loc2:*=(loc1.length - 1);
+            while (loc2 >= 0) 
+            {
+                if (arg1[loc2] != loc1[loc2]) 
+                {
+                    return false;
+                }
+                --loc2;
+            }
+            return true;
+        }
+
+        protected var _br:com.mxi.BinaryReader;
+    }
+}
+
+
+//      class BinaryReader
+package com.mxi 
+{
+    import flash.utils.*;
+    
+    public class BinaryReader extends flash.utils.ByteArray
+    {
+        public function BinaryReader()
+        {
+            super();
+            return;
+        }
+
+        public function init(arg1:flash.utils.ByteArray):void
+        {
+            clear();
+            endian = flash.utils.Endian.BIG_ENDIAN;
+            writeBytes(arg1);
+            return;
+        }
+
+        public function II(... rest):*
+        {
+            if (!rest.length) 
+            {
+                return endian != flash.utils.Endian.LITTLE_ENDIAN ? false : true;
+            }
+            endian = rest[0] != true ? flash.utils.Endian.BIG_ENDIAN : flash.utils.Endian.LITTLE_ENDIAN;
+            return;
+        }
+
+        public function SEGMENT(... rest):flash.utils.ByteArray
+        {
+            var loc1:*=new flash.utils.ByteArray();
+            var loc2:*=rest.length;
+            switch (loc2) 
+            {
+                case 1:
+                {
+                    position = rest[0];
+                    readBytes(loc1, 0);
+                    break;
+                }
+                case 2:
+                {
+                    position = rest[0];
+                    readBytes(loc1, 0, rest[1]);
+                    break;
+                }
+                case 3:
+                {
+                    position = rest[0] + rest[1];
+                    readBytes(loc1);
+                    position = rest[0];
+                    writeBytes(rest[2]);
+                    writeBytes(loc1);
+                    break;
+                }
+                default:
+                {
+                    position = 0;
+                    readBytes(loc1, 0, length);
+                }
+            }
+            return loc1;
+        }
+
+        public function BYTE(arg1:int):uint
+        {
+            position = arg1;
+            return readUnsignedByte();
+        }
+
+        public function SHORT(arg1:int):uint
+        {
+            position = arg1;
+            return readUnsignedShort();
+        }
+
+        public function LONG(arg1:int, ... rest):*
+        {
+            position = arg1;
+            if (!rest.length) 
+            {
+                return readUnsignedInt();
+            }
+            writeUnsignedInt(rest[0]);
+            return;
+        }
+
+        public function SLONG(arg1:uint):int
+        {
+            position = arg1;
+            return readInt();
+        }
+
+        public function STRING(arg1:uint, arg2:uint):String
+        {
+            position = arg1;
+            return readUTFBytes(arg2);
+        }
+    }
+}
+
+
+//      class CleanEventDispatcher
+package com.mxi 
+{
+    import flash.events.*;
+    
+    public class CleanEventDispatcher extends flash.events.EventDispatcher
+    {
+        public function CleanEventDispatcher()
+        {
+            this.events = [];
+            super();
+            return;
+        }
+
+        public override function addEventListener(arg1:String, arg2:Function, arg3:Boolean=false, arg4:int=0, arg5:Boolean=false):void
+        {
+            this.events.push({"type":arg1, "callback":arg2});
+            super.addEventListener(arg1, arg2);
+            return;
+        }
+
+        public function removeAllEventListeners():void
+        {
+            var loc1:*=0;
+            var loc2:*=this.events.length;
+            loc1 = 0;
+            while (loc1 < loc2) 
+            {
+                removeEventListener(this.events[loc1].type, this.events[loc1].callback);
+                ++loc1;
+            }
+            this.events = [];
+            return;
+        }
+
+        protected var events:Array;
+    }
+}
+
+
+//    package plupload
+//      class File
+package com.plupload 
+{
+    import com.mxi.image.*;
+    import com.mxi.image.events.*;
+    import flash.events.*;
+    import flash.net.*;
+    import flash.utils.*;
+    
+    public class File extends flash.events.EventDispatcher
+    {
+        public function File(arg1:String, arg2:flash.net.FileReference)
+        {
+            super();
+            this._id = arg1;
+            this._fileRef = arg2;
+            this._size = arg2.size;
+            this._fileName = arg2.name;
+            return;
+        }
+
+        public function get id():String
+        {
+            return this._id;
+        }
+
+        public function get fileName():String
+        {
+            return this._fileName;
+        }
+
+        public function set fileName(arg1:String):void
+        {
+            this._fileName = arg1;
+            return;
+        }
+
+        public function get size():Number
+        {
+            return this._size;
+        }
+
+        public function cancelUpload():void
+        {
+            if (this.canUseSimpleUpload(this._settings)) 
+            {
+                this._fileRef.cancel();
+            }
+            else if (this._urlStream) 
+            {
+                if (this._urlStream.connected) 
+                {
+                    this._removeAllURLStreamListeners();
+                    this._urlStream.close();
+                    this._urlStream = null;
+                }
+            }
+            else 
+            {
+                this._fileRef.cancel();
+                this._fileRef.cancel();
+                this._removeAllListeners();
+            }
+            return;
+        }
+
+        public function upload(arg1:String, arg2:Object):void
+        {
+            this._settings = arg2;
+            if (this.canUseSimpleUpload(arg2)) 
+            {
+                this.simpleUpload(arg1, arg2);
+            }
+            else 
+            {
+                this.advancedUpload(arg1, arg2);
+            }
+            return;
+        }
+
+        public function canUseSimpleUpload(arg1:Object):Boolean
+        {
+            var loc1:*=new Boolean(arg1["multipart"]);
+            var loc2:*=arg1["width"] || arg1["height"] || arg1["quality"];
+            var loc3:*=arg1["chunk_size"] > 0;
+            return (!new RegExp("\\.(jpeg|jpg|png)$", "i").test(this._fileName) || !loc2) && loc1 && !loc3 && !arg1.urlstream_upload && !arg1.headers;
+        }
+
+        public function simpleUpload(arg1:String, arg2:Object):void
+        {
+            var url:String;
+            var settings:Object;
+            var file:com.plupload.File;
+            var request:flash.net.URLRequest;
+            var postData:flash.net.URLVariables;
+            var fileDataName:String;
+            var onProgress:Function;
+            var onUploadComplete:Function;
+            var onIOError:Function;
+            var onSecurityErrorEvent:Function;
+            var removeAllListeners:Function;
+            var key:String;
+
+            var loc1:*;
+            file = null;
+            request = null;
+            postData = null;
+            fileDataName = null;
+            onProgress = null;
+            onUploadComplete = null;
+            onIOError = null;
+            onSecurityErrorEvent = null;
+            key = null;
+            url = arg1;
+            settings = arg2;
+            file = this;
+            removeAllListeners = function ():void
+            {
+                file._fileRef.removeEventListener(flash.events.ProgressEvent.PROGRESS, onProgress);
+                file._fileRef.removeEventListener(flash.events.DataEvent.UPLOAD_COMPLETE_DATA, onUploadComplete);
+                file._fileRef.removeEventListener(flash.events.IOErrorEvent.IO_ERROR, onIOError);
+                file._fileRef.removeEventListener(flash.events.SecurityErrorEvent.SECURITY_ERROR, onSecurityErrorEvent);
+                return;
+            }
+            this._removeAllListeners = removeAllListeners;
+            file._postvars = settings["multipart_params"];
+            file._chunk = 0;
+            file._chunks = 1;
+            postData = new flash.net.URLVariables();
+            file._postvars["name"] = settings["name"];
+            var loc2:*=0;
+            var loc3:*=file._postvars;
+            for (key in loc3) 
+            {
+                if (key == "Filename") 
+                {
+                    continue;
+                }
+                postData[key] = file._postvars[key];
+            }
+            request = new flash.net.URLRequest();
+            request.method = flash.net.URLRequestMethod.POST;
+            request.url = url;
+            request.data = postData;
+            fileDataName = new String(settings["file_data_name"]);
+            onUploadComplete = function (arg1:flash.events.DataEvent):void
+            {
+                removeAllListeners();
+                var loc1:*=new flash.events.ProgressEvent(flash.events.ProgressEvent.PROGRESS, false, false, file._size, file._size);
+                dispatchEvent(loc1);
+                var loc2:*=new com.plupload.UploadChunkEvent(com.plupload.UploadChunkEvent.UPLOAD_CHUNK_COMPLETE_DATA, false, false, arg1.data, file._chunk, file._chunks);
+                var loc3:*;
+                var loc4:*=((loc3 = file)._chunk + 1);
+                loc3._chunk = loc4;
+                dispatchEvent(loc2);
+                dispatchEvent(arg1);
+                return;
+            }
+            file._fileRef.addEventListener(flash.events.DataEvent.UPLOAD_COMPLETE_DATA, onUploadComplete);
+            onIOError = function (arg1:flash.events.IOErrorEvent):void
+            {
+                removeAllListeners();
+                dispatchEvent(arg1);
+                return;
+            }
+            file._fileRef.addEventListener(flash.events.IOErrorEvent.IO_ERROR, onIOError);
+            onSecurityErrorEvent = function (arg1:flash.events.SecurityErrorEvent):void
+            {
+                removeAllListeners();
+                dispatchEvent(arg1);
+                return;
+            }
+            file._fileRef.addEventListener(flash.events.SecurityErrorEvent.SECURITY_ERROR, onSecurityErrorEvent);
+            onProgress = function (arg1:flash.events.ProgressEvent):void
+            {
+                dispatchEvent(arg1);
+                return;
+            }
+            file._fileRef.addEventListener(flash.events.ProgressEvent.PROGRESS, onProgress);
+            file._fileRef.upload(request, fileDataName, false);
+            return;
+        }
+
+        public function advancedUpload(arg1:String, arg2:Object):void
+        {
+            var url:String;
+            var settings:Object;
+            var file:com.plupload.File;
+            var width:int;
+            var height:int;
+            var quality:int;
+            var multipart:Boolean;
+            var chunking:Boolean;
+            var fileDataName:String;
+            var chunk:int;
+            var chunks:int;
+            var chunkSize:int;
+            var postvars:Object;
+            var onComplete:Function;
+            var onIOError:Function;
+            var removeAllListeners:Function;
+
+            var loc1:*;
+            file = null;
+            width = 0;
+            height = 0;
+            quality = 0;
+            multipart = false;
+            chunking = false;
+            fileDataName = null;
+            chunk = 0;
+            chunks = 0;
+            chunkSize = 0;
+            postvars = null;
+            onComplete = null;
+            onIOError = null;
+            url = arg1;
+            settings = arg2;
+            file = this;
+            removeAllListeners = function ():void
+            {
+                file._fileRef.removeEventListener(flash.events.Event.COMPLETE, onComplete);
+                file._fileRef.removeEventListener(flash.events.IOErrorEvent.IO_ERROR, onIOError);
+                return;
+            }
+            this._uploadUrl = url;
+            this._cancelled = false;
+            this._headers = settings.headers;
+            this._mimeType = settings.mime;
+            this._removeAllListeners = removeAllListeners;
+            multipart = new Boolean(settings["multipart"]);
+            fileDataName = new String(settings["file_data_name"]);
+            chunkSize = settings["chunk_size"];
+            chunking = chunkSize > 0;
+            postvars = settings["multipart_params"];
+            chunk = 0;
+            onComplete = function (arg1:flash.events.Event):void
+            {
+                var e:flash.events.Event;
+                var startUpload:Function;
+                var image:com.mxi.image.Image;
+
+                var loc1:*;
+                image = null;
+                e = arg1;
+                removeAllListeners();
+                startUpload = function ():void
+                {
+                    if (chunking) 
+                    {
+                        chunks = Math.ceil(file._size / chunkSize);
+                        if (chunks < 4 && file._size > 1024 * 32) 
+                        {
+                            chunkSize = Math.ceil(file._size / 4);
+                            chunks = 4;
+                        }
+                    }
+                    else 
+                    {
+                        chunkSize = file._size;
+                        chunks = 1;
+                    }
+                    file._multipart = multipart;
+                    file._fileDataName = fileDataName;
+                    file._chunking = chunking;
+                    file._chunk = chunk;
+                    file._chunks = chunks;
+                    file._chunkSize = chunkSize;
+                    file._postvars = postvars;
+                    file.uploadNextChunk();
+                    return;
+                }
+                if (new RegExp("\\.(jpeg|jpg|png)$", "i").test(file._fileName) && (settings["width"] || settings["height"] || settings["quality"])) 
+                {
+                    image = new com.mxi.image.Image(file._fileRef.data);
+                    image.addEventListener(com.mxi.image.events.ImageEvent.COMPLETE, function (arg1:com.mxi.image.events.ImageEvent):void
+                    {
+                        image.removeAllEventListeners();
+                        if (image.imageData) 
+                        {
+                            file._imageData = image.imageData;
+                            file._imageData.position = 0;
+                            file._size = image.imageData.length;
+                        }
+                        startUpload();
+                        return;
+                    })
+                    image.addEventListener(com.mxi.image.events.ImageEvent.ERROR, function (arg1:com.mxi.image.events.ImageEvent):void
+                    {
+                        image.removeAllEventListeners();
+                        file.dispatchEvent(arg1);
+                        return;
+                    })
+                    image.addEventListener(com.mxi.image.events.ExifParserEvent.EXIF_DATA, function (arg1:com.mxi.image.events.ExifParserEvent):void
+                    {
+                        file.dispatchEvent(arg1);
+                        return;
+                    })
+                    image.addEventListener(com.mxi.image.events.ExifParserEvent.GPS_DATA, function (arg1:com.mxi.image.events.ExifParserEvent):void
+                    {
+                        file.dispatchEvent(arg1);
+                        return;
+                    })
+                    image.scale(settings["width"], settings["height"], settings["quality"]);
+                }
+                else 
+                {
+                    startUpload();
+                }
+                return;
+            }
+            this._fileRef.addEventListener(flash.events.Event.COMPLETE, onComplete);
+            onIOError = function (arg1:flash.events.Event):void
+            {
+                removeAllListeners();
+                dispatchEvent(arg1);
+                return;
+            }
+            this._fileRef.addEventListener(flash.events.IOErrorEvent.IO_ERROR, onIOError);
+            this._fileRef.load();
+            return;
+        }
+
+        public function uploadNextChunk():Boolean
+        {
+            var file:com.plupload.File;
+            var fileData:flash.utils.ByteArray;
+            var chunkData:flash.utils.ByteArray;
+            var req:flash.net.URLRequest;
+            var url:String;
+            var onComplete:Function;
+            var onIOError:Function;
+            var onSecurityError:Function;
+            var removeAllEventListeners:Function;
+            var headerName:String;
+            var boundary:String;
+            var dashdash:String;
+            var crlf:String;
+            var multipartBlob:flash.utils.ByteArray;
+            var name:String;
+
+            var loc1:*;
+            file = null;
+            fileData = null;
+            chunkData = null;
+            req = null;
+            url = null;
+            onComplete = null;
+            onIOError = null;
+            onSecurityError = null;
+            headerName = null;
+            boundary = null;
+            dashdash = null;
+            crlf = null;
+            multipartBlob = null;
+            name = null;
+            file = this;
+            removeAllEventListeners = function ():void
+            {
+                file._urlStream.removeEventListener(flash.events.Event.COMPLETE, onComplete);
+                file._urlStream.removeEventListener(flash.events.IOErrorEvent.IO_ERROR, onIOError);
+                file._urlStream.removeEventListener(flash.events.SecurityErrorEvent.SECURITY_ERROR, onSecurityError);
+                return;
+            }
+            this._removeAllURLStreamListeners = removeAllEventListeners;
+            if (this._chunk >= this._chunks) 
+            {
+                if (this._fileRef.data) 
+                {
+                    this._fileRef.data.clear();
+                }
+                this._imageData = null;
+                return false;
+            }
+            chunkData = new flash.utils.ByteArray();
+            if (this._imageData == null) 
+            {
+                fileData = this._fileRef.data;
+            }
+            else 
+            {
+                fileData = this._imageData;
+            }
+            fileData.readBytes(chunkData, 0, fileData.position + this._chunkSize > fileData.length ? fileData.length - fileData.position : this._chunkSize);
+            file._urlStream = null;
+            file._urlStream = new flash.net.URLStream();
+            onComplete = function (arg1:flash.events.Event):void
+            {
+                var loc1:*=file._urlStream.readUTFBytes(file._urlStream.bytesAvailable);
+                var loc2:*=new com.plupload.UploadChunkEvent(com.plupload.UploadChunkEvent.UPLOAD_CHUNK_COMPLETE_DATA, false, false, loc1, file._chunk, file._chunks);
+                var loc4:*;
+                var loc5:*=((loc4 = file)._chunk + 1);
+                loc4._chunk = loc5;
+                dispatchEvent(loc2);
+                var loc3:*=new flash.events.ProgressEvent(flash.events.ProgressEvent.PROGRESS, false, false, fileData.position, file._size);
+                dispatchEvent(loc3);
+                file._urlStream.close();
+                removeAllEventListeners();
+                chunkData.clear();
+                return;
+            }
+            file._urlStream.addEventListener(flash.events.Event.COMPLETE, onComplete);
+            onIOError = function (arg1:flash.events.IOErrorEvent):void
+            {
+                removeAllEventListeners();
+                dispatchEvent(arg1);
+                return;
+            }
+            file._urlStream.addEventListener(flash.events.IOErrorEvent.IO_ERROR, onIOError);
+            onSecurityError = function (arg1:flash.events.SecurityErrorEvent):void
+            {
+                removeAllEventListeners();
+                dispatchEvent(arg1);
+                return;
+            }
+            file._urlStream.addEventListener(flash.events.SecurityErrorEvent.SECURITY_ERROR, onSecurityError);
+            url = this._uploadUrl;
+            if (!this._multipart) 
+            {
+                if (url.indexOf("?") != -1) 
+                {
+                    url = url + "&";
+                }
+                else 
+                {
+                    url = url + "?";
+                }
+                url = url + ("name=" + encodeURIComponent(this._settings["name"]));
+                if (this._chunking) 
+                {
+                    url = url + ("&chunk=" + this._chunk + "&chunks=" + this._chunks);
+                }
+            }
+            req = new flash.net.URLRequest(url);
+            req.method = flash.net.URLRequestMethod.POST;
+            if (this._headers) 
+            {
+                var loc2:*=0;
+                var loc3:*=this._headers;
+                for (headerName in loc3) 
+                {
+                    req.requestHeaders.push(new flash.net.URLRequestHeader(headerName, this._headers[headerName]));
+                }
+            }
+            if (this._multipart) 
+            {
+                boundary = "----pluploadboundary" + new Date().getTime();
+                dashdash = "--";
+                crlf = "\r\n";
+                multipartBlob = new flash.utils.ByteArray();
+                req.requestHeaders.push(new flash.net.URLRequestHeader("Content-Type", "multipart/form-data; boundary=" + boundary));
+                this._postvars["name"] = this._settings["name"];
+                if (this._chunking) 
+                {
+                    this._postvars["chunk"] = this._chunk;
+                    this._postvars["chunks"] = this._chunks;
+                }
+                loc2 = 0;
+                loc3 = this._postvars;
+                for (name in loc3) 
+                {
+                    multipartBlob.writeUTFBytes(dashdash + boundary + crlf + "Content-Disposition: form-data; name=\"" + name + "\"" + crlf + crlf + this._postvars[name] + crlf);
+                }
+                multipartBlob.writeUTFBytes(dashdash + boundary + crlf + "Content-Disposition: form-data; name=\"" + this._fileDataName + "\"; filename=\"" + this._fileName + "\"" + crlf + "Content-Type: " + this._mimeType + crlf + crlf);
+                multipartBlob.writeBytes(chunkData, 0, chunkData.length);
+                multipartBlob.writeUTFBytes(crlf + dashdash + boundary + dashdash + crlf);
+                req.data = multipartBlob;
+            }
+            else 
+            {
+                req.requestHeaders.push(new flash.net.URLRequestHeader("Content-Type", "application/octet-stream"));
+                req.data = chunkData;
+            }
+            flash.utils.setTimeout(function ():void
+            {
+                file._urlStream.load(req);
+                return;
+            }, 1)
+            return true;
+        }
+
+        internal var _fileRef:flash.net.FileReference;
+
+        internal var _urlStream:flash.net.URLStream;
+
+        internal var _cancelled:Boolean;
+
+        internal var _uploadUrl:String;
+
+        internal var _uploadPath:String;
+
+        internal var _mimeType:String;
+
+        internal var _id:String;
+
+        internal var _fileName:String;
+
+        internal var _size:Number;
+
+        internal var _imageData:flash.utils.ByteArray;
+
+        internal var _multipart:Boolean;
+
+        internal var _fileDataName:String;
+
+        internal var _chunking:Boolean;
+
+        internal var _chunk:int;
+
+        internal var _chunks:int;
+
+        internal var _chunkSize:int;
+
+        internal var _postvars:Object;
+
+        internal var _headers:Object;
+
+        internal var _settings:Object;
+
+        internal var _removeAllListeners:Function;
+
+        internal var _removeAllURLStreamListeners:Function;
+    }
+}
+
+
+//      class Plupload
+package com.plupload 
+{
+    import com.mxi.image.events.*;
+    import flash.display.*;
+    import flash.errors.*;
+    import flash.events.*;
+    import flash.external.*;
+    import flash.net.*;
+    import flash.utils.*;
+    
+    public class Plupload extends flash.display.Sprite
+    {
+        public function Plupload()
+        {
+            this.fileRefArray = [];
+            super();
+            if (stage) 
+            {
+                this.init();
+            }
+            else 
+            {
+                addEventListener(flash.events.Event.ADDED_TO_STAGE, this.init);
+            }
+            return;
+        }
+
+        internal function init(arg1:flash.events.Event=null):void
+        {
+            removeEventListener(flash.events.Event.ADDED_TO_STAGE, this.init);
+            this.id = this.stage.loaderInfo.parameters["id"];
+            this.fileRefList = new flash.net.FileReferenceList();
+            this.fileRefList.addEventListener(flash.events.Event.CANCEL, this.cancelEvent);
+            this.fileRefList.addEventListener(flash.events.Event.SELECT, this.selectEvent);
+            this.initSingleFileReference();
+            this.files = new flash.utils.Dictionary();
+            this.stage.align = flash.display.StageAlign.TOP_LEFT;
+            this.stage.scaleMode = flash.display.StageScaleMode.NO_SCALE;
+            this.clickArea = new flash.display.MovieClip();
+            this.clickArea.graphics.beginFill(0, 0);
+            this.clickArea.graphics.drawRect(0, 0, 1024, 1024);
+            this.clickArea.x = 0;
+            this.clickArea.y = 0;
+            this.clickArea.width = 1024;
+            this.clickArea.height = 1024;
+            this.clickArea.graphics.endFill();
+            this.clickArea.buttonMode = true;
+            this.clickArea.useHandCursor = true;
+            addChild(this.clickArea);
+            this.clickArea.addEventListener(flash.events.MouseEvent.ROLL_OVER, this.stageEvent);
+            this.clickArea.addEventListener(flash.events.MouseEvent.ROLL_OUT, this.stageEvent);
+            this.clickArea.addEventListener(flash.events.MouseEvent.CLICK, this.stageClickEvent);
+            this.clickArea.addEventListener(flash.events.MouseEvent.MOUSE_DOWN, this.stageEvent);
+            this.clickArea.addEventListener(flash.events.MouseEvent.MOUSE_UP, this.stageEvent);
+            this.clickArea.addEventListener(flash.events.FocusEvent.FOCUS_IN, this.stageEvent);
+            this.clickArea.addEventListener(flash.events.FocusEvent.FOCUS_OUT, this.stageEvent);
+            flash.external.ExternalInterface.addCallback("disableBrowse", this.disableBrowse);
+            flash.external.ExternalInterface.addCallback("uploadFile", this.uploadFile);
+            flash.external.ExternalInterface.addCallback("removeFile", this.removeFile);
+            flash.external.ExternalInterface.addCallback("cancelUpload", this.cancelUpload);
+            flash.external.ExternalInterface.addCallback("clearQueue", this.clearFiles);
+            flash.external.ExternalInterface.addCallback("setFileFilters", this.setFileFilters);
+            flash.external.ExternalInterface.addCallback("uploadNextChunk", this.uploadNextChunk);
+            this.fireEvent("Init");
+            return;
+        }
+
+        internal function initSingleFileReference():void
+        {
+            if (this.fileRef) 
+            {
+                this.fileRef = null;
+            }
+            this.fileRef = new flash.net.FileReference();
+            this.fileRef.addEventListener(flash.events.Event.CANCEL, this.cancelEvent);
+            this.fileRef.addEventListener(flash.events.Event.SELECT, this.selectEvent);
+            return;
+        }
+
+        internal function cancelEvent(arg1:flash.events.Event):void
+        {
+            this.fireEvent("CancelSelect");
+            return;
+        }
+
+        internal function selectEvent(arg1:flash.events.Event):void
+        {
+            var e:flash.events.Event;
+            var selectedFiles:Array;
+            var files:flash.utils.Dictionary;
+            var processFile:Function;
+            var i:Number;
+
+            var loc1:*;
+            selectedFiles = null;
+            files = null;
+            i = NaN;
+            e = arg1;
+            processFile = function (arg1:com.plupload.File):void
+            {
+                var file:com.plupload.File;
+
+                var loc1:*;
+                file = arg1;
+                file.addEventListener(flash.events.ProgressEvent.PROGRESS, function (arg1:flash.events.ProgressEvent):void
+                {
+                    var loc1:*=arg1.target as com.plupload.File;
+                    fireEvent("UploadProcess", {"id":loc1.id, "loaded":arg1.bytesLoaded, "size":arg1.bytesTotal});
+                    return;
+                })
+                file.addEventListener(flash.events.IOErrorEvent.IO_ERROR, function (arg1:flash.events.IOErrorEvent):void
+                {
+                    var loc1:*=arg1.target as com.plupload.File;
+                    fireEvent("IOError", {"id":loc1.id, "message":arg1.text.replace(new RegExp("\\\\", "g"), "\\\\")});
+                    return;
+                })
+                file.addEventListener(flash.events.SecurityErrorEvent.SECURITY_ERROR, function (arg1:flash.events.SecurityErrorEvent):void
+                {
+                    var loc1:*=arg1.target as com.plupload.File;
+                    fireEvent("SecurityError", {"id":loc1.id, "message":arg1.text.replace(new RegExp("\\\\", "g"), "\\\\")});
+                    return;
+                })
+                file.addEventListener(com.mxi.image.events.ExifParserEvent.EXIF_DATA, function (arg1:com.mxi.image.events.ExifParserEvent):void
+                {
+                    var loc1:*=arg1.target as com.plupload.File;
+                    fireEvent("ExifData", {"id":loc1.id, "data":arg1.data});
+                    return;
+                })
+                file.addEventListener(com.mxi.image.events.ExifParserEvent.GPS_DATA, function (arg1:com.mxi.image.events.ExifParserEvent):void
+                {
+                    var loc1:*=arg1.target as com.plupload.File;
+                    fireEvent("GpsData", {"id":loc1.id, "data":arg1.data});
+                    return;
+                })
+                file.addEventListener(com.mxi.image.events.ImageEvent.ERROR, function (arg1:com.mxi.image.events.ImageEvent):void
+                {
+                    var loc1:*=arg1.target as com.plupload.File;
+                    fireEvent("ImageError", {"id":loc1.id, "code":arg1.code});
+                    return;
+                })
+                file.addEventListener(flash.events.DataEvent.UPLOAD_COMPLETE_DATA, function (arg1:flash.events.DataEvent):void
+                {
+                    var loc1:*=arg1.target as com.plupload.File;
+                    fireEvent("UploadComplete", {"id":loc1.id, "text":arg1.text.replace(new RegExp("\\\\", "g"), "\\\\")});
+                    return;
+                })
+                file.addEventListener(com.plupload.UploadChunkEvent.UPLOAD_CHUNK_COMPLETE_DATA, function (arg1:com.plupload.UploadChunkEvent):void
+                {
+                    var loc1:*=arg1.target as com.plupload.File;
+                    fireEvent("UploadChunkComplete", {"id":loc1.id, "text":arg1.text.replace(new RegExp("\\\\", "g"), "\\\\"), "chunk":arg1.chunk, "chunks":arg1.chunks});
+                    return;
+                })
+                files[file.id] = file;
+                selectedFiles.push({"id":file.id, "name":file.fileName, "size":file.size, "loaded":0});
+                return;
+            }
+            selectedFiles = [];
+            files = this.files;
+            if (this.multipleFiles) 
+            {
+                i = 0;
+                while (i < this.fileRefList.fileList.length) 
+                {
+                    var loc2:*;
+                    var loc3:*=((loc2 = this).idCounter + 1);
+                    loc2.idCounter = loc3;
+                    processFile(new com.plupload.File("file_" + (loc2 = this).idCounter, this.fileRefList.fileList[i]));
+                    ++i;
+                }
+            }
+            else 
+            {
+                loc3 = ((loc2 = this).idCounter + 1);
+                loc2.idCounter = loc3;
+                processFile(new com.plupload.File("file_" + (loc2 = this).idCounter, this.fileRef));
+                this.fileRefArray.push(this.fileRef);
+                this.initSingleFileReference();
+            }
+            this.fireEvent("SelectFiles", selectedFiles);
+            return;
+        }
+
+        internal function stageEvent(arg1:flash.events.Event):void
+        {
+            this.fireEvent("StageEvent:" + arg1.type);
+            return;
+        }
+
+        internal function stageClickEvent(arg1:flash.events.Event):void
+        {
+            var e:flash.events.Event;
+            var filters:Array;
+            var i:int;
+
+            var loc1:*;
+            i = 0;
+            e = arg1;
+            filters = [];
+            if (this._disabled) 
+            {
+                return;
+            }
+            if (this.fileFilters != null) 
+            {
+                i = 0;
+                while (i < this.fileFilters.length) 
+                {
+                    filters.push(new flash.net.FileFilter(this.fileFilters[i].title, "*." + this.fileFilters[i].extensions.replace(new RegExp(",", "g"), ";*."), this.fileFilters[i].mac_types));
+                    ++i;
+                }
+            }
+            try 
+            {
+                if (this.multipleFiles) 
+                {
+                    if (filters.length > 0) 
+                    {
+                        this.fileRefList.browse(filters);
+                    }
+                    else 
+                    {
+                        this.fileRefList.browse();
+                    }
+                }
+                else if (filters.length > 0) 
+                {
+                    this.fileRef.browse(filters);
+                }
+                else 
+                {
+                    this.fileRef.browse();
+                }
+            }
+            catch (ex1:flash.errors.IllegalOperationError)
+            {
+                this.fireEvent("SelectError", ex1.message);
+            }
+            catch (ex2:ArgumentError)
+            {
+                this.fireEvent("SelectError", ex2.message);
+            }
+            return;
+        }
+
+        internal function disableBrowse(arg1:Boolean=true):void
+        {
+            this._disabled = arg1;
+            return;
+        }
+
+        internal function uploadFile(arg1:String, arg2:String, arg3:Object):void
+        {
+            var loc1:*;
+            if (loc1 = this.files[arg1] as com.plupload.File) 
+            {
+                this.currentFile = loc1;
+                loc1.upload(arg2, arg3);
+            }
+            return;
+        }
+
+        internal function uploadNextChunk():Boolean
+        {
+            if (this.currentFile) 
+            {
+                return this.currentFile.uploadNextChunk();
+            }
+            return false;
+        }
+
+        internal function removeFile(arg1:String):void
+        {
+            if (this.files[arg1] != null) 
+            {
+                delete this.files[arg1];
+            }
+            return;
+        }
+
+        internal function cancelUpload():void
+        {
+            if (this.currentFile) 
+            {
+                this.currentFile.cancelUpload();
+            }
+            return;
+        }
+
+        internal function clearFiles():void
+        {
+            this.files = new flash.utils.Dictionary();
+            return;
+        }
+
+        internal function setFileFilters(arg1:Array, arg2:Boolean):void
+        {
+            this.fileFilters = arg1;
+            this.multipleFiles = arg2;
+            return;
+        }
+
+        internal function fireEvent(arg1:String, arg2:Object=null):void
+        {
+            flash.external.ExternalInterface.call("plupload.flash.trigger", this.id, arg1, arg2);
+            return;
+        }
+
+        public static function debug(arg1:String):void
+        {
+            flash.external.ExternalInterface.call("console.log", arg1);
+            return;
+        }
+
+        internal var clickArea:flash.display.MovieClip;
+
+        internal var fileRefList:flash.net.FileReferenceList;
+
+        internal var files:flash.utils.Dictionary;
+
+        internal var idCounter:int=0;
+
+        internal var currentFile:com.plupload.File;
+
+        internal var id:String;
+
+        internal var fileFilters:Array;
+
+        internal var multipleFiles:Boolean;
+
+        internal var fileRefArray:Array;
+
+        internal var fileRef:flash.net.FileReference;
+
+        internal var _disabled:Boolean=false;
+    }
+}
+
+
+//      class UploadChunkEvent
+package com.plupload 
+{
+    import flash.events.*;
+    
+    public class UploadChunkEvent extends flash.events.DataEvent
+    {
+        public function UploadChunkEvent(arg1:String, arg2:Boolean, arg3:Boolean, arg4:String, arg5:int, arg6:int)
+        {
+            super(arg1, arg2, arg3, arg4);
+            this._chunk = arg5;
+            this._chunks = arg6;
+            return;
+        }
+
+        public function get chunk():int
+        {
+            return this._chunk;
+        }
+
+        public function get chunks():int
+        {
+            return this._chunks;
+        }
+
+        public static const UPLOAD_CHUNK_COMPLETE_DATA:String="uploadchunk";
+
+        internal var _chunk:int;
+
+        internal var _chunks:int;
+    }
+}
+
+
+//  package mx
+//    package core
+//      namespace mx_internal
+package mx.core 
+{
+    public namespace mx_internal="http://www.adobe.com/2006/flex/mx/internal";
+}
+
+
+//    package graphics
+//      package codec
+//        class IImageEncoder
+package mx.graphics.codec 
+{
+    import flash.display.*;
+    import flash.utils.*;
+    
+    public interface IImageEncoder
+    {
+        function get contentType():String;
+
+        function encode(arg1:flash.display.BitmapData):flash.utils.ByteArray;
+
+        function encodeByteArray(arg1:flash.utils.ByteArray, arg2:int, arg3:int, arg4:Boolean=true):flash.utils.ByteArray;
+    }
+}
+
+
+//        class JPEGEncoder
+package mx.graphics.codec 
+{
+    import flash.display.*;
+    import flash.utils.*;
+    import mx.core.*;
+    
+    use namespace mx_internal;
+    
+    public class JPEGEncoder extends Object implements mx.graphics.codec.IImageEncoder
+    {
+        public function JPEGEncoder(arg1:Number=50)
+        {
+            this.category = new Array(65535);
+            this.bitcode = new Array(65535);
+            this.YTable = new Array(64);
+            this.UVTable = new Array(64);
+            this.fdtbl_Y = new Array(64);
+            this.fdtbl_UV = new Array(64);
+            this.DU = new Array(64);
+            this.YDU = new Array(64);
+            this.UDU = new Array(64);
+            this.VDU = new Array(64);
+            super();
+            if (arg1 <= 0) 
+            {
+                arg1 = 1;
+            }
+            if (arg1 > 100) 
+            {
+                arg1 = 100;
+            }
+            var loc1:*=0;
+            if (arg1 < 50) 
+            {
+                loc1 = int(5000 / arg1);
+            }
+            else 
+            {
+                loc1 = int(200 - arg1 * 2);
+            }
+            this.initHuffmanTbl();
+            this.initCategoryNumber();
+            this.initQuantTables(loc1);
+            return;
+        }
+
+        internal function internalEncode(arg1:Object, arg2:int, arg3:int, arg4:Boolean=true):flash.utils.ByteArray
+        {
+            var loc7:*=0;
+            var loc8:*=null;
+            var loc1:*=arg1 as flash.display.BitmapData;
+            var loc2:*=arg1 as flash.utils.ByteArray;
+            this.byteout = new flash.utils.ByteArray();
+            this.bytenew = 0;
+            this.bytepos = 7;
+            this.writeWord(65496);
+            this.writeAPP0();
+            this.writeDQT();
+            this.writeSOF0(arg2, arg3);
+            this.writeDHT();
+            this.writeSOS();
+            var loc3:*=0;
+            var loc4:*=0;
+            var loc5:*=0;
+            this.bytenew = 0;
+            this.bytepos = 7;
+            var loc6:*=0;
+            while (loc6 < arg3) 
+            {
+                loc7 = 0;
+                while (loc7 < arg2) 
+                {
+                    this.RGB2YUV(loc1, loc2, loc7, loc6, arg2, arg3);
+                    loc3 = this.processDU(this.YDU, this.fdtbl_Y, loc3, this.YDC_HT, this.YAC_HT);
+                    loc4 = this.processDU(this.UDU, this.fdtbl_UV, loc4, this.UVDC_HT, this.UVAC_HT);
+                    loc5 = this.processDU(this.VDU, this.fdtbl_UV, loc5, this.UVDC_HT, this.UVAC_HT);
+                    loc7 = loc7 + 8;
+                }
+                loc6 = loc6 + 8;
+            }
+            if (this.bytepos >= 0) 
+            {
+                (loc8 = new BitString()).len = this.bytepos + 1;
+                loc8.val = (1 << this.bytepos + 1 - 1);
+                this.writeBits(loc8);
+            }
+            this.writeWord(65497);
+            return this.byteout;
+        }
+
+        internal function initQuantTables(arg1:int):void
+        {
+            var loc2:*=NaN;
+            var loc7:*=0;
+            var loc1:*=0;
+            var loc3:*=[16, 11, 10, 16, 24, 40, 51, 61, 12, 12, 14, 19, 26, 58, 60, 55, 14, 13, 16, 24, 40, 57, 69, 56, 14, 17, 22, 29, 51, 87, 80, 62, 18, 22, 37, 56, 68, 109, 103, 77, 24, 35, 55, 64, 81, 104, 113, 92, 49, 64, 78, 87, 103, 121, 120, 101, 72, 92, 95, 98, 112, 100, 103, 99];
+            loc1 = 0;
+            while (loc1 < 64) 
+            {
+                loc2 = Math.floor((loc3[loc1] * arg1 + 50) / 100);
+                if (loc2 < 1) 
+                {
+                    loc2 = 1;
+                }
+                else if (loc2 > 255) 
+                {
+                    loc2 = 255;
+                }
+                this.YTable[this.ZigZag[loc1]] = loc2;
+                ++loc1;
+            }
+            var loc4:*=[17, 18, 24, 47, 99, 99, 99, 99, 18, 21, 26, 66, 99, 99, 99, 99, 24, 26, 56, 99, 99, 99, 99, 99, 47, 66, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99];
+            loc1 = 0;
+            while (loc1 < 64) 
+            {
+                loc2 = Math.floor((loc4[loc1] * arg1 + 50) / 100);
+                if (loc2 < 1) 
+                {
+                    loc2 = 1;
+                }
+                else if (loc2 > 255) 
+                {
+                    loc2 = 255;
+                }
+                this.UVTable[this.ZigZag[loc1]] = loc2;
+                ++loc1;
+            }
+            var loc5:*=[1, 1.387039845, 1.306562965, 1.175875602, 1, 0.785694958, 0.5411961, 0.275899379];
+            loc1 = 0;
+            var loc6:*=0;
+            while (loc6 < 8) 
+            {
+                loc7 = 0;
+                while (loc7 < 8) 
+                {
+                    this.fdtbl_Y[loc1] = 1 / (this.YTable[this.ZigZag[loc1]] * loc5[loc6] * loc5[loc7] * 8);
+                    this.fdtbl_UV[loc1] = 1 / (this.UVTable[this.ZigZag[loc1]] * loc5[loc6] * loc5[loc7] * 8);
+                    ++loc1;
+                    ++loc7;
+                }
+                ++loc6;
+            }
+            return;
+        }
+
+        internal function initHuffmanTbl():void
+        {
+            this.YDC_HT = this.computeHuffmanTbl(this.std_dc_luminance_nrcodes, this.std_dc_luminance_values);
+            this.UVDC_HT = this.computeHuffmanTbl(this.std_dc_chrominance_nrcodes, this.std_dc_chrominance_values);
+            this.YAC_HT = this.computeHuffmanTbl(this.std_ac_luminance_nrcodes, this.std_ac_luminance_values);
+            this.UVAC_HT = this.computeHuffmanTbl(this.std_ac_chrominance_nrcodes, this.std_ac_chrominance_values);
+            return;
+        }
+
+        internal function initCategoryNumber():void
+        {
+            var loc1:*=0;
+            var loc2:*=1;
+            var loc3:*=2;
+            var loc4:*=1;
+            while (loc4 <= 15) 
+            {
+                loc1 = loc2;
+                while (loc1 < loc3) 
+                {
+                    this.category[32767 + loc1] = loc4;
+                    this.bitcode[32767 + loc1] = new BitString();
+                    this.bitcode[32767 + loc1].len = loc4;
+                    this.bitcode[32767 + loc1].val = loc1;
+                    ++loc1;
+                }
+                loc1 = -(loc3 - 1);
+                while (loc1 <= -loc2) 
+                {
+                    this.category[32767 + loc1] = loc4;
+                    this.bitcode[32767 + loc1] = new BitString();
+                    this.bitcode[32767 + loc1].len = loc4;
+                    this.bitcode[32767 + loc1].val = (loc3 - 1) + loc1;
+                    ++loc1;
+                }
+                loc2 = loc2 << 1;
+                loc3 = loc3 << 1;
+                ++loc4;
+            }
+            return;
+        }
+
+        internal function computeHuffmanTbl(arg1:Array, arg2:Array):Array
+        {
+            var loc5:*=0;
+            var loc1:*=0;
+            var loc2:*=0;
+            var loc3:*=[];
+            var loc4:*=1;
+            while (loc4 <= 16) 
+            {
+                loc5 = 1;
+                while (loc5 <= arg1[loc4]) 
+                {
+                    loc3[arg2[loc2]] = new BitString();
+                    loc3[arg2[loc2]].val = loc1;
+                    loc3[arg2[loc2]].len = loc4;
+                    ++loc2;
+                    ++loc1;
+                    ++loc5;
+                }
+                loc1 = loc1 * 2;
+                ++loc4;
+            }
+            return loc3;
+        }
+
+        internal function writeDQT():void
+        {
+            var loc1:*=0;
+            this.writeWord(65499);
+            this.writeWord(132);
+            this.writeByte(0);
+            loc1 = 0;
+            while (loc1 < 64) 
+            {
+                this.writeByte(this.YTable[loc1]);
+                ++loc1;
+            }
+            this.writeByte(1);
+            loc1 = 0;
+            while (loc1 < 64) 
+            {
+                this.writeByte(this.UVTable[loc1]);
+                ++loc1;
+            }
+            return;
+        }
+
+        public function encodeByteArray(arg1:flash.utils.ByteArray, arg2:int, arg3:int, arg4:Boolean=true):flash.utils.ByteArray
+        {
+            return this.internalEncode(arg1, arg2, arg3, arg4);
+        }
+
+        public function encode(arg1:flash.display.BitmapData):flash.utils.ByteArray
+        {
+            return this.internalEncode(arg1, arg1.width, arg1.height, arg1.transparent);
+        }
+
+        public function get contentType():String
+        {
+            return CONTENT_TYPE;
+        }
+
+        internal function writeWord(arg1:int):void
+        {
+            this.writeByte(arg1 >> 8 & 255);
+            this.writeByte(arg1 & 255);
+            return;
+        }
+
+        internal function writeByte(arg1:int):void
+        {
+            this.byteout.writeByte(arg1);
+            return;
+        }
+
+        internal function writeBits(arg1:BitString):void
+        {
+            var loc1:*=arg1.val;
+            var loc2:*=(arg1.len - 1);
+            while (loc2 >= 0) 
+            {
+                if (loc1 & uint(1 << loc2)) 
+                {
+                    this.bytenew = this.bytenew | uint(1 << this.bytepos);
+                }
+                --loc2;
+                var loc3:*;
+                var loc4:*=((loc3 = this).bytepos - 1);
+                loc3.bytepos = loc4;
+                if (!(this.bytepos < 0)) 
+                {
+                    continue;
+                }
+                if (this.bytenew != 255) 
+                {
+                    this.writeByte(this.bytenew);
+                }
+                else 
+                {
+                    this.writeByte(255);
+                    this.writeByte(0);
+                }
+                this.bytepos = 7;
+                this.bytenew = 0;
+            }
+            return;
+        }
+
+        internal function fDCTQuant(arg1:Array, arg2:Array):Array
+        {
+            var loc2:*=0;
+            var loc3:*=NaN;
+            var loc4:*=NaN;
+            var loc5:*=NaN;
+            var loc6:*=NaN;
+            var loc7:*=NaN;
+            var loc8:*=NaN;
+            var loc9:*=NaN;
+            var loc10:*=NaN;
+            var loc11:*=NaN;
+            var loc12:*=NaN;
+            var loc13:*=NaN;
+            var loc14:*=NaN;
+            var loc15:*=NaN;
+            var loc16:*=NaN;
+            var loc17:*=NaN;
+            var loc18:*=NaN;
+            var loc19:*=NaN;
+            var loc20:*=NaN;
+            var loc21:*=NaN;
+            var loc1:*=0;
+            loc2 = 0;
+            while (loc2 < 8) 
+            {
+                loc3 = arg1[loc1 + 0] + arg1[loc1 + 7];
+                loc4 = arg1[loc1 + 0] - arg1[loc1 + 7];
+                loc5 = arg1[loc1 + 1] + arg1[loc1 + 6];
+                loc6 = arg1[loc1 + 1] - arg1[loc1 + 6];
+                loc7 = arg1[loc1 + 2] + arg1[loc1 + 5];
+                loc8 = arg1[loc1 + 2] - arg1[loc1 + 5];
+                loc9 = arg1[loc1 + 3] + arg1[loc1 + 4];
+                loc10 = arg1[loc1 + 3] - arg1[loc1 + 4];
+                loc11 = loc3 + loc9;
+                loc12 = loc3 - loc9;
+                loc13 = loc5 + loc7;
+                loc14 = loc5 - loc7;
+                arg1[loc1 + 0] = loc11 + loc13;
+                arg1[loc1 + 4] = loc11 - loc13;
+                loc15 = (loc14 + loc12) * 0.707106781;
+                arg1[loc1 + 2] = loc12 + loc15;
+                arg1[loc1 + 6] = loc12 - loc15;
+                loc11 = loc10 + loc8;
+                loc13 = loc8 + loc6;
+                loc14 = loc6 + loc4;
+                loc16 = (loc11 - loc14) * 0.382683433;
+                loc17 = 0.5411961 * loc11 + loc16;
+                loc18 = 1.306562965 * loc14 + loc16;
+                loc19 = loc13 * 0.707106781;
+                loc20 = loc4 + loc19;
+                loc21 = loc4 - loc19;
+                arg1[loc1 + 5] = loc21 + loc17;
+                arg1[loc1 + 3] = loc21 - loc17;
+                arg1[loc1 + 1] = loc20 + loc18;
+                arg1[loc1 + 7] = loc20 - loc18;
+                loc1 = loc1 + 8;
+                ++loc2;
+            }
+            loc1 = 0;
+            loc2 = 0;
+            while (loc2 < 8) 
+            {
+                loc3 = arg1[loc1 + 0] + arg1[loc1 + 56];
+                loc4 = arg1[loc1 + 0] - arg1[loc1 + 56];
+                loc5 = arg1[loc1 + 8] + arg1[loc1 + 48];
+                loc6 = arg1[loc1 + 8] - arg1[loc1 + 48];
+                loc7 = arg1[loc1 + 16] + arg1[loc1 + 40];
+                loc8 = arg1[loc1 + 16] - arg1[loc1 + 40];
+                loc9 = arg1[loc1 + 24] + arg1[loc1 + 32];
+                loc10 = arg1[loc1 + 24] - arg1[loc1 + 32];
+                loc11 = loc3 + loc9;
+                loc12 = loc3 - loc9;
+                loc13 = loc5 + loc7;
+                loc14 = loc5 - loc7;
+                arg1[loc1 + 0] = loc11 + loc13;
+                arg1[loc1 + 32] = loc11 - loc13;
+                loc15 = (loc14 + loc12) * 0.707106781;
+                arg1[loc1 + 16] = loc12 + loc15;
+                arg1[loc1 + 48] = loc12 - loc15;
+                loc11 = loc10 + loc8;
+                loc13 = loc8 + loc6;
+                loc14 = loc6 + loc4;
+                loc16 = (loc11 - loc14) * 0.382683433;
+                loc17 = 0.5411961 * loc11 + loc16;
+                loc18 = 1.306562965 * loc14 + loc16;
+                loc19 = loc13 * 0.707106781;
+                loc20 = loc4 + loc19;
+                loc21 = loc4 - loc19;
+                arg1[loc1 + 40] = loc21 + loc17;
+                arg1[loc1 + 24] = loc21 - loc17;
+                arg1[loc1 + 8] = loc20 + loc18;
+                arg1[loc1 + 56] = loc20 - loc18;
+                ++loc1;
+                ++loc2;
+            }
+            loc2 = 0;
+            while (loc2 < 64) 
+            {
+                arg1[loc2] = Math.round(arg1[loc2] * arg2[loc2]);
+                ++loc2;
+            }
+            return arg1;
+        }
+
+        internal function processDU(arg1:Array, arg2:Array, arg3:Number, arg4:Array, arg5:Array):Number
+        {
+            var loc3:*=0;
+            var loc7:*=0;
+            var loc8:*=0;
+            var loc9:*=0;
+            var loc1:*=arg5[0];
+            var loc2:*=arg5[240];
+            var loc4:*=this.fDCTQuant(arg1, arg2);
+            loc3 = 0;
+            while (loc3 < 64) 
+            {
+                this.DU[this.ZigZag[loc3]] = loc4[loc3];
+                ++loc3;
+            }
+            var loc5:*=this.DU[0] - arg3;
+            arg3 = this.DU[0];
+            if (loc5 != 0) 
+            {
+                this.writeBits(arg4[this.category[32767 + loc5]]);
+                this.writeBits(this.bitcode[32767 + loc5]);
+            }
+            else 
+            {
+                this.writeBits(arg4[0]);
+            }
+            var loc6:*=63;
+            while (loc6 > 0 && this.DU[loc6] == 0) 
+            {
+                --loc6;
+            }
+            if (loc6 == 0) 
+            {
+                this.writeBits(loc1);
+                return arg3;
+            }
+            loc3 = 1;
+            while (loc3 <= loc6) 
+            {
+                loc7 = loc3;
+                while (this.DU[loc3] == 0 && loc3 <= loc6) 
+                {
+                    ++loc3;
+                }
+                if ((loc8 = loc3 - loc7) >= 16) 
+                {
+                    loc9 = 1;
+                    while (loc9 <= loc8 / 16) 
+                    {
+                        this.writeBits(loc2);
+                        ++loc9;
+                    }
+                    loc8 = int(loc8 & 15);
+                }
+                this.writeBits(arg5[loc8 * 16 + this.category[32767 + this.DU[loc3]]]);
+                this.writeBits(this.bitcode[32767 + this.DU[loc3]]);
+                ++loc3;
+            }
+            if (loc6 != 63) 
+            {
+                this.writeBits(loc1);
+            }
+            return arg3;
+        }
+
+        internal function RGB2YUV(arg1:flash.display.BitmapData, arg2:flash.utils.ByteArray, arg3:int, arg4:int, arg5:int, arg6:int):void
+        {
+            var loc3:*=0;
+            var loc4:*=0;
+            var loc5:*=0;
+            var loc6:*=0;
+            var loc7:*=NaN;
+            var loc8:*=NaN;
+            var loc9:*=NaN;
+            var loc1:*=0;
+            var loc2:*=0;
+            while (loc2 < 8) 
+            {
+                if ((loc3 = arg4 + loc2) >= arg6) 
+                {
+                    --loc3;
+                }
+                loc4 = 0;
+                while (loc4 < 8) 
+                {
+                    if ((loc5 = arg3 + loc4) >= arg5) 
+                    {
+                        --loc5;
+                    }
+                    if (arg1) 
+                    {
+                        loc6 = arg1.getPixel32(loc5, loc3);
+                    }
+                    else 
+                    {
+                        arg2.position = 4 * (loc3 * arg5 + loc5);
+                        loc6 = arg2.readUnsignedInt();
+                    }
+                    loc7 = Number(loc6 >> 16 & 255);
+                    loc8 = Number(loc6 >> 8 & 255);
+                    loc9 = Number(loc6 & 255);
+                    this.YDU[loc1] = 0.299 * loc7 + 0.587 * loc8 + 0.114 * loc9 - 128;
+                    this.UDU[loc1] = -0.16874 * loc7 - 0.33126 * loc8 + 0.5 * loc9;
+                    this.VDU[loc1] = 0.5 * loc7 - 0.41869 * loc8 - 0.08131 * loc9;
+                    ++loc1;
+                    ++loc4;
+                }
+                ++loc2;
+            }
+            return;
+        }
+
+        internal function writeAPP0():void
+        {
+            this.writeWord(65504);
+            this.writeWord(16);
+            this.writeByte(74);
+            this.writeByte(70);
+            this.writeByte(73);
+            this.writeByte(70);
+            this.writeByte(0);
+            this.writeByte(1);
+            this.writeByte(1);
+            this.writeByte(0);
+            this.writeWord(1);
+            this.writeWord(1);
+            this.writeByte(0);
+            this.writeByte(0);
+            return;
+        }
+
+        internal function writeSOF0(arg1:int, arg2:int):void
+        {
+            this.writeWord(65472);
+            this.writeWord(17);
+            this.writeByte(8);
+            this.writeWord(arg2);
+            this.writeWord(arg1);
+            this.writeByte(3);
+            this.writeByte(1);
+            this.writeByte(17);
+            this.writeByte(0);
+            this.writeByte(2);
+            this.writeByte(17);
+            this.writeByte(1);
+            this.writeByte(3);
+            this.writeByte(17);
+            this.writeByte(1);
+            return;
+        }
+
+        internal function writeDHT():void
+        {
+            var loc1:*=0;
+            this.writeWord(65476);
+            this.writeWord(418);
+            this.writeByte(0);
+            loc1 = 0;
+            while (loc1 < 16) 
+            {
+                this.writeByte(this.std_dc_luminance_nrcodes[loc1 + 1]);
+                ++loc1;
+            }
+            loc1 = 0;
+            while (loc1 <= 11) 
+            {
+                this.writeByte(this.std_dc_luminance_values[loc1]);
+                ++loc1;
+            }
+            this.writeByte(16);
+            loc1 = 0;
+            while (loc1 < 16) 
+            {
+                this.writeByte(this.std_ac_luminance_nrcodes[loc1 + 1]);
+                ++loc1;
+            }
+            loc1 = 0;
+            while (loc1 <= 161) 
+            {
+                this.writeByte(this.std_ac_luminance_values[loc1]);
+                ++loc1;
+            }
+            this.writeByte(1);
+            loc1 = 0;
+            while (loc1 < 16) 
+            {
+                this.writeByte(this.std_dc_chrominance_nrcodes[loc1 + 1]);
+                ++loc1;
+            }
+            loc1 = 0;
+            while (loc1 <= 11) 
+            {
+                this.writeByte(this.std_dc_chrominance_values[loc1]);
+                ++loc1;
+            }
+            this.writeByte(17);
+            loc1 = 0;
+            while (loc1 < 16) 
+            {
+                this.writeByte(this.std_ac_chrominance_nrcodes[loc1 + 1]);
+                ++loc1;
+            }
+            loc1 = 0;
+            while (loc1 <= 161) 
+            {
+                this.writeByte(this.std_ac_chrominance_values[loc1]);
+                ++loc1;
+            }
+            return;
+        }
+
+        internal function writeSOS():void
+        {
+            this.writeWord(65498);
+            this.writeWord(12);
+            this.writeByte(3);
+            this.writeByte(1);
+            this.writeByte(0);
+            this.writeByte(2);
+            this.writeByte(17);
+            this.writeByte(3);
+            this.writeByte(17);
+            this.writeByte(0);
+            this.writeByte(63);
+            this.writeByte(0);
+            return;
+        }
+
+        
+        {
+            mx_internal::VERSION = "4.1.0.16076";
+        }
+
+        internal const std_ac_chrominance_nrcodes:Array=[0, 0, 2, 1, 2, 4, 4, 3, 4, 7, 5, 4, 4, 0, 1, 2, 119];
+
+        internal const std_ac_chrominance_values:Array=[0, 1, 2, 3, 17, 4, 5, 33, 49, 6, 18, 65, 81, 7, 97, 113, 19, 34, 50, 129, 8, 20, 66, 145, 161, 177, 193, 9, 35, 51, 82, 240, 21, 98, 114, 209, 10, 22, 36, 52, 225, 37, 241, 23, 24, 25, 26, 38, 39, 40, 41, 42, 53, 54, 55, 56, 57, 58, 67, 68, 69, 70, 71, 72, 73, 74, 83, 84, 85, 86, 87, 88, 89, 90, 99, 100, 101, 102, 103, 104, 105, 106, 115, 116, 117, 118, 119, 120, 121, 122, 130, 131, 132, 133, 134, 135, 136, 137, 138, 146, 147, 148, 149, 150, 151, 152, 153, 154, 162, 163, 164, 165, 166, 167, 168, 169, 170, 178, 179, 180, 181, 182, 183, 184, 185, 186, 194, 195, 196, 197, 198, 199, 200, 201, 202, 210, 211, 212, 213, 214, 215, 216, 217, 218, 226, 227, 228, 229, 230, 231, 232, 233, 234, 242, 243, 244, 245, 246, 247, 248, 249, 250];
+
+        internal const ZigZag:Array=[0, 1, 5, 6, 14, 15, 27, 28, 2, 4, 7, 13, 16, 26, 29, 42, 3, 8, 12, 17, 25, 30, 41, 43, 9, 11, 18, 24, 31, 40, 44, 53, 10, 19, 23, 32, 39, 45, 52, 54, 20, 22, 33, 38, 46, 51, 55, 60, 21, 34, 37, 47, 50, 56, 59, 61, 35, 36, 48, 49, 57, 58, 62, 63];
+
+        internal const std_ac_luminance_values:Array=[1, 2, 3, 0, 4, 17, 5, 18, 33, 49, 65, 6, 19, 81, 97, 7, 34, 113, 20, 50, 129, 145, 161, 8, 35, 66, 177, 193, 21, 82, 209, 240, 36, 51, 98, 114, 130, 9, 10, 22, 23, 24, 25, 26, 37, 38, 39, 40, 41, 42, 52, 53, 54, 55, 56, 57, 58, 67, 68, 69, 70, 71, 72, 73, 74, 83, 84, 85, 86, 87, 88, 89, 90, 99, 100, 101, 102, 103, 104, 105, 106, 115, 116, 117, 118, 119, 120, 121, 122, 131, 132, 133, 134, 135, 136, 137, 138, 146, 147, 148, 149, 150, 151, 152, 153, 154, 162, 163, 164, 165, 166, 167, 168, 169, 170, 178, 179, 180, 181, 182, 183, 184, 185, 186, 194, 195, 196, 197, 198, 199, 200, 201, 202, 210, 211, 212, 213, 214, 215, 216, 217, 218, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250];
+
+        internal const std_dc_luminance_nrcodes:Array=[0, 0, 1, 5, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0];
+
+        internal const std_dc_luminance_values:Array=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
+        internal const std_dc_chrominance_nrcodes:Array=[0, 0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0];
+
+        internal const std_dc_chrominance_values:Array=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
+        mx_internal static const VERSION:String="4.1.0.16076";
+
+        internal static const CONTENT_TYPE:String="image/jpeg";
+
+        internal const std_ac_luminance_nrcodes:Array=[0, 0, 2, 1, 3, 3, 2, 4, 3, 5, 5, 4, 4, 0, 0, 1, 125];
+
+        internal var fdtbl_UV:Array;
+
+        internal var UVTable:Array;
+
+        internal var YTable:Array;
+
+        internal var bitcode:Array;
+
+        internal var category:Array;
+
+        internal var UVAC_HT:Array;
+
+        internal var YAC_HT:Array;
+
+        internal var UVDC_HT:Array;
+
+        internal var YDC_HT:Array;
+
+        internal var UDU:Array;
+
+        internal var fdtbl_Y:Array;
+
+        internal var VDU:Array;
+
+        internal var DU:Array;
+
+        internal var bytepos:int=7;
+
+        internal var bytenew:int=0;
+
+        internal var YDU:Array;
+
+        internal var byteout:flash.utils.ByteArray;
+    }
+}
+
+
+class BitString extends Object
+{
+    public function BitString()
+    {
+        super();
+        return;
+    }
+
+    public var len:int=0;
+
+    public var val:int=0;
+}
+
+//        class PNGEncoder
+package mx.graphics.codec 
+{
+    import flash.display.*;
+    import flash.utils.*;
+    import mx.core.*;
+    
+    use namespace mx_internal;
+    
+    public class PNGEncoder extends Object implements mx.graphics.codec.IImageEncoder
+    {
+        public function PNGEncoder()
+        {
+            super();
+            this.initializeCRCTable();
+            return;
+        }
+
+        public function get contentType():String
+        {
+            return CONTENT_TYPE;
+        }
+
+        public function encode(arg1:flash.display.BitmapData):flash.utils.ByteArray
+        {
+            return this.internalEncode(arg1, arg1.width, arg1.height, arg1.transparent);
+        }
+
+        public function encodeByteArray(arg1:flash.utils.ByteArray, arg2:int, arg3:int, arg4:Boolean=true):flash.utils.ByteArray
+        {
+            return this.internalEncode(arg1, arg2, arg3, arg4);
+        }
+
+        internal function initializeCRCTable():void
+        {
+            var loc2:*=0;
+            var loc3:*=0;
+            this.crcTable = [];
+            var loc1:*=0;
+            while (loc1 < 256) 
+            {
+                loc2 = loc1;
+                loc3 = 0;
+                while (loc3 < 8) 
+                {
+                    if (loc2 & 1) 
+                    {
+                        loc2 = uint(uint(3988292384) ^ uint(loc2 >>> 1));
+                    }
+                    else 
+                    {
+                        loc2 = uint(loc2 >>> 1);
+                    }
+                    ++loc3;
+                }
+                this.crcTable[loc1] = loc2;
+                ++loc1;
+            }
+            return;
+        }
+
+        internal function internalEncode(arg1:Object, arg2:int, arg3:int, arg4:Boolean=true):flash.utils.ByteArray
+        {
+            var loc7:*=0;
+            var loc8:*=0;
+            var loc1:*=arg1 as flash.display.BitmapData;
+            var loc2:*;
+            if (loc2 = arg1 as flash.utils.ByteArray) 
+            {
+                loc2.position = 0;
+            }
+            var loc3:*;
+            (loc3 = new flash.utils.ByteArray()).writeUnsignedInt(2303741511);
+            loc3.writeUnsignedInt(218765834);
+            var loc4:*;
+            (loc4 = new flash.utils.ByteArray()).writeInt(arg2);
+            loc4.writeInt(arg3);
+            loc4.writeByte(8);
+            loc4.writeByte(6);
+            loc4.writeByte(0);
+            loc4.writeByte(0);
+            loc4.writeByte(0);
+            this.writeChunk(loc3, 1229472850, loc4);
+            var loc5:*=new flash.utils.ByteArray();
+            var loc6:*=0;
+            while (loc6 < arg3) 
+            {
+                loc5.writeByte(0);
+                if (arg4) 
+                {
+                    loc7 = 0;
+                    while (loc7 < arg2) 
+                    {
+                        if (loc1) 
+                        {
+                            loc8 = loc1.getPixel32(loc7, loc6);
+                        }
+                        else 
+                        {
+                            loc8 = loc2.readUnsignedInt();
+                        }
+                        loc5.writeUnsignedInt(uint((loc8 & 16777215) << 8 | loc8 >>> 24));
+                        ++loc7;
+                    }
+                }
+                else 
+                {
+                    loc7 = 0;
+                    while (loc7 < arg2) 
+                    {
+                        if (loc1) 
+                        {
+                            loc8 = loc1.getPixel(loc7, loc6);
+                        }
+                        else 
+                        {
+                            loc8 = loc2.readUnsignedInt();
+                        }
+                        loc5.writeUnsignedInt(uint((loc8 & 16777215) << 8 | 255));
+                        ++loc7;
+                    }
+                }
+                ++loc6;
+            }
+            loc5.compress();
+            this.writeChunk(loc3, 1229209940, loc5);
+            this.writeChunk(loc3, 1229278788, null);
+            loc3.position = 0;
+            return loc3;
+        }
+
+        internal function writeChunk(arg1:flash.utils.ByteArray, arg2:uint, arg3:flash.utils.ByteArray):void
+        {
+            var loc1:*=0;
+            if (arg3) 
+            {
+                loc1 = arg3.length;
+            }
+            arg1.writeUnsignedInt(loc1);
+            var loc2:*=arg1.position;
+            arg1.writeUnsignedInt(arg2);
+            if (arg3) 
+            {
+                arg1.writeBytes(arg3);
+            }
+            var loc3:*=arg1.position;
+            arg1.position = loc2;
+            var loc4:*=4294967295;
+            var loc5:*=loc2;
+            while (loc5 < loc3) 
+            {
+                loc4 = uint(this.crcTable[(loc4 ^ arg1.readUnsignedByte()) & uint(255)] ^ uint(loc4 >>> 8));
+                ++loc5;
+            }
+            loc4 = uint(loc4 ^ uint(4294967295));
+            arg1.position = loc3;
+            arg1.writeUnsignedInt(loc4);
+            return;
+        }
+
+        
+        {
+            mx_internal::VERSION = "4.1.0.16076";
+        }
+
+        mx_internal static const VERSION:String="4.1.0.16076";
+
+        internal static const CONTENT_TYPE:String="image/png";
+
+        internal var crcTable:Array;
+    }
+}
+
+

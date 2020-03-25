@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Import the common properties to support NuGet restore -->
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <!-- A framework version is required for NuGet restore.  This can be any valid version -->
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <!-- The configuration and platform will be used to determine which assemblies to include from solution and
+				 project documentation sources -->
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{b22bc118-c70f-47a5-8729-254ec4eeb020}</ProjectGuid>
+    <SHFBSchemaVersion>2017.9.26.0</SHFBSchemaVersion>
+    <!-- AssemblyName, Name, and RootNamespace are not used by SHFB but Visual Studio adds them anyway -->
+    <AssemblyName>Documentation</AssemblyName>
+    <RootNamespace>Documentation</RootNamespace>
+    <Name>Documentation</Name>
+    <!-- SHFB properties -->
+    <FrameworkVersion>.NET Framework 4.5.2</FrameworkVersion>
+    <OutputPath>.\Help\</OutputPath>
+    <HtmlHelpName>CDMSWEBApi说明文档</HtmlHelpName>
+    <Language>zh-CHS</Language>
+    <HelpFileFormat>HtmlHelp1</HelpFileFormat>
+    <SyntaxFilters>C#</SyntaxFilters>
+    <PresentationStyle>VS2013</PresentationStyle>
+    <CleanIntermediates>True</CleanIntermediates>
+    <KeepLogFile>True</KeepLogFile>
+    <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
+    <IndentHtml>False</IndentHtml>
+    <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
+    <SaveComponentCacheCapacity>100</SaveComponentCacheCapacity>
+    <HelpTitle>CDMSWEBApi说明文档</HelpTitle>
+    <HelpFileVersion>1.0.0.0</HelpFileVersion>
+    <NamingMethod>Guid</NamingMethod>
+    <ContentPlacement>AboveNamespaces</ContentPlacement>
+    <RootNamespaceContainer>False</RootNamespaceContainer>
+    <NamespaceGrouping>False</NamespaceGrouping>
+    <MaximumGroupParts>2</MaximumGroupParts>
+    <Preliminary>False</Preliminary>
+    <SdkLinkTarget>Blank</SdkLinkTarget>
+    <DocumentationSources>
+      <DocumentationSource sourceFile="..\..\CDMSWeb\bin\CDMSWebApi.xml" />
+<DocumentationSource sourceFile="..\..\CDMSWeb\bin\CDMSWebApi.dll" /></DocumentationSources>
+    <NamespaceSummaries>
+      <NamespaceSummaryItem name="CDMSWeb" isDocumented="False" />
+      <NamespaceSummaryItem name="CDMSWeb.Areas.HelpPage" isDocumented="False" />
+      <NamespaceSummaryItem name="CDMSWeb.Areas.HelpPage.Controllers" isDocumented="False" />
+      <NamespaceSummaryItem name="CDMSWeb.Areas.HelpPage.Models" isDocumented="False" />
+      <NamespaceSummaryItem name="CDMSWeb.Controllers" isDocumented="False" />
+      <NamespaceSummaryItem name="CDMSWeb.Helper" isDocumented="False" />
+      <NamespaceSummaryItem name="AVEVA.CDMS.WebApi.Helper" isDocumented="False" />
+      <NamespaceSummaryItem name="AVEVA.CDMS.WebApi" isDocumented="True" />
+    </NamespaceSummaries>
+    <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, ProtectedInternalAsProtected, NonBrowsable</VisibleItems>
+    <ApiFilter>
+      <Filter entryType="Namespace" fullName="AVEVA.CDMS.WebApi" isExposed="False">
+        <Filter entryType="Class" fullName="AVEVA.CDMS.WebApi.DBSourceController" filterName="DBSourceController" isExposed="False">
+          <Filter entryType="Method" fullName="AVEVA.CDMS.WebApi.DBSourceController.DBSelectSQL" filterName="DBSelectSQL" isExposed="True" />
+          <Filter entryType="Method" fullName="AVEVA.CDMS.WebApi.DBSourceController.GetAJson" filterName="GetAJson" isExposed="True" />
+          <Filter entryType="Method" fullName="AVEVA.CDMS.WebApi.DBSourceController.GetMenuList" filterName="GetMenuList" isExposed="True" />
+          <Filter entryType="Method" fullName="AVEVA.CDMS.WebApi.DBSourceController.GetNewSid" filterName="GetNewSid" isExposed="True" />
+          <Filter entryType="Method" fullName="AVEVA.CDMS.WebApi.DBSourceController.Login" filterName="Login" isExposed="True" />
+          <Filter entryType="Method" fullName="AVEVA.CDMS.WebApi.DBSourceController.Logout" filterName="Logout" isExposed="True" />
+          <Filter entryType="Method" fullName="AVEVA.CDMS.WebApi.DBSourceController.LogoutBySid" filterName="LogoutBySid" isExposed="True" />
+          <Filter entryType="Method" fullName="AVEVA.CDMS.WebApi.DBSourceController.refreshDBSource" filterName="refreshDBSource" isExposed="True" />
+        </Filter>
+        <Filter entryType="Class" fullName="AVEVA.CDMS.WebApi.DocController" filterName="DocController" isExposed="True">
+          <Filter entryType="Constructor" fullName="AVEVA.CDMS.WebApi.DocController.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Method" fullName="AVEVA.CDMS.WebApi.DocController.GetDocDFReadRight" filterName="GetDocDFReadRight" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="AVEVA.CDMS.WebApi.FileController" filterName="FileController" isExposed="True">
+          <Filter entryType="Constructor" fullName="AVEVA.CDMS.WebApi.FileController.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Field" fullName="AVEVA.CDMS.WebApi.FileController.UploadBpsTotal" filterName="UploadBpsTotal" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="AVEVA.CDMS.WebApi.GroupController" filterName="GroupController" isExposed="True">
+          <Filter entryType="Constructor" fullName="AVEVA.CDMS.WebApi.GroupController.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="AVEVA.CDMS.WebApi.MessageController" filterName="MessageController" isExposed="True">
+          <Filter entryType="Constructor" fullName="AVEVA.CDMS.WebApi.MessageController.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="AVEVA.CDMS.WebApi.ProjectController" filterName="ProjectController" isExposed="True">
+          <Filter entryType="Constructor" fullName="AVEVA.CDMS.WebApi.ProjectController.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Method" fullName="AVEVA.CDMS.WebApi.ProjectController.GetProjectPCreateRight" filterName="GetProjectPCreateRight" isExposed="False" />
+          <Filter entryType="Method" fullName="AVEVA.CDMS.WebApi.ProjectController.GetProjectPDeleteRight" filterName="GetProjectPDeleteRight" isExposed="False" />
+          <Filter entryType="Method" fullName="AVEVA.CDMS.WebApi.ProjectController.GetProjectPWriteRight" filterName="GetProjectPWriteRight" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="AVEVA.CDMS.WebApi.ProjectController.ProjectIndex" filterName="ProjectController.ProjectIndex" isExposed="False" />
+        <Filter entryType="Class" fullName="AVEVA.CDMS.WebApi.UserController" filterName="UserController" isExposed="True">
+          <Filter entryType="Constructor" fullName="AVEVA.CDMS.WebApi.UserController.#ctor" filterName=".ctor" isExposed="False" />
+          <Filter entryType="Method" fullName="AVEVA.CDMS.WebApi.UserController.GetUserFlags" filterName="GetUserFlags" isExposed="False" />
+          <Filter entryType="Method" fullName="AVEVA.CDMS.WebApi.UserController.GetUserType" filterName="GetUserType" isExposed="False" />
+        </Filter>
+        <Filter entryType="Class" fullName="AVEVA.CDMS.WebApi.WorkFlowController" filterName="WorkFlowController" isExposed="True">
+          <Filter entryType="Constructor" fullName="AVEVA.CDMS.WebApi.WorkFlowController.#ctor" filterName=".ctor" isExposed="False" />
+        </Filter>
+      </Filter>
+      <Filter entryType="Namespace" fullName="AVEVA.CDMS.WebApi.Helper" isExposed="False" />
+    </ApiFilter>
+  </PropertyGroup>
+  <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
+			 the build.  The others are optional common platform types that may appear. -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Win32' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Win32' ">
+  </PropertyGroup>
+  <!-- Uncomment this to use the NuGet packages when SHFB is not installed locally, e.g. in the CI build pipeline.
+			Update the package versions to the latest releases.
+	<ItemGroup>
+		<PackageReference Include="EWSoftware.SHFB" Version="2019.9.15" />
+		<PackageReference Include="EWSoftware.SHFB.NETFramework" Version="4.8.0" />
+	</ItemGroup>
+	-->
+  <!-- Import the common build targets during NuGet restore because before the packages are being installed, $(SHFBROOT) is not set yet -->
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="'$(MSBuildRestoreSessionId)' != ''" />
+  <!-- Import the SHFB build targets during build -->
+  <Import Project="$(SHFBROOT)\SandcastleHelpFileBuilder.targets" Condition="'$(MSBuildRestoreSessionId)' == ''" />
+  <!-- The pre-build and post-build event properties must appear *after* the targets file import in order to be
+			 evaluated correctly. -->
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+</Project>

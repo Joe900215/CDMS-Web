@@ -1,0 +1,285 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>艾三维协同管理信息系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    @*<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">@*ie8安装chrome frame后，使用chrome模式*@
+    @*如果安装了chrome frame，则使用chrome frame来渲染页面，如果没安装chrome frame，则使用最高版本的IE内核进行渲染。*@
+    @*<meta http-equiv=”X-UA-Compatible” content="IE =edge,chrome =1" />*@
+
+    @*解决360浏览器默认使用了IE7内核*@
+    <meta http-equiv="x-ua-compatible" content="IE=9,8" />
+    @*<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" /> *@
+
+    @*使IE5,IE6,IE7,IE8兼容到IE9模式*@
+    <!–[if lt IE 9]>
+    <script src=”http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js”></script>
+    <![endif]–>
+
+    <!--<link rel="stylesheet" type="text/css" href="@Url.Content("Scripts/extjs/resources/css/ext-all.css")" />-->    @*蓝色经典*@
+    @*<link rel="stylesheet" type="text/css" href="@Url.Content("Scripts/extjs/resources/css/ext-all-ex.css")" />*@    @*蓝色经典*@
+    <!--<link rel="stylesheet" type="text/css" href="@Url.Content("Scripts/extjs/resources/css/ext-all-neptune.css")" />-->  @*蓝色*@
+    <!--<link rel="stylesheet" type="text/css" href="@Url.Content("Scripts/extjs/resources/shared/extjs.css")" />-->
+    <!--<link rel="stylesheet" type="text/css" href="@Url.Content("Scripts/extjs/resources/css/ext-all-gray.css")" /> -->  @*灰色*@
+    <!--<link rel="stylesheet" type="text/css" href="@Url.Content("Scripts/extjs/resources/css/ext-all-access.css")" /> --> @*黑色底*@
+    <!--<link rel="stylesheet" type="text/css" href="@Url.Content("Scripts/extjs/resources/css/ext-all-standard.css")"/> -->
+    @*<link rel="stylesheet" type="text/css" href="@Url.Content("Scripts/extjs/resources/css/ext-all-a.css")" />*@ 
+    <!--<link rel="stylesheet" type="text/css" href="@Url.Content("Scripts/extjs/resources/a/KitchenSink-all.css")" /> -->
+    <!--<link rel="stylesheet" type="text/css" href="@Url.Content("Scripts/extjs/resources/ext-theme-neptune-cdms/ext-theme-neptune-cdms-all.css")" />--> @*蓝色*@
+    
+
+    <script src="@Url.Content("Scripts/ExtJS6/ext-all.js")"></script>
+    @*<script src="@Url.Content("Scripts/ExtJS6/packages/ext-locale/build/ext-locale-zh_CN.js")"></script>*@
+    @*<link href="@Url.Content("Scripts/ExtJS6/classic/theme-gray/resources/theme-gray-all.css")" rel="stylesheet" />*@
+    <link href="@Url.Content("Scripts/ExtJS6/classic/theme-neptune/resources/theme-neptune-all.css")" rel="stylesheet" />
+    @*<link href="@Url.Content("Scripts/ExtJS6/classic/theme-triton/resources/theme-triton-all.css")" rel="stylesheet" />*@
+
+    <link rel="stylesheet" type="text/css" href="@Url.Content("Scripts/app/resources/css/app.css")" />    @*在首页添加css样式表*@
+
+    <!--<script type="text/javascript" src="@Url.Content("Scripts/extjs/ext-theme-neptune.js")"></script>-->
+
+    <script type="text/javascript" src="@Url.Content("Scripts/extjs6/ext-locale-zh_CN.js")"></script>
+    @*<script type="text/javascript" src="@Url.Content("Scripts/extjs6/bootstrap.js")"></script>
+    <script type="text/javascript" src="@Url.Content("Scripts/extjs6/Ext-lang-zh_CN.js")"></script>*@
+    @*<script type="text/javascript" src="@Url.Content("Scripts/extjs6/ux/data/PagingMemoryProxy.js")"></script>*@
+    
+    
+
+    <script type="text/javascript" src="@Url.Content("Scripts/extjs6/ux/upload/plupload/js/plupload.js")"></script>
+    <script type="text/javascript" src="@Url.Content("Scripts/extjs6/ux/upload/plupload/js/plupload.html4.js")"></script>
+    <script type="text/javascript" src="@Url.Content("Scripts/extjs6/ux/upload/plupload/js/plupload.html5.js")"></script>
+    <script type="text/javascript" src="@Url.Content("Scripts/extjs6/ux/upload/plupload/js/plupload.flash.js")"></script>
+    <script type="text/javascript" src="@Url.Content("Scripts/extjs6/ux/upload/plupload/js/plupload.silverlight.js")"></script>
+
+
+    <script type="text/javascript" src="@Url.Content("Scripts/extjs6/ux/jsencrypt/jsencrypt.js")"></script>
+
+    @*<style type="text/css">        
+        body {
+   backgroup-image:
+                 }
+    </style>*@
+
+
+</head>
+<body style="background-image:url(/Images/loginback.jpg); background-color: beige; font-family: Verdana, Arial; ">
+
+    <script>
+
+        Ext.Loader.setConfig({
+            enabled: true,
+            paths: {
+                ////定义应用程序的路径
+                'Ext.ux': 'scripts/extjs6/ux',
+                'Ext.ux.upload': 'scripts/extjs6/ux/upload',
+                'CDMSWeb': 'scripts/app',
+                'Ext.plug_ins': 'scripts/app/plug_ins'
+            }
+        });
+        Ext.ns('CDMSWeb');
+
+        //处理错误信息的代码,CDMSWeb.ProxyException的定义:
+        //路径：\CDMSWeb\Scripts\app\store\Users.js
+        //在proxy定义内添加listeners配置项来监听exception事件
+        CDMSWeb.ProxyException = function (proxy, response, opts) {
+            //if (typeof (opts.error) != "undefined" && opts.error != "communication failure")
+            //Ext.Msg.alert("错误信息", "连接服务器失败，请稍后再试！"+opts.error.statusText);//opts.error);
+        }
+
+        CDMSWeb.ModelException = function (response, opts) {
+            Ext.Msg.alert("错误信息", "数据模型错误！" + opts.error.statusText);
+        }
+
+        CDMSWeb.FormSubmitFailure = function (form, action) {
+            if (action.failureType === "connect") {
+                Ext.Msg.alert('错误',
+                '状态:' + action.response.status + ': ' +
+                action.response.statusText);
+                return;
+            }
+            if (action.result) {
+                if (action.result.Msg)
+                    Ext.Msg.alert('错误', action.result.Msg);
+            }
+        }
+
+    </script>
+
+    @{
+        //if (Session["IsAuthenticated"] != null && Session["IsAuthenticated"].ToString()=="true")
+        //if (Request.IsAuthenticated)
+        if (Session["IsAuthenticated"] != null && Session["IsAuthenticated"].ToString() == "true")
+        {
+            //var roles = Roles.GetRolesForUser(User.Identity.Name);
+            //var rolesstring = "";
+            //foreach (var c in roles)
+            //{
+            //    rolesstring += string.Format("'{0}',", c);
+            //}
+            //var cookieName=HttpContext.Current.Request.Cookies["cookieName"].Value;
+            //rolesstring = rolesstring.Substring(0, rolesstring.Length - 1);
+            //"AUTHID": "@Request.Cookies[FormsAuthentication.FormsCookieName].Value"
+            <script>
+
+                CDMSWeb.Userinfo = {
+                    Roles: [
+                        @Html.Raw("'系统管理员'")
+                    ]
+                };
+
+                CDMSWeb.postParams = {
+                    path: null,
+                    "ASPSESSID": "@Session.SessionID",
+                    "AUTHID": ""
+                };
+
+                CDMSWeb.tinyCfg = {
+                    // 基本选项
+                    theme: "advanced", //使用高级选项
+                    language: "zh",   //使用中文
+                    skin: "extjs",    //使用extjs的样式
+                    inlinepopups_skin: "extjs",
+                    inline_styles: true,
+                    theme_advanced_row_height: 27,
+                    delta_height: 0,
+                    convert_urls: false,
+                    relative_urls: true,
+                    media_use_script: true,
+
+                    //要添加那些插件
+                    plugins: "autolink,lists,pagebreak,style,layer,table,advhr,advimage,advlink,inlinepopups,media,searchreplace,contextmenu,paste,directionality,noneditable,visualchars,nonbreaking,advlist,imagemanager",
+
+                    // 样式选项，用来设置显示那些操作按钮
+                    theme_advanced_buttons1: "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+                    theme_advanced_buttons2: "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,code,|,forecolor,backcolor",
+                    theme_advanced_buttons3: "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,media,advhr,|,ltr,rtl,|,imagemanager",
+                    theme_advanced_toolbar_location: "top",
+                    theme_advanced_toolbar_align: "left",
+                    theme_advanced_statusbar_location: "bottom"
+
+                    // 设置前台站点使用到的样式，这样样式会显示在样式列表中，这里没有，就没设置
+                    //content_css: "Scripts/Extjs/ux/Form/site.css"
+                };
+
+
+                Ext.onReady(function () {
+                    if (Ext.BLANK_IMAGE_URL.substr(0, 4) != "data") {
+                        Ext.BLANK_IMAGE_URL = "Content/Images/s.gif";
+                    }
+
+                    Ext.application({
+                        name: "CDMSWeb",//定义应用程序的名称
+                        appFolder: "scripts/app",//应用程序的路径
+                        autoCreateViewport: true,//自动加载\Script\app\View目录下的Viewport.js文件,在Loader中配置
+                        controllers: ["MainPanel"]//自动加载主面板的控制器\Script\app\controller\MainPanel.js
+                    });
+
+                })
+
+            </script>
+        }
+        else
+        {
+            <script>
+                Ext.require('Ext.ux.Login');
+
+                Ext.onReady(function () {
+                    if (Ext.BLANK_IMAGE_URL.substr(0, 4) != "data") {
+                        Ext.BLANK_IMAGE_URL = "Content/Images/s.gif";
+                    }
+
+                    Ext.ux.Login.show();
+                })
+            </script>
+        }
+    }
+
+    <script>
+
+        /*
+        *函数功能：从href获得参数
+        *sHref:   http://www.artfh.com/arg.htm?arg1=d&arg2=re
+        *sArgName:arg1, arg2
+        *return:    the value of arg. d, re
+        */
+        function GetArgsFromHref(sHref, sArgName) {
+            var args = sHref.split("?");
+            var retval = "";
+
+            if (args[0] == sHref) /*参数为空*/ {
+                return retval; /*无需做任何处理*/
+            }
+            var str = args[1];
+            args = str.split("&");
+            for (var i = 0; i < args.length; i++) {
+                str = args[i];
+                var arg = str.split("=");
+                if (arg.length <= 1) continue;
+                if (arg[0] == sArgName) retval = arg[1];
+            }
+            return retval;
+        }
+
+
+        //在js中定义被c#调用的方法:
+        //function Messageaa(message) {
+        //    alert(browserName+","+message);
+        //}
+        function Messageaa() {
+            alert("cccc");
+        }
+
+        //设置文件状态图标
+        function SetImgClass(imgViewId, classValue, recordIndex) {
+
+            //获取表格的DOM对象
+            var viewDom = document.getElementById(imgViewId);
+
+            //找到文件状态所在图标的DOM对象
+            var viewImg = viewDom.childNodes["0"].children["0"].childNodes[recordIndex + 1].children[1].children["0"].childNodes["0"];
+
+            //设置文件状态图标为检出状态
+            viewImg.setAttribute('class', classValue);
+
+        }
+
+        //记录浏览器的类型
+        var _browserName = "ie";
+
+
+
+        //在js中定义被c#调用的方法,设置浏览器类型:
+        function setBrowserType(type) {
+            //alert(_browserName + "," + type);
+            _browserName = type;
+            localStorage.setItem("_browserName", type);
+
+        }
+
+        //刷新文件夹目录树
+        function SendRefreshProjectTree(treePanelId, projectKeyword) {
+            //alert("接收到刷新目录树消息！请手动刷新目录树:" + treePanelId);
+            Ext.RefreshProjectTree(treePanelId, projectKeyword);
+            //var view = document.getElementById(treePanelId);
+            //view.RefreshProjTree("LastProject");
+
+        }
+
+        //设置文档列表框下部消息
+        function SendSetDocGridBarMsg(gridPanelId, msg) {
+            //alert("接收到刷新目录树消息！请手动刷新目录树:" + treePanelId);
+            Ext.setDocGridBarMsg(gridPanelId, msg);
+            //var view = document.getElementById(treePanelId);
+            //view.RefreshProjTree("LastProject");
+
+        }
+
+    </script>
+</body>
+</html>
+

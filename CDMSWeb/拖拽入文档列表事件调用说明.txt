@@ -1,0 +1,39 @@
+文件上传后
+在JS端：
+cdmsweb\scripts\extjs\ux\ydform\_maindocgrid.js
+
+1. 触发了
+afterUploadFile: function (uploader, file, ServerFullFileName) 函数
+
+2. 再触发
+OnAfterCreateNewDocEvent: function (DocKeyword, file) 函数
+
+3. 然后触发
+Ext.require('Ext.plug_ins.' + plugins + '.common', function () 函数
+
+
+
+在C#端：
+1. cdmsweb\hxepc_plugins\enterpoint.cs
+下的函数：
+        public static void Init()
+添加：
+                //拖拽文件后处理
+                WebExploreEvent.OnAfterCreateNewObject += new WebExploreEvent.Explorer_AfterCreateNewObject(Document.OnAfterCreateNewObject);
+
+
+2. cdmsweb\hxepc_plugins\document\document.cs
+下添加函数：
+        public static ExReJObject OnAfterCreateNewObject(object obj) {
+返回：
+                    reJo.msg = "RecDocument";
+                    reJo.data = new JArray(new JObject(
+                        new JProperty("plugins", "HXEPC_Plugins"),
+                        new JProperty("FuncName", "recDocument"),
+                        new JProperty("DocKeyword", doc.KeyWord)
+                        ));
+
+3. cdmsweb\scripts\app\plug_ins\hxepc_plugins\common.js
+添加函数：
+function recDocument(mainPanelId, res, files) {
+

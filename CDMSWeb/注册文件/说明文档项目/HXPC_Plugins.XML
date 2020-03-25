@@ -1,0 +1,620 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HXPC_Plugins</name>
+    </assembly>
+    <members>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.CommonFunction.GetProject(System.Object)">
+            <summary>
+            获取项目对象
+            </summary>
+            <param name="obj">目录或者文档</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.CommonFunction.GetDesign(System.Object)">
+            <summary>
+            获取阶段对象
+            </summary>
+            <param name="obj">目录或者文档</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.CommonFunction.GetProfession(System.Object)">
+            <summary>
+            获取专业对象
+            </summary>
+            <param name="obj">目录或者文档</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.CommonFunction.GetTempDefn(System.Object,System.String)">
+            <summary>
+            查找模板
+            </summary>
+            <param name="obj">Doc， Project</param>
+            <param name="keyword">模板关键字</param>
+            <returns>TempDefn</returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.CommonFunction.SendEmail(System.String,System.Collections.Generic.List{System.String},System.String,System.String,System.Collections.Generic.List{System.String},System.String,System.String,System.String)">
+            <summary>
+            发邮件
+            </summary>
+            <param name="MailFrom">发件人邮箱地址</param>
+            <param name="MailToList">收件人邮箱地址</param>
+            <param name="MailTitle">主题</param>
+            <param name="MailBody">邮件内容</param>
+            <param name="FileList">附加文件</param>
+            <param name="MailServer">服务器地址</param>
+            <param name="UserName">邮箱登录账号</param>
+            <param name="UserPw">邮箱登录密码</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.CommonFunction.ExcSign(AVEVA.CDMS.Server.WorkFlow)">
+            <summary>
+            内部提资：专业主设人接收文件签名
+            </summary>
+            <param name="workflow"></param>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.CommonFunction.StrToGroup(AVEVA.CDMS.Server.DBSource,System.String)">
+            <summary>
+            把用户字符串转换成用户列表
+            </summary>
+            <param name="dbsource"></param>
+            <param name="userlist">用户列表，格式："用户代码1__用户名1，用户代码2__用户名2。。。"</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.CommonFunction.getUserCodelist(System.String)">
+            <summary>
+            转换用户字符串，获取只包含用户代码的字符串
+            </summary>
+            <param name="userlist">用户列表，格式："用户代码1__用户名1，用户代码2__用户名2。。。"</param>
+            <returns>
+            返回格式："用户代码1，用户代码2。。。"
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Company.GetEditCompanyDefault(System.String,System.String)">
+            <summary>
+            新建厂家资料目录时，获取默认值
+            </summary>
+            <param name="sid">链接密钥</param>
+            <param name="ProjectKeyword">厂家文件夹关键字</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Company.EditCompany(System.String,System.String,System.String)">
+            <summary>
+            修改厂家资料目录
+            </summary>
+            <param name="sid">链接密钥</param>
+            <param name="ProjectKeyword">厂家文件夹关键字</param>
+            <param name="projectAttrJson">参数字符串，详见下面例子例子</param>
+            <returns>
+            <para>projectAttrJson 例子：</para>
+            <code>
+            [
+                { name: 'companyCode', value: companyCode },
+                { name: 'companyChinese', value: companyChinese },
+                { name: 'address', value: address },
+                { name: 'province', value: province },
+                { name: 'postCode', value: postCode },
+                { name: 'eMail', value: eMail },
+                { name: 'receiver', value: receiver },
+                { name: 'faxNo', value: faxNo },
+                { name: 'phone', value: phone },
+            ];
+            </code>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Company.GetTempDefn(AVEVA.CDMS.Server.DBSource,System.String)">
+            <summary>
+            //获取所有厂家信息
+            </summary>
+            <param name="td"></param>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Prodect.CreateProdect(System.String,System.String,System.String)">
+            <summary>
+            创建成品目录
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="ProjectKeyword">父目录关键字</param>
+            <param name="projectAttrJson">参数关键字，详见下面例子</param>
+            <returns>
+            <para>projectAttrJson参数例子：</para>
+            <code>
+            [
+               { name: 'projectCode', value: projectCode },
+               { name: 'projectDesc', value: projectDesc }
+            ];
+            </code>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Prodect.GetProductSignDefault(System.String,System.String)">
+            <summary>
+            获取“成品校审会签专业”表单默认参数
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="DocKeyword">成品文档关键字</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Prodect.SetProdectSignProfession(System.String,System.String,System.String)">
+            <summary>
+            设置成品会签专业
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="DocKeyword">成品文档关键字</param>
+            <param name="Receiver">会签人员关键字列表，使用','分隔</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Prodect.GetProjectByTempDefn(AVEVA.CDMS.Server.Project,System.String)">
+            <summary>
+            根据模板查找文件夹
+            </summary>
+            <param name="project"></param>
+            <param name="tempDefnCode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Profession.GetProfessionList(System.String)">
+            <summary>
+            获取专业列表
+            </summary>
+            <param name="sid">连接密钥</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Profession.GetCreatedProfession(System.String,System.String)">
+            <summary>
+            "创建设计阶段与选择专业..."功能，根据ProjectKeyword获取已创建的专业，以及项目阶段(选取项目阶段目录时触发)
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="ProjectKeyword">项目目录关键字</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Profession.GetDesignPhaseProfession(System.String,System.String,System.String)">
+            <summary>
+            "创建设计阶段与选择专业..."功能，获取项目某个阶段已创建的专业，以及项目阶段(选取项目根目录时触发)
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="ProjectKeyword">项目目录关键字</param>
+            <param name="DesignPhaseCode">设计阶段代码</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Profession.SetProfession(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            设置项目的相关专业
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="prjoectKeyword">目录关键字</param>
+            <param name="professionList">选取的相关专业列表，使用','分隔</param>
+            <param name="startAtWfBtn">是否在流程按钮里面触发的本函数，可以是"true"或者"false"</param>
+            <returns>
+            <para>本函数在项目目录右键菜单“创建设计阶段与专业”，专业目录右键菜单“创建设计阶段与专业”，</para>
+            <para>以及项目立项流程的设总“选择参与专业”流程按钮里面使用到</para>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.CreateProject.GetCreateRootProjectDefault(System.String)">
+            <summary>
+            创建项目时，获取表单默认值，填充到combo
+            </summary>
+            <param name="sid">链接密钥</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.CreateProject.GetProjectTypeII(System.String,System.String)">
+            <summary>
+            获取二级项目类型
+            </summary>
+            <param name="sid">链接密钥</param>
+            <param name="ProjectType">一级项目类型</param>
+            <returns></returns>
+        </member>
+        <!-- 对于成员“M:AVEVA.CDMS.HXPC_Plugins.CreateProject.CreateRootProject(System.String,System.String)”忽略有格式错误的 XML 注释 -->
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Document.GetSendDocumentDefault(System.String,System.String)">
+            <summary>
+            获取创建发文单表单的默认配置
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="ProjectKeyword">发文单位目录关键字</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Document.SendDocument(System.String,System.String,System.String)">
+            <summary>
+            创建发文单
+            </summary>
+            <param name="sid"></param>
+            <param name="ProjectKeyword"></param>
+            <param name="docAttrJson"></param>
+            <returns>
+            发文流程的服务端处理流程：
+            1.创建发文单，由本函数处理
+            2.上传附件
+            3.发起发文流程,由DocumentStartWorkFlow函数处理
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Document.DocumentStartWorkFlow(System.String,System.String,System.String)">
+            <summary>
+            创建发文单后，发起发文流程
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="docKeyword">发文单文档关键字</param>
+            <param name="DocList">本流程所有文档列表关键字，用','分隔</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Document.OnBeforeFileAddEvent(System.String,System.String)">
+            <summary>
+            处理拖拽文件到DocGrid控件的处理事件
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="ProjectKeyword">目录关键字</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Document.GetReceiveDocumentDefault(System.String,System.String)">
+            <summary>
+            获取创建收文单表单的默认配置
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="DocKeyword">文档关键字</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Document.ReceiveDocument(System.String,System.String,System.String)">
+            <summary>
+            处理收文表单
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="DocKeyword">文档关键字</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Document.GetProfessionList(System.String,System.String)">
+            <summary>
+            收文流程分发专业获取所在设计阶段的专业列表
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="WorkFlowKeyword">流程关键字</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Document.SetReceiveDocProfession(System.String,System.String,System.String)">
+            <summary>
+            选择收文流程分发专业
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="WorkFlowKeyword">流程关键字</param>
+            <param name="professionList">选取的专业的projectKeyword列表,使用','分割</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.Document.LocalProject(AVEVA.CDMS.Server.Project)">
+            <summary>
+            定位到发文目录
+            </summary>
+            <param name="prj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.ExchangeDoc.GetExchangeDocDefault(System.String,System.String,System.String)">
+            <summary>
+            获取创建内部互提资料表单的默认选项
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="ProjectKeyword">目录关键字</param>
+            <param name="ExchangeType">互提资料的类型，Create：生成提资单，Continue：继续提资，UpEdition：提资升版</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.ExchangeDoc.LocalProject(AVEVA.CDMS.Server.Project)">
+            <summary>
+            定位到提出资料目录
+            </summary>
+            <param name="prj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.ExchangeDoc.CreateExchangeDoc(System.String,System.String,System.String,System.String)">
+             <summary>
+             处理生成提资单,继续提资和提资升版
+             </summary>
+             <param name="sid">sid</param>
+             <param name="ProjectKeyword">选择的Project</param>
+             <param name="ExchangeType">互提资料的类型，Create：生成提资单，Continue：继续提资，UpEdition：提资升版</param>
+             <param name="docAttrJson">参数字符串</param>
+             <returns>
+             <para>docAttrJson例子：</para>
+             <code>
+              [
+                { name: 'PrjName', value: prjName },
+                { name: 'PrjCode', value: PrjCode },
+                { name: 'Phase', value: Phase },
+                { name: 'DocNum1', value: DocNum1 },
+                { name: 'DocNum2', value: DocNum2 },
+                { name: 'DocNum3', value: DocNum3 },
+                { name: 'OutProfession', value: OutProfession },
+                { name: 'ProfessionList', value: professionList },
+                { name: 'Receiver', value: Receiver },
+                { name: 'Title', value: Title },
+                { name: 'Content', value: content },
+                { name: 'PriImport', value: priImport },
+                { name: 'BookQuantity', value: bookQuantity },
+                { name: 'FormQuantity', value: formQuantity }
+             ]
+             
+             //生成提资单流程：
+             //1.客户端发送提资单的参数
+             //2.服务端创建互提资料单doc，生成存储目录，
+             //3.客户端上传附件给服务端
+             //4.服务端创建附件doc,接收附件，并保存到存储目录,把附件doc的Keyword发送给客户端
+             //5.客户端发送创建流程的消息给服务端
+             //6.服务端创建提资流程
+             //本函数负责第2个步骤，函数ExchangeDocStartWorkFlow负责第6个步骤
+            </code>
+             </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.ExchangeDoc.ExchangeDocStartWorkFlow(System.String,System.String,System.String)">
+            <summary>
+            启动互提资料流程
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="docKeyword">互提资料文档</param>
+            <param name="docList">附件关键字列表，使用 ','分隔</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.ProjectExportMenu.MeasureMenuState">
+            <summary>
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.WorkTask.CreateTask(System.String,System.String,System.String)">
+             <summary>
+             创建工作任务
+             </summary>
+             <param name="sid">sid</param>
+             <param name="ProjectKeyword">选择的Project</param>
+             <param name="docAttrJson">参数Json</param>
+             <returns>
+             <para>docAttrJson例子：</para>
+             <code>
+             [
+                { name: 'taskName', value: taskName },
+                { name: 'taskContent', value: taskContent },
+                { name: 'taskStartDate', value: taskStartDate },
+                { name: 'taskEndDate', value: taskEndDate }
+            ]
+            </code>
+             </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.WorkTask.CreateUserTask(System.String,System.String,System.String)">
+             <summary>
+             创建用户工作任务（在工日填报，即任务报告表单创建）
+             </summary>
+             <param name="sid">sid</param>
+             <param name="UserKeyword">任务的责任人</param>
+             <param name="docAttrJson">参数Json，详见下面例子</param>
+             <returns>
+             <para>"docAttrJson例子：</para>
+             <code>
+             [
+                { name: 'taskName', value: taskName },
+                { name: 'taskContent', value: taskContent },
+                { name: 'taskStartDate', value: taskStartDate },
+                { name: 'taskEndDate', value: taskEndDate }
+             ]
+            </code>
+             </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.WorkTask.GetTaskReportDefault(System.String)">
+            <summary>
+            获取任务报告表单默认参数
+            </summary>
+            <param name="sid">连接密钥</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.WorkTask.GetTaskReportList(System.String,System.String)">
+            <summary>
+            获取任务的报告列表
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="TaskKeyword">任务keyword</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.WorkTask.GetTaskReport(System.String,System.String)">
+            <summary>
+            获取任务报告内容
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="ReportKeyword">报告关键字</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.WorkTask.CreateTaskReport(System.String,System.String,System.String)">
+             <summary>
+             创建任务报告
+             </summary>
+             <param name="sid">连接密钥</param>
+             <param name="RTaskKeyword">任务关键字</param>
+             <param name="reportAttrJson">参数字符串，详见下面例子</param>
+             <returns>
+             <para>reportAttrJson例子：</para>
+             <code>
+             [
+                { name: 'content', value: strContent },
+                { name: 'problom', value: strProblem },
+                { name: 'schedule', value: strSchedule },
+                { name: 'laborTime', value: strLaborTime },
+                { name: 'reportDate', value: strReportDate },
+                { name: 'startDate', value: strStartDate },
+                { name: 'endDate', value: strEndDate }
+            ]
+            </code>
+             </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.WorkTask.ModiTaskReport(System.String,System.String,System.String)">
+             <summary>
+             修改任务报告
+             </summary>
+             <param name="sid">连接密钥</param>
+             <param name="ReportKeyword">任务报告Keyword</param>
+             <param name="reportAttrJson">参数字符串，详见下面例子</param>
+             <returns>
+             <para>reportAttrJson例子：</para>
+             <code>
+              [
+                { name: 'content', value: strContent },
+                { name: 'problom', value: strProblem },
+                { name: 'schedule', value: strSchedule },
+                { name: 'laborTime', value: strLaborTime },
+                { name: 'reportDate', value: strReportDate },
+                { name: 'startDate', value: strStartDate },
+                { name: 'endDate', value: strEndDate }
+            ]
+             </code>
+             </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.WorkTask.DeleteTaskReport(System.String,System.String)">
+            <summary>
+            删除任务报告
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="ReportKeyword">任务报告Keyword</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.TaskReportMenu.MeasureMenuState">
+            <summary>
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.ProjectInfoMenu.MeasureMenuState">
+            <summary>
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.WorkTaskMenu.MeasureMenuState">
+            <summary>
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.CreateProdectMenu.MeasureMenuState">
+            <summary>
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:AVEVA.CDMS.HXPC_Plugins.SendDocumentMenu">
+            <summary>
+            专业发文，只有：专业主设或者专业设计人才可以发文
+            </summary>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.SendDocumentMenu.MeasureMenuState">
+            <summary>
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:AVEVA.CDMS.HXPC_Plugins.ExcangeDocMenu">
+            <summary>
+            内部互提，只有：专业主设或者专业设计人才可以提资
+            </summary>
+        </member>
+        <member name="F:AVEVA.CDMS.HXPC_Plugins.ExcangeDocMenu.menustate">
+            <summary>
+            提资类型 1_新提资 2_继续提资 3_提资升版  0表示不提资
+            </summary>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.ExcangeDocMenu.MeasureMenuState">
+            <summary>
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.SelectProfessionMenu.MeasureMenuState">
+            <summary>
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.EnterPoint.SetProjectOwner(System.String,System.String,System.String)">
+            <summary>
+            设置项目设总
+            </summary>
+            <param name="sid"></param>
+            <param name="prjoectKeyword">目录关键字</param>
+            <param name="userlist">设总的用户列表</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.EnterPoint.SetDirector(System.String,System.String,System.String,System.String)">
+            <summary>
+            设置项目文秘和进度工程师
+            </summary>
+            <param name="sid"></param>
+            <param name="prjoectKeyword">目录关键字</param>
+            <param name="checkerList">文秘的用户列表</param>
+            <param name="auditorList">进度工程师的用户列表</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.BIMViewMenu.MeasureMenuState">
+            <summary>
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.CompanyMenu.MeasureMenuState">
+            <summary>
+            决定菜单的状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.SelectUser.GetSelectUserExDefault(System.String,System.String)">
+            <summary>
+            主设人选择校审核人员时，获取默认值
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="WorkFlowKeyword">流程关键字</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.SelectUser.SelectUserEx(System.String,System.String)">
+            <summary>
+            响应主设人选择校审核人员表单的确定按钮
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="workflowAttrJson">流程参数字符串,详见下面例子</param>
+            <returns>
+            <para>workflowAttrJson例子：</para>
+            <code>
+            [{
+                   workflowKeyword: dataItem.workflowKeyword,
+                   checker: dataItem.checker,
+                   auditor: dataItem.auditor
+               },
+             {
+                   workflowKeyword: dataItem.workflowKeyword,
+                   checker: dataItem.checker,
+                   auditor: dataItem.auditor
+               }
+             ]
+             </code>
+            </returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.SelectUser.GetSelectUserApprovDefault(System.String,System.String)">
+            <summary>
+            主设人选择校审核人员时，获取默认值
+            </summary>
+            <param name="sid">连接密钥</param>
+            <param name="WorkFlowKeyword">流程关键字</param>
+            <returns></returns>
+        </member>
+        <member name="M:AVEVA.CDMS.HXPC_Plugins.SelectUser.SelectUserApprov(System.String,System.String)">
+             <summary>
+             响应主设人选择校核审核批准人员表单的确定按钮
+             </summary>
+             <param name="sid">连接密钥</param>
+             <param name="workflowAttrJson">流程参数字符串，详见下面例子</param>
+             <returns>
+             <para>workflowAttrJson例子：</para>
+             <code>
+             [{
+                workflowKeyword: dataItem.workflowKeyword,
+                checker: dataItem.checker,
+                auditor: dataItem.auditor,
+                approver: dataItem.approver
+            },
+            {
+                workflowKeyword: dataItem.workflowKeyword,
+                checker: dataItem.checker,
+                auditor: dataItem.auditor,
+                approver: dataItem.approver
+            }]
+             </code>
+             </returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>PDSV.Unity</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="TemplateData/UnityProgress.js"></script>
+	<script src="Build/UnityLoader.js"></script>
+
+    <script>
+        //获取当前页面的url
+        var urlinfo = window.location.href; 
+
+        //模型名称
+        //var modelName = "测试模型";
+        var modelName = "建筑";
+        //模型文件下载地址
+        var modelUrl = GetArgsFromHref(urlinfo, "modelUrl");
+        //var modelUrl = "http://119.29.37.191:8081/ModelDownLoad/Downloadfile?FileName=66aa98df-4acd-4cfa-8f92-506c10369206/建筑.thm";
+        //var modelUrl = "http://119.29.37.191:8081/ModelDownLoad/Downloadfile?FileName=152b151d-2137-4509-9698-00959896f9a2/样例.thm";
+
+        //初始化并加载Unity控件
+        var gameInstance = UnityLoader.instantiate("gameContainer", "Build/WebGL.json", { onProgress: UnityProgress });
+
+        //读取文件的调用函数，由Unity自己载入完成后自己调用
+        function LoadFile() {
+            gameInstance.SendMessage('MasterControl', 'JsLoad', modelName + ";" + modelUrl);
+        }
+
+        //高亮元素,nodeid,elementid为字符串
+        function HighlightElement(nodeid, elementid) {
+            gameInstance.SendMessage('JavaScriptInterface', 'HighlightElement', nodeid + ";" + elementid);
+        }
+
+        //隐藏元素,elementid为字符串
+        function HideElement(nodeid, elementid) {
+            gameInstance.SendMessage('JavaScriptInterface', 'HideElement', nodeid + ";" + elementid);
+        }
+
+        //隐藏某一个二级子节点(若要隐藏多个则用';'号隔开)
+        function HideCategory(nodeids) {
+            gameInstance.SendMessage('JavaScriptInterface', 'HideCategory', nodeids);
+        }
+
+        //清理隐藏
+        function ClearHide() {
+            gameInstance.SendMessage('JavaScriptInterface', 'ClearHide');
+        }
+
+        //当Unity高亮一个元素的时候会调用这个函数
+        function OnSelectItemChanged(elementid) {
+            //这里代码你自己填
+            console.log(elementid);
+        }
+
+        /*
+        *函数功能：从href获得参数
+        *sHref:   http://www.artfh.com/arg.htm?arg1=d&arg2=re
+        *sArgName:arg1, arg2
+        *return:    the value of arg. d, re
+        */
+        function GetArgsFromHref(sHref, sArgName) {
+            var args = sHref.split("?");
+            var retval = "";
+
+            if (args[0] == sHref) /*参数为空*/ {
+                return retval; /*无需做任何处理*/
+            }
+            var str = args[1];
+            args = str.split("&");
+            for (var i = 0; i < args.length; i++) {
+                str = args[i];
+                var arg = str.split("=");
+                if (arg.length <= 1) continue;
+                if (arg[0] == sArgName) retval = arg[1];
+            }
+            return retval;
+        }
+    </script>
+</head>
+
+<body>
+    <div style='width:100%;height:100%;' class='webgl-content'><div id='gameContainer'></div></div>
+	<!--<div class="webgl-content">
+		<div id="gameContainer" style="width: 960px; height: 600px"></div>
+	</div>-->
+</body>
+</html>

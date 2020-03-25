@@ -1,0 +1,12 @@
+2018.4
+1. comm.js下的function StartNewWorkFlow (doclist, wfKeyword, userlist,callback_fun) 函数，
+提交Ajax A: "StartNewWorkFlow"后，无论返回状态res.success是否是false ,都检查msg是否是"selectUser",
+如果是,就调用选人对话框，解决手动启动流程后不能弹出选人对话框问题，m版同步修改
+
+2. project\_mainprojecttree.js下的saveLastProject函数，var projectId = rs[0].data.id;
+修改为：var projectId = rs[0].data.Keyword;，解决刷新后不能定位问题，m版同步修改
+
+3.YDForm\WorkFlow\_WorkFlowPage.js下添加流程页的流程表格菜单，CDMSWeb.model.WorkFlowPage添加WorkStateKeyword字段，
+CDMSWebApi\WorkFlowController.cs下的 GetWorkFlowPagesData(string sid, string Keyword)函数，添加返回WorkStateKeyword字段
+
+4. CDMSWebApi\WorkFlowController.cs下的GetWorkFlowPagesData函数，添加WrokUserKeyword字段
